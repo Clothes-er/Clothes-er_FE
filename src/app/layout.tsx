@@ -1,7 +1,9 @@
 "use client";
 
-import GlobalFont from "@/styles/GlobalFont";
+import GlobalFont from "@/styles/GlobalStyle";
 import "./globals.css";
+import { ThemeProvider } from "styled-components";
+import { theme } from "@/styles/theme";
 
 export default function RootLayout({
   children,
@@ -14,8 +16,10 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <GlobalFont />
-        {children}
+        <ThemeProvider theme={theme}>
+          <GlobalFont />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
