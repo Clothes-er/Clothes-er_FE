@@ -4,6 +4,7 @@ import GlobalFont from "@/styles/GlobalStyle";
 import "./globals.css";
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
+import Tabbar from "@/components/common/Tabbar";
 
 export default function RootLayout({
   children,
@@ -19,6 +20,7 @@ export default function RootLayout({
         <ThemeProvider theme={theme}>
           <GlobalFont />
           {children}
+          <Tabbar />
         </ThemeProvider>
       </body>
     </html>
