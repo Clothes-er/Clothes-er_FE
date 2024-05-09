@@ -14,6 +14,8 @@ const colors = {
 
   b100: "#4E4C51",
   b200: "#4B4B4B",
+  b400: "#94A3B8",
+  basic: "#CBD5E1",
 
   gray50: "#FAF9FF",
   gray100: "#F5F5F5",
