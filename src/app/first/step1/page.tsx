@@ -27,23 +27,27 @@ const Step1 = () => {
           alt="logo"
         />
       </Background>
-      <Story>
-        동네 설정을 위한
-        <br />
-        주소를 입력해주세요.
-      </Story>
-      <Input
-        value={location}
-        onChange={(value: string) => setLocation(value)}
-        placeholder="주소"
-      />
-      <Button
-        buttonType="primaryDeep"
-        size="large"
-        text="다음 단계"
-        onClick={handleNext}
-        disabled={!location}
-      />
+      <Content>
+        <Story>
+          동네 설정을 위한
+          <br />
+          주소를 입력해주세요.
+        </Story>
+        <Box>
+          <Input
+            value={location}
+            onChange={(value: string) => setLocation(value)}
+            placeholder="주소"
+          />
+          <Button
+            buttonType="primaryDeep"
+            size="large"
+            text="다음 단계"
+            onClick={handleNext}
+            disabled={!location}
+          />
+        </Box>
+      </Content>
     </Layout>
   );
 };
@@ -68,6 +72,16 @@ const Background = styled.div`
   top: 0;
   left: 0px;
   z-index: 0;
+`;
+
+const Content = styled.div`
+  z-index: 10;
+`;
+
+const Box = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 404px;
 `;
 
 const Story = styled.div`
