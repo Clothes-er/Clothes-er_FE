@@ -1,10 +1,9 @@
 "use client";
 
-import GlobalFont from "@/styles/GlobalStyle";
-import "./globals.css";
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import Tabbar from "@/components/common/Tabbar";
+import GlobalStyles from "@/styles/GlobalStyle";
 
 export default function RootLayout({
   children,
@@ -18,7 +17,7 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider theme={theme}>
-          <GlobalFont />
+          <GlobalStyles />
           {children}
           <Tabbar />
         </ThemeProvider>

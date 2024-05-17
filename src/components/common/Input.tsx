@@ -79,9 +79,8 @@ const StyledInput = styled.input<InputProps>`
       errorMsg ? theme.colors.red : theme.colors.gray400};
   background: ${theme.colors.white};
   color: ${theme.colors.b200};
-  ${(props) => props.theme.fonts.body3_m};
   outline: none;
-  ${(props) => props.theme.fonts.b2_bold};
+  ${(props) => props.theme.fonts.b2_regular};
   &::placeholder {
     color: ${theme.colors.gray900};
     ${(props) => props.theme.fonts.b2_regular};
