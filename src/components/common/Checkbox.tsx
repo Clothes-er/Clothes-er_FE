@@ -5,7 +5,7 @@ import Image from "next/image";
 export type checkboxType = "checkbox" | "checkBtn" | "checkArrow";
 
 export interface CheckBoxProps {
-  value?: string | number;
+  value?: boolean;
   label?: string;
   text?: string;
   checked?: boolean;
@@ -28,12 +28,8 @@ const Checkbox = (props: CheckBoxProps) => {
   } = props;
 
   let checkboxClassName = checkboxType;
-  if (color === "purple") {
-    checkboxClassName += " purple";
-  } else if (color === "gray") {
-    checkboxClassName += " gray";
-  } else if (color === "black") {
-    checkboxClassName += " black";
+  if (color) {
+    checkboxClassName += " " + color;
   }
 
   return (
