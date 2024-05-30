@@ -39,8 +39,8 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
   };
 
   return (
-    <Container>
-      <Label $label={label || ""}>{label}</Label>
+    <Container $label={label || ""}>
+      {label && <Label>{label}</Label>}
       <StyledInput
         className={size}
         type={inputType}
@@ -57,18 +57,18 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
 
 export default Input;
 
-const Container = styled.div`
+const Container = styled.div<{ $label: string }>`
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({ $label }) => $label && "column"};
   justify-content: center;
   align-items: flex-start;
 `;
 
-const Label = styled.div<{ $label: string }>`
+const Label = styled.div`
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.b2_bold};
-  margin-bottom: ${({ $label }) => ($label ? "5px" : "0px")};
+  margin-bottom: 5px;
 `;
 
 const StyledInput = styled.input<InputProps>`

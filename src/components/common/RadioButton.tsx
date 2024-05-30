@@ -34,6 +34,7 @@ const RadioButton: React.FC<ChoiceProps> = ({ options, onChange }) => {
 export default RadioButton;
 
 const ChoiceContainer = styled.div`
+  width: 100%;
   display: flex;
   gap: 16px;
 `;
@@ -42,7 +43,6 @@ const ChoiceInput = styled.div<{ isSelected: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  /* width: 112px; */
   width: 100%;
   height: 50px;
   border-radius: 15px;

@@ -2,7 +2,7 @@ import { theme } from "@/styles/theme";
 import React, { ReactNode } from "react";
 import styled from "styled-components";
 
-export type buttonType = "primaryDeep" | "primary" | "primaryLight";
+export type buttonType = "primaryDeep" | "primary" | "primaryLight" | "gray";
 
 type ButtonTypes = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -78,10 +78,10 @@ const StyledButton = styled.button`
     color: ${theme.colors.white};
     background: ${theme.colors.purple800};
     &:hover {
-      background: ${theme.colors.purple900};
+      background: ${theme.colors.purple700};
     }
     &:active {
-      background: ${theme.colors.purple900};
+      background: ${theme.colors.purple700};
     }
     &:disabled {
       background: ${theme.colors.gray500};
@@ -109,6 +109,16 @@ const StyledButton = styled.button`
     }
     &:active {
       background: #e8e4ff;
+    }
+  }
+  &.gray {
+    color: ${theme.colors.white};
+    background: ${theme.colors.gray700};
+    &:hover {
+      background: ${theme.colors.gray800};
+    }
+    &:active {
+      background: ${theme.colors.gray800};
     }
   }
 

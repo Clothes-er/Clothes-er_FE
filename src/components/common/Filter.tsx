@@ -7,7 +7,7 @@ const Filter = () => {
   return (
     <Layout>
       {filter.map((data, index) => (
-        <Chip key={index} label={data} />
+        <Chip key={index} label={data} value={data} />
       ))}
     </Layout>
   );

@@ -40,8 +40,7 @@ export default Postcode;
 
 const Div = styled.div`
   width: 100%;
-  position: absolute;
-  top: 60px;
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 20px;
