@@ -2,13 +2,15 @@
 
 import Topbar from "@/components/common/Topbar";
 import styled from "styled-components";
-import { useState } from "react";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
+import Header from "@/components/common/Header";
+import Filter from "@/components/common/Filter";
 
 const Home = () => {
   return (
     <Layout>
+      <Header />
       <Topbar text="홈" align="left" />
       <div>
         <Row>
@@ -21,6 +23,7 @@ const Home = () => {
           강남구 역삼로 150길
         </Row>
         <SearchBox placeholder="원하는 상품명을 검색하세요!"></SearchBox>
+        <Filter />
       </div>
     </Layout>
   );
