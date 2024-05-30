@@ -82,7 +82,7 @@ const Content = styled.div`
 
 const Box = styled.div`
   width: 100%;
-  position: relative;
+  height: 550px;
 `;
 
 const Story = styled.div`
@@ -91,7 +91,7 @@ const Story = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.h1_bold};
   z-index: 10;
-  margin-bottom: 60px;
+  margin-bottom: 54px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -99,6 +99,6 @@ const Story = styled.div`
 
 const StyledButton = styled.div`
   width: 100%;
-  position: absolute;
+  position: sticky;
   bottom: 38px;
 `;

@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/common/Button";
+import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
@@ -11,7 +12,13 @@ import styled from "styled-components";
 const Step1 = () => {
   const router = useRouter();
   const [category, setCategory] = useState("");
+
+  const styleOptions = ["러블리", "빈티지", "시크", "힙합"];
   const [style, setStyle] = useState("");
+
+  const handleChange = (selectedOption: string) => {
+    setStyle(selectedOption);
+  };
 
   return (
     <Layout>
@@ -30,22 +37,34 @@ const Step1 = () => {
         <Small>모든 항목은 수정할 수 있습니다.</Small>
       </Story>
       <Card>
-        <Input
-          label="카테고리"
-          value={category}
-          placeholder="가디건, 셔츠, 청바지 등"
-          onChange={(value: string) => setCategory(value)}
-        />
-        <Input
-          label="스타일"
-          value={style}
-          placeholder="스타일"
-          onChange={(value: string) => setStyle(value)}
-        />
+        <div>
+          <Label>
+            카테고리
+            <Span>(,로 복수입력)</Span>
+          </Label>
+          <Input
+            value={category}
+            placeholder="가디건, 셔츠, 청바지 등"
+            onChange={(value: string) => setCategory(value)}
+          />
+        </div>
+        <div>
+          <Label>
+            스타일
+            <Span>(복수선택)</Span>
+          </Label>
+          <Dropdown
+            value={style}
+            placeholder="스타일"
+            size="medium"
+            options={styleOptions}
+          />
+        </div>
       </Card>
       <Row>
         <Button
           text="이전 단계"
+          buttonType="gray"
           size="medium"
           onClick={() => router.push("/first/step2")}
         />
@@ -95,7 +114,8 @@ const Story = styled.div`
 `;
 
 const Small = styled.div`
-  ${(props) => props.theme.fonts.b2_regular};
+  color: #ffffffb7;
+  ${(props) => props.theme.fonts.b3_regular};
 `;
 
 const Card = styled.div`
@@ -105,7 +125,6 @@ const Card = styled.div`
   margin-bottom: 55px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   gap: 33px;
   border-radius: 15px;
@@ -118,4 +137,19 @@ const Row = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 24px;
+`;
+
+const Label = styled.div`
+  text-align: left;
+  color: ${theme.colors.black};
+  ${(props) => props.theme.fonts.b2_bold};
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+`;
+
+const Span = styled.span`
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b3_regular};
 `;

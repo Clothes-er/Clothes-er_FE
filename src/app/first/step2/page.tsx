@@ -1,7 +1,9 @@
 "use client";
 
 import Button from "@/components/common/Button";
+import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
+import RadioButton from "@/components/common/RadioButton";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,6 +16,34 @@ const Step2 = () => {
   const [weight, setWeight] = useState("");
   const [foot, setFoot] = useState("");
   const [body, setBody] = useState("");
+
+  const genderOptions = ["남자", "여자"];
+  const [gender, setGender] = useState(genderOptions[0]);
+
+  const sizeOptions = [
+    "210",
+    "215",
+    "220",
+    "225",
+    "230",
+    "235",
+    "240",
+    "245",
+    "250",
+    "255",
+    "260",
+    "265",
+    "270",
+    "275",
+    "280",
+    "285",
+    "290",
+  ];
+  const [selectedSizeOption, setSelectedSizeOption] = useState("");
+
+  const handleChange = (selectedOption: string) => {
+    setGender(selectedOption);
+  };
 
   return (
     <Layout>
@@ -33,47 +63,51 @@ const Step2 = () => {
       </Story>
       <Card>
         <div>
-          <Label>기본 정보</Label>
-          <Row>
-            <Input
-              value={height}
-              placeholder="남자"
-              onChange={(value: string) => setHeight(value)}
+          <Label>
+            기본 정보
+            <SpanPurple>*수정 가능</SpanPurple>
+          </Label>
+          <Gap>
+            <RadioButton options={genderOptions} onChange={handleChange} />
+            <Row>
+              <Input
+                value={height}
+                placeholder="키"
+                size="medium"
+                onChange={(value: string) => setHeight(value)}
+              />
+              <Input
+                value={weight}
+                placeholder="몸무게"
+                size="medium"
+                onChange={(value: string) => setWeight(value)}
+              />
+            </Row>
+            <Dropdown
+              value={selectedSizeOption}
+              placeholder="발 사이즈"
+              size="medium"
+              options={sizeOptions}
             />
-            <Input
-              value={weight}
-              placeholder="여자"
-              onChange={(value: string) => setWeight(value)}
-            />
-          </Row>
+          </Gap>
         </div>
-        <Row>
+        <div>
+          <Label>
+            체형
+            <Span>(,로 복수입력)</Span>
+          </Label>
           <Input
-            value={height}
-            placeholder="키"
-            onChange={(value: string) => setHeight(value)}
+            value={body}
+            placeholder="어깨가 넓어요, 허리가 길어요"
+            size="medium"
+            onChange={(value: string) => setBody(value)}
           />
-          <Input
-            value={weight}
-            placeholder="몸무게"
-            onChange={(value: string) => setWeight(value)}
-          />
-        </Row>
-        <Input
-          value={foot}
-          placeholder="발사이즈"
-          onChange={(value: string) => setFoot(value)}
-        />
-        <Input
-          label="체형"
-          value={body}
-          placeholder="어깨가 넓어요, 허리가 길어요"
-          onChange={(value: string) => setBody(value)}
-        />
+        </div>
       </Card>
       <Row>
         <Button
           text="이전 단계"
+          buttonType="gray"
           size="medium"
           onClick={() => router.push("/first/step1")}
         />
@@ -101,6 +135,7 @@ const Layout = styled.div`
   justify-content: flex-start;
   align-items: center;
   position: relative;
+  overflow-x: hidden;
 `;
 
 const Background = styled.div`
@@ -123,33 +158,51 @@ const Story = styled.div`
 `;
 
 const Small = styled.div`
-  ${(props) => props.theme.fonts.b2_regular};
+  color: #ffffffb7;
+  ${(props) => props.theme.fonts.b3_regular};
 `;
 
 const Card = styled.div`
   width: 100%;
-  height: 404px;
   padding: 29px 20px;
   margin-bottom: 55px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 25px;
+  gap: 30px;
   border-radius: 15px;
   background: ${theme.colors.white};
   box-shadow: 0px 4px 30px 0px rgba(171, 171, 171, 0.25);
   z-index: 10;
 `;
 
+const Gap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+`;
+
 const Label = styled.div`
   text-align: left;
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.b2_bold};
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 `;
 
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
-  gap: 24px;
+  gap: 16px;
+`;
+
+const Span = styled.span`
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b3_regular};
+`;
+
+const SpanPurple = styled.span`
+  color: ${theme.colors.purple400};
+  ${(props) => props.theme.fonts.b3_regular};
 `;

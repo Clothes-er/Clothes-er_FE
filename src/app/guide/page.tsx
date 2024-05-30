@@ -5,7 +5,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
 import RadioButton from "@/components/common/RadioButton";
-import Post from "@/components/home/post";
+import Post from "@/components/home/Post";
 import { useState } from "react";
 import styled from "styled-components";
 
