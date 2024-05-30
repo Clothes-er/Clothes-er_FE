@@ -1,7 +1,9 @@
 "use client";
 
+import Axios from "@/api/axios";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
+import Tabbar from "@/components/common/Tabbar";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,79 +23,96 @@ export default function Home() {
     setSave(!save);
   };
 
+  const handleLogin = () => {
+    Axios.post("/api/v1/users/login", {
+      email: email,
+      password: password,
+    })
+      .then((response) => {
+        console.log("로그인 성공", response.data);
+      })
+      .catch((error) => {
+        console.log("로그인 실패", error);
+      });
+  };
+
   return (
-    <Layout>
-      <Background>
-        <Image
-          src="/assets/images/shape.svg"
-          width={575}
-          height={592}
-          alt="logo"
-        />
-      </Background>
-      <Character>
-        <Image
-          src="/assets/images/character.svg"
-          width={48}
-          height={55}
-          alt="logo"
-        />
-      </Character>
-      <Logo>
-        <Image
-          src="/assets/images/logo.svg"
-          width={111}
-          height={36}
-          alt="logo"
-        />
-      </Logo>
-      <Story>
-        옷은 많은데...
-        <br />
-        입을 게 없네?
-        <Small>
-          Clothes:er와 함께
-          <br /> 동네 주민들과 옷장을 공유해봐요!
-        </Small>
-      </Story>
-      <Login>
-        <Purple>LOGIN</Purple>
-        <Input
-          value={email}
-          onChange={(value: string) => setEmail(value)}
-          placeholder="이메일"
-        />
-        <Input
-          value={password}
-          onChange={(value: string) => setPassword(value)}
-          placeholder="비밀번호"
-        />
-        <Save save={save} onClick={handleSave}>
-          {save ? (
-            <Image
-              src="/assets/icons/ic_save.svg"
-              width={23}
-              height={23}
-              alt="check"
-            />
-          ) : (
-            <Image
-              src="/assets/icons/ic_notsave.svg"
-              width={23}
-              height={23}
-              alt="check"
-            />
-          )}
-          로그인 정보 저장하기
-        </Save>
-        <Button text="로그인" />
-        <Nav>
-          <Link href="/join/terms">회원가입</Link>|
-          <Link href="/findId">아이디 찾기</Link>|
-          <Link href="/findPw">비밀번호 찾기</Link>
-        </Nav>
-      </Login>
-    </Layout>
+    <>
+      <Layout>
+        <Background>
+          <Image
+            src="/assets/images/shape.svg"
+            width={575}
+            height={592}
+            alt="logo"
+          />
+        </Background>
+        <Character>
+          <Image
+            src="/assets/images/character.svg"
+            width={48}
+            height={55}
+            alt="logo"
+          />
+        </Character>
+        <Logo>
+          <Image
+            src="/assets/images/logo.svg"
+            width={111}
+            height={36}
+            alt="logo"
+          />
+        </Logo>
+        <Story>
+          옷은 많은데...
+          <br />
+          입을 게 없네?
+          <Small>
+            Clothes:er와 함께
+            <br /> 동네 주민들과 옷장을 공유해봐요!
+          </Small>
+        </Story>
+        <Login>
+          <Purple>LOGIN</Purple>
+          <Input
+            value={email}
+            onChange={(value: string) => setEmail(value)}
+            placeholder="이메일"
+          />
+          <Input
+            inputType="password"
+            value={password}
+            onChange={(value: string) => setPassword(value)}
+            placeholder="비밀번호"
+          />
+          <Save save={save} onClick={handleSave}>
+            {save ? (
+              <Image
+                src="/assets/icons/ic_save.svg"
+                width={23}
+                height={23}
+                alt="check"
+              />
+            ) : (
+              <Image
+                src="/assets/icons/ic_notsave.svg"
+                width={23}
+                height={23}
+                alt="check"
+              />
+            )}
+            로그인 정보 저장하기
+          </Save>
+          <Button text="로그인" onClick={handleLogin} />
+          <Nav>
+            <Link href="/join/terms">회원가입</Link>|
+            <Link href="/findId">아이디 찾기</Link>|
+            <Link href="/findPw">비밀번호 찾기</Link>
+          </Nav>
+        </Login>
+      </Layout>
+      <Tabbar />
+    </>
   );
 }
 
