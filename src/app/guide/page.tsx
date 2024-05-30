@@ -3,15 +3,23 @@ import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
+import RadioButton from "@/components/common/RadioButton";
 import { useState } from "react";
 import styled from "styled-components";
 
 const Guide = () => {
   const [name, setName] = useState("");
+  const gender = ["남자", "여자"];
+  const [selectedOption, setSelectedOption] = useState(gender[0]);
+
+  const handleChange = (selectedOption: string) => {
+    setSelectedOption(selectedOption);
+  };
+
   return (
     <>
       <Layout>
-        홈
+        <h2>Input</h2>
         <Input
           label="이름"
           value={name}
@@ -25,6 +33,7 @@ const Guide = () => {
           onChange={(value: string) => setName(value)}
           errorMsg="이름을 입력해주세요"
         />
+        <h2>Checkbox</h2>
         <Checkbox label="서비스 이용약관" text="필수" />
         <Checkbox checkboxType="checkBtn" label="서비스 이용약관" text="필수" />
         <Checkbox
@@ -32,9 +41,13 @@ const Guide = () => {
           label="서비스 이용약관"
           text="필수"
         />
+        <h2>Button</h2>
         <Button buttonType="primary" size="large" text="다음 단계" />
         <Button buttonType="primaryLight" size="medium" text="인증" />
+        <h2>Modal</h2>
         <Modal title="정말 제출하시겠습니까?" text="원활한 서비스 어쩌구" />
+        <h2>Radio Choice</h2>
+        <RadioButton options={gender} onChange={handleChange} />
       </Layout>
     </>
   );
