@@ -40,7 +40,7 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
 
   return (
     <Container>
-      <Label>{label}</Label>
+      <Label $label={label || ""}>{label}</Label>
       <StyledInput
         className={size}
         type={inputType}
@@ -63,12 +63,12 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  gap: 5px;
 `;
 
-const Label = styled.div`
+const Label = styled.div<{ $label: string }>`
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.b2_bold};
+  margin-bottom: ${({ $label }) => ($label ? "5px" : "0px")};
 `;
 
 const StyledInput = styled.input<InputProps>`
