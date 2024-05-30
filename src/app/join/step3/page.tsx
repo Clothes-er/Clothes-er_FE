@@ -3,19 +3,35 @@
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Progressbar from "@/components/common/Progressbar";
+import { setStep3 } from "@/redux/slices/signInSlice";
+import { useAppDispatch } from "@/redux/store";
+import { postSignUpData } from "@/redux/thunks/postSignIn";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const Step3 = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const [inputs, setInputs] = useState({
-    name: "",
-    nickname: "",
-    email: "",
-    emailAuth: "",
+    phone: "",
+    phoneAuth: "",
   });
+
+  const handleSignUp = () => {
+    dispatch(postSignUpData())
+      .unwrap()
+      .then((data) => {
+        console.log("회원가입 성공:", data);
+        () => router.push("/join/finish");
+      })
+      .catch((error) => {
+        console.error("회원가입 실패:", error.message);
+      });
+  };
 
   return (
     <Container>
@@ -27,41 +43,53 @@ const Step3 = () => {
       <Row>
         <Input
           label="전화번호"
-          value={inputs.name}
+          value={inputs.phone}
           placeholder="전화번호"
-          onChange={(value: string) =>
-            setInputs({ ...inputs, [inputs.name]: value })
-          }
+          onChange={(value: string) => {
+            setInputs({ ...inputs, phone: value });
+            dispatch(
+              setStep3({
+                ...inputs,
+                [inputs.phone]: value,
+              })
+            );
+          }}
         />
-        <Button
-          buttonType="primaryLight"
-          text="인증"
-          size="small"
-          onClick={() => {}}
-        />
+        <Small>
+          <Button
+            buttonType="primaryLight"
+            text="인증"
+            size="small"
+            onClick={() => {}}
+          />
+        </Small>
       </Row>
       <Row>
         <Input
           label="전화번호 인증"
-          value={inputs.nickname}
+          value={inputs.phoneAuth}
           placeholder="인증번호"
-          onChange={(value: string) =>
-            setInputs({ ...inputs, [inputs.nickname]: value })
-          }
+          onChange={(value: string) => {
+            setInputs({ ...inputs, phoneAuth: value });
+            dispatch(
+              setStep3({
+                ...inputs,
+                [inputs.phoneAuth]: value,
+              })
+            );
+          }}
         />
-        <Button
-          buttonType="primaryLight"
-          text="인증"
-          size="small"
-          onClick={() => {}}
-        />
+        <Small>
+          <Button
+            buttonType="primaryLight"
+            text="인증"
+            size="small"
+            onClick={() => {}}
+          />
+        </Small>
       </Row>
 
-      <Button
-        text="회원가입"
-        size="medium"
-        onClick={() => router.push("/join/finish")}
-      />
+      <Button text="회원가입" size="medium" onClick={handleSignUp} />
     </Container>
   );
 };
@@ -87,4 +115,8 @@ const Row = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   gap: 16px;
+`;
+
+const Small = styled.div`
+  margin-bottom: 21px;
 `;

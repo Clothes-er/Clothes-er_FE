@@ -6,22 +6,26 @@ import Image from "next/image";
 export interface InputProps {
   label?: string;
   value: string;
+  size?: "large" | "medium" | "small";
   onChange: (value: string) => void;
   onClick?: () => void;
   placeholder?: string;
-  inputType?: "text";
+  inputType?: "text" | "password";
   errorMsg?: string;
+  readOnly?: boolean;
 }
 
 const Input: React.FC<InputProps> = (props: InputProps) => {
   const {
     label,
     value,
+    size,
     onChange,
     onClick,
     placeholder,
     inputType = "text",
     errorMsg,
+    readOnly = false,
   } = props;
 
   const handleChange = (event: any) => {
@@ -38,13 +42,15 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
     <Container>
       <Label>{label}</Label>
       <StyledInput
-        type="text"
+        className={size}
+        type={inputType}
         value={value}
         onChange={handleChange}
         onClick={handleClick}
         placeholder={placeholder}
+        readOnly={readOnly}
       />
-      {errorMsg && <Error>{errorMsg}</Error>}
+      <Error errorMsg={errorMsg}>{errorMsg}</Error>
     </Container>
   );
 };
@@ -68,7 +74,7 @@ const Label = styled.div`
 const StyledInput = styled.input<InputProps>`
   width: 100%;
   height: 44px;
-  padding: 13px 22px;
+  padding: 12px 18px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -76,7 +82,9 @@ const StyledInput = styled.input<InputProps>`
   border-radius: 15px;
   border: 1px solid
     ${({ errorMsg, theme }) =>
-      errorMsg ? theme.colors.red : theme.colors.gray400};
+      errorMsg && errorMsg.length > 0
+        ? theme.colors.red
+        : theme.colors.gray400};
   background: ${theme.colors.white};
   color: ${theme.colors.b200};
   outline: none;
@@ -90,16 +98,20 @@ const StyledInput = styled.input<InputProps>`
     cursor: pointer;
     caret-color: transparent;
   }
+
+  &.medium {
+    height: 50px;
+  }
 `;
 
-const ImageContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: -30px;
-  cursor: pointer;
-`;
+interface StyledInputProps {
+  errorMsg?: string;
+}
 
-const Error = styled.div`
+const Error = styled.div<StyledInputProps>`
+  height: 16px;
+  padding-left: 10px;
   color: ${(props) => props.theme.colors.red};
   ${(props) => props.theme.fonts.c1_regular};
+  opacity: ${(props) => (props.errorMsg ? 1 : 0)};
 `;
