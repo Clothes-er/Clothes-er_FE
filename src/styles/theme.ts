@@ -4,6 +4,7 @@ const colors = {
   purple10: "#F7F5FF",
   purple50: "#F5F3FF",
   purple100: "#F2F0FF",
+  purple150: "#E8E4FF",
   purple200: "#D8D1FF",
   purple300:"#6952F5",
   purple400:"#8C7CF4",
@@ -28,8 +29,8 @@ const colors = {
   gray700: "#C0C0C0",
   gray800: "#A9A9A9",
   gray900: "#8F8F8F",
-
-  linear_purple: "",
+  
+  linear_purple: "linear-gradient(180deg, #796EF2 0%, #8677E1 100%)",
   linear_btn:"",
   linear_sub:"",
 
