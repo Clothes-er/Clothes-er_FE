@@ -10,7 +10,7 @@ const GlobalStyles = createGlobalStyle`
 
 html {
   width: 100%;
-  max-width: 560px;
+  max-width: 480px;
   min-height: 100%;
   margin: 0 auto;
   box-shadow: 0px 0px 64px 0px rgba(30, 41, 59, 0.1);
