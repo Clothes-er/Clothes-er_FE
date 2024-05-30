@@ -62,8 +62,6 @@ const Guide = () => {
           placeholder="발 사이즈"
           options={sizeOptions}
         />
-        <h2>Post</h2>
-        <Post />
       </Layout>
     </>
   );
