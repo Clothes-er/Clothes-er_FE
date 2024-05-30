@@ -1,17 +1,16 @@
 "use client";
 
 import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
+import Postcode from "@/components/common/Postcode";
 
 const Step1 = () => {
   const router = useRouter();
   const [location, setLocation] = useState("");
-
   const handleNext = () => {
     console.log(location);
     router.push("/first/step2");
@@ -34,11 +33,9 @@ const Step1 = () => {
           주소를 입력해주세요.
         </Story>
         <Box>
-          <Input
-            value={location}
-            onChange={(value: string) => setLocation(value)}
-            placeholder="주소"
-          />
+          <Postcode />
+        </Box>
+        <StyledButton>
           <Button
             buttonType="primaryDeep"
             size="large"
@@ -46,7 +43,7 @@ const Step1 = () => {
             onClick={handleNext}
             disabled={!location}
           />
-        </Box>
+        </StyledButton>
       </Content>
     </Layout>
   );
@@ -75,13 +72,17 @@ const Background = styled.div`
 `;
 
 const Content = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   z-index: 10;
 `;
 
 const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 404px;
+  width: 100%;
+  position: relative;
 `;
 
 const Story = styled.div`
@@ -94,4 +95,10 @@ const Story = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+`;
+
+const StyledButton = styled.div`
+  width: 100%;
+  position: absolute;
+  bottom: 38px;
 `;
