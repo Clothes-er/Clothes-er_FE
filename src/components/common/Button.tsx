@@ -126,7 +126,8 @@ const StyledButton = styled.button`
   }
 
   &.small {
-    height: 28px;
+    height: 50px;
+    max-width: 79px;
     ${(props) => props.theme.fonts.b2_regular};
   }
 `;
