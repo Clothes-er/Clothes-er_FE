@@ -5,6 +5,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
 import RadioButton from "@/components/common/RadioButton";
+import Post from "@/components/home/post";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -61,6 +62,8 @@ const Guide = () => {
           placeholder="발 사이즈"
           options={sizeOptions}
         />
+        <h2>Post</h2>
+        <Post />
       </Layout>
     </>
   );
