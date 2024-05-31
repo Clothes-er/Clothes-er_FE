@@ -6,6 +6,7 @@ const colors = {
   purple100: "#F2F0FF",
   purple150: "#E8E4FF",
   purple200: "#D8D1FF",
+  purple250: "#A29AFF",
   purple300:"#6952F5",
   purple400:"#8C7CF4",
   purple500:"#796EF2",
@@ -36,6 +37,7 @@ const colors = {
 
   red: "#FF4E43",
   green: "#5AB430",
+  delete: "#FF6C63",
 
   white: "#FFFFFF",
   black: "#000000",
