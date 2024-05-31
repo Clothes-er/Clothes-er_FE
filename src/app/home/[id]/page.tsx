@@ -2,6 +2,7 @@
 
 import Header from "@/components/common/Header";
 import Bottom from "@/components/home/Bottom";
+import ModifyMenu from "@/components/home/ModifyMenu";
 import Profile from "@/components/home/Profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
@@ -36,14 +37,17 @@ const Page = () => {
               style={{ cursor: "pointer" }}
             />
             공유 옷장
-            <Image
-              src="/assets/icons/ic_more_vertical.svg"
-              width={24}
-              height={24}
-              alt="more"
-              onClick={handleMoreMenu}
-              style={{ cursor: "pointer" }}
-            />
+            <Menu>
+              <Image
+                src="/assets/icons/ic_more_vertical.svg"
+                width={24}
+                height={24}
+                alt="more"
+                onClick={handleMoreMenu}
+                style={{ cursor: "pointer" }}
+              />
+              {menu && <ModifyMenu />}
+            </Menu>
           </Top>
         </Head>
         <ImageSlide></ImageSlide>
@@ -102,6 +106,10 @@ const Top = styled.div`
   justify-content: space-between;
   align-items: center;
   ${(props) => props.theme.fonts.h2_bold};
+`;
+
+const Menu = styled.div`
+  position: relative;
 `;
 
 const ImageSlide = styled.div`
