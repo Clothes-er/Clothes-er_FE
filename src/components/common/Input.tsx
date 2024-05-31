@@ -10,7 +10,7 @@ export interface InputProps {
   onChange: (value: string) => void;
   onClick?: () => void;
   placeholder?: string;
-  inputType?: "text" | "password";
+  inputType?: "text" | "password" | "write" | "textarea";
   errorMsg?: string;
   readOnly?: boolean;
 }
@@ -42,7 +42,7 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
     <Container $label={label || ""}>
       {label && <Label>{label}</Label>}
       <StyledInput
-        className={size}
+        className={size + " " + inputType}
         type={inputType}
         value={value}
         onChange={handleChange}
@@ -73,25 +73,28 @@ const Label = styled.div`
 
 const StyledInput = styled.input<InputProps>`
   width: 100%;
-  height: 44px;
-  padding: 12px 18px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 15px;
-  border: 1px solid
-    ${({ errorMsg, theme }) =>
-      errorMsg && errorMsg.length > 0
-        ? theme.colors.red
-        : theme.colors.gray400};
-  background: ${theme.colors.white};
-  color: ${theme.colors.b200};
-  outline: none;
-  ${(props) => props.theme.fonts.b2_regular};
-  &::placeholder {
-    color: ${theme.colors.gray900};
+  &.text,
+  &.password {
+    height: 44px;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 15px;
+    border: 1px solid
+      ${({ errorMsg, theme }) =>
+        errorMsg && errorMsg.length > 0
+          ? theme.colors.red
+          : theme.colors.gray400};
+    background: ${theme.colors.white};
+    color: ${theme.colors.b200};
+    outline: none;
     ${(props) => props.theme.fonts.b2_regular};
+    &::placeholder {
+      color: ${theme.colors.gray900};
+      ${(props) => props.theme.fonts.b2_regular};
+    }
   }
 
   &.select {
@@ -101,6 +104,21 @@ const StyledInput = styled.input<InputProps>`
 
   &.medium {
     height: 50px;
+  }
+
+  &.write,
+  &.textarea {
+    height: 30px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid ${theme.colors.gray700};
+    background: #fff;
+    color: ${theme.colors.b100};
+    outline: none;
+    ${(props) => props.theme.fonts.c1_regular};
+    &::placeholder {
+      color: ${theme.colors.gray600};
+    }
   }
 `;
 

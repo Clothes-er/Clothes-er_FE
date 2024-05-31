@@ -41,6 +41,13 @@ const Guide = () => {
           onChange={(value: string) => setName(value)}
           errorMsg="이름을 입력해주세요"
         />
+        <Input
+          inputType="write"
+          label="이름"
+          value={name}
+          placeholder="홍길동"
+          onChange={(value: string) => setName(value)}
+        />
         <h2>Checkbox</h2>
         <Checkbox label="서비스 이용약관" text="필수" />
         <Checkbox checkboxType="checkBtn" label="서비스 이용약관" text="필수" />
