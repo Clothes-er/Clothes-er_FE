@@ -60,7 +60,12 @@ const Guide = () => {
         <Button buttonType="primary" size="large" text="다음 단계" />
         <Button buttonType="primaryLight" size="medium" text="인증" />
         <h2>Modal</h2>
-        <Modal title="정말 제출하시겠습니까?" text="원활한 서비스 어쩌구" />
+        <Modal
+          title="정말 제출하시겠습니까?"
+          text="원활한 서비스 어쩌구"
+          onClose={() => {}}
+          onCheck={() => {}}
+        />
         <h2>Radio Choice</h2>
         <RadioButton options={gender} onChange={handleChange} />
         <h2>Dropdown</h2>
