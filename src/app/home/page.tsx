@@ -13,12 +13,13 @@ import { useRouter } from "next/navigation";
 
 const Home = () => {
   const router = useRouter();
+
   return (
     <>
       <Layout>
         <Header />
         <Topbar text="홈" align="left" />
-        <Row>
+        <Location onClick={() => router.push("/home/location")}>
           <Image
             src="/assets/icons/ic_pin.svg"
             width={24}
@@ -26,7 +27,7 @@ const Home = () => {
             alt="pin"
           />
           강남구 역삼로 150길
-        </Row>
+        </Location>
         <Content>
           <SearchBox placeholder="원하는 상품명을 검색하세요!"></SearchBox>
           <Filter />
@@ -34,6 +35,7 @@ const Home = () => {
             {postList.map((data) => (
               <Post
                 key={data.id}
+                id={data.id}
                 title={data.title}
                 minPrice={data.minPrice}
                 createdAt={data.createdAt}
@@ -69,11 +71,12 @@ const Layout = styled.div`
   position: relative;
 `;
 
-const Row = styled.div`
+const Location = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
   ${(props) => props.theme.fonts.b2_medium};
+  cursor: pointer;
 `;
 
 const Content = styled.div`
