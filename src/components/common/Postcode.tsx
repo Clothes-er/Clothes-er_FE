@@ -2,26 +2,24 @@ import React, { useEffect, useState } from "react";
 import DaumPostcode from "react-daum-postcode";
 import styled from "styled-components";
 import Input from "./Input";
-import axios from "axios";
 
-const Postcode: React.FC = () => {
-  //   const [zipCode, setZipcode] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
+interface PostcodeProps {
+  location: string;
+  setLocation: (location: string) => void;
+}
+
+const Postcode: React.FC<PostcodeProps> = ({ location, setLocation }) => {
   const [locationPopup, setLocationPopup] = useState(false);
+
   const completeHandler = (data: any) => {
     console.log(data);
-    // setZipcode(data.zonecode);
     setLocation(data.roadAddress);
   };
 
   useEffect(() => {
-    const response = axios.get(
-      `https://dapi.kakao.com/v2/local/search/address.json+`,
-      {
-        // Authorization: KakaoAK`${REACT_APP_KAKAO_REST_API_KEY}`,
-      }
-    );
+    console.log("useEffect location", location);
   }, [location]);
+
   return (
     <Div>
       <Input
