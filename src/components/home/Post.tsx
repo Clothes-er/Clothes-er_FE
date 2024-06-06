@@ -6,6 +6,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Post: React.FC<PostList> = ({
+  id,
   imgUrl,
   nickname,
   title,
@@ -14,7 +15,7 @@ const Post: React.FC<PostList> = ({
 }) => {
   const router = useRouter();
   const handleDetail = () => {
-    router.push(`/home/1`);
+    router.push(`/home/${id}`);
   };
   return (
     <Container onClick={handleDetail}>
