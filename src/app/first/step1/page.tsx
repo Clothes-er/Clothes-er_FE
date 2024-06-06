@@ -7,13 +7,30 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
 import Postcode from "@/components/common/Postcode";
+import { getAddressCoords } from "@/hooks/getAddressCoords";
+import { useDispatch } from "react-redux";
+import { setStep1 } from "@/redux/slices/firstLoginSlice";
 
 const Step1 = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [location, setLocation] = useState("");
-  const handleNext = () => {
-    console.log(location);
-    router.push("/first/step2");
+
+  const handleNext = async () => {
+    try {
+      console.log("location-page", location);
+      const coords = await getAddressCoords(location);
+      dispatch(
+        setStep1({
+          address: location,
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+        })
+      );
+      router.push("/first/step2");
+    } catch (error) {
+      console.error("주소 변환에 실패하였습니다.");
+    }
   };
 
   return (
@@ -33,7 +50,7 @@ const Step1 = () => {
           주소를 입력해주세요.
         </Story>
         <Box>
-          <Postcode />
+          <Postcode location={location} setLocation={setLocation} />
         </Box>
         <StyledButton>
           <Button
