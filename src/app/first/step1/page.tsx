@@ -7,13 +7,27 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
 import Postcode from "@/components/common/Postcode";
+import { getAddressCoords } from "@/hooks/getAddressCoords";
+import { useDispatch } from "react-redux";
+import { setStep1 } from "@/redux/slices/firstLoginSlice";
 
 const Step1 = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [location, setLocation] = useState("");
-  const handleNext = () => {
-    console.log(location);
+
+  const handleNext = async () => {
+    console.log("location-page", location);
+    const coords = await getAddressCoords(location);
     router.push("/first/step2");
+
+    // const step1Info = {
+    //   address: location,
+    //   latitude: coords.latitude,
+    //   longitude: coords.longitude,
+    // };
+
+    // dispatch(setStep1(step1Info));
   };
 
   return (
@@ -33,7 +47,7 @@ const Step1 = () => {
           주소를 입력해주세요.
         </Story>
         <Box>
-          <Postcode />
+          <Postcode location={location} setLocation={setLocation} />
         </Box>
         <StyledButton>
           <Button
@@ -82,7 +96,7 @@ const Content = styled.div`
 
 const Box = styled.div`
   width: 100%;
-  position: relative;
+  height: 550px;
 `;
 
 const Story = styled.div`
@@ -91,7 +105,7 @@ const Story = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.h1_bold};
   z-index: 10;
-  margin-bottom: 60px;
+  margin-bottom: 54px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -99,6 +113,6 @@ const Story = styled.div`
 
 const StyledButton = styled.div`
   width: 100%;
-  position: absolute;
+  position: sticky;
   bottom: 38px;
 `;

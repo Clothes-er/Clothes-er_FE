@@ -86,7 +86,7 @@ const Step2 = () => {
           dispatch(
             setStep2({
               ...inputs,
-              [inputs.password]: value,
+              password: value,
             })
           );
         }}
@@ -102,7 +102,7 @@ const Step2 = () => {
           dispatch(
             setStep2({
               ...inputs,
-              [inputs.repassword]: value,
+              repassword: value,
             })
           );
         }}
@@ -117,7 +117,7 @@ const Step2 = () => {
           dispatch(
             setStep2({
               ...inputs,
-              [inputs.birth]: value,
+              birth: value,
             })
           );
         }}

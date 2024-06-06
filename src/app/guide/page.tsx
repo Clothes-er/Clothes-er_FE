@@ -5,7 +5,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
 import RadioButton from "@/components/common/RadioButton";
-import Post from "@/components/home/post";
+import Post from "@/components/home/Post";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -41,6 +41,13 @@ const Guide = () => {
           onChange={(value: string) => setName(value)}
           errorMsg="이름을 입력해주세요"
         />
+        <Input
+          inputType="write"
+          label="이름"
+          value={name}
+          placeholder="홍길동"
+          onChange={(value: string) => setName(value)}
+        />
         <h2>Checkbox</h2>
         <Checkbox label="서비스 이용약관" text="필수" />
         <Checkbox checkboxType="checkBtn" label="서비스 이용약관" text="필수" />
@@ -53,7 +60,12 @@ const Guide = () => {
         <Button buttonType="primary" size="large" text="다음 단계" />
         <Button buttonType="primaryLight" size="medium" text="인증" />
         <h2>Modal</h2>
-        <Modal title="정말 제출하시겠습니까?" text="원활한 서비스 어쩌구" />
+        <Modal
+          title="정말 제출하시겠습니까?"
+          text="원활한 서비스 어쩌구"
+          onClose={() => {}}
+          onCheck={() => {}}
+        />
         <h2>Radio Choice</h2>
         <RadioButton options={gender} onChange={handleChange} />
         <h2>Dropdown</h2>
@@ -62,8 +74,6 @@ const Guide = () => {
           placeholder="발 사이즈"
           options={sizeOptions}
         />
-        <h2>Post</h2>
-        <Post />
       </Layout>
     </>
   );

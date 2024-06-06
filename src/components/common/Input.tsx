@@ -10,7 +10,7 @@ export interface InputProps {
   onChange: (value: string) => void;
   onClick?: () => void;
   placeholder?: string;
-  inputType?: "text" | "password";
+  inputType?: "text" | "password" | "write" | "textarea";
   errorMsg?: string;
   readOnly?: boolean;
 }
@@ -39,10 +39,10 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
   };
 
   return (
-    <Container>
-      <Label $label={label || ""}>{label}</Label>
+    <Container $label={label || ""}>
+      {label && <Label>{label}</Label>}
       <StyledInput
-        className={size}
+        className={size + " " + inputType}
         type={inputType}
         value={value}
         onChange={handleChange}
@@ -57,41 +57,44 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
 
 export default Input;
 
-const Container = styled.div`
+const Container = styled.div<{ $label: string }>`
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({ $label }) => $label && "column"};
   justify-content: center;
   align-items: flex-start;
 `;
 
-const Label = styled.div<{ $label: string }>`
+const Label = styled.div`
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.b2_bold};
-  margin-bottom: ${({ $label }) => ($label ? "5px" : "0px")};
+  margin-bottom: 5px;
 `;
 
 const StyledInput = styled.input<InputProps>`
   width: 100%;
-  height: 44px;
-  padding: 12px 18px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 15px;
-  border: 1px solid
-    ${({ errorMsg, theme }) =>
-      errorMsg && errorMsg.length > 0
-        ? theme.colors.red
-        : theme.colors.gray400};
-  background: ${theme.colors.white};
-  color: ${theme.colors.b200};
-  outline: none;
-  ${(props) => props.theme.fonts.b2_regular};
-  &::placeholder {
-    color: ${theme.colors.gray900};
+  &.text,
+  &.password {
+    height: 44px;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 15px;
+    border: 1px solid
+      ${({ errorMsg, theme }) =>
+        errorMsg && errorMsg.length > 0
+          ? theme.colors.red
+          : theme.colors.gray400};
+    background: ${theme.colors.white};
+    color: ${theme.colors.b200};
+    outline: none;
     ${(props) => props.theme.fonts.b2_regular};
+    &::placeholder {
+      color: ${theme.colors.gray900};
+      ${(props) => props.theme.fonts.b2_regular};
+    }
   }
 
   &.select {
@@ -101,6 +104,21 @@ const StyledInput = styled.input<InputProps>`
 
   &.medium {
     height: 50px;
+  }
+
+  &.write,
+  &.textarea {
+    height: 30px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid ${theme.colors.gray700};
+    background: #fff;
+    color: ${theme.colors.b100};
+    outline: none;
+    ${(props) => props.theme.fonts.c1_regular};
+    &::placeholder {
+      color: ${theme.colors.gray600};
+    }
   }
 `;
 

@@ -22,6 +22,8 @@ export const postSignUpData = createAsyncThunk(
         phoneNumber: signUpData.step3.phone,
       };
 
+      console.log("requestData", requestData);
+
       const response = await Axios.post('/api/v1/users/signup', requestData);
       console.log("리덕스", requestData);
       return response.data;

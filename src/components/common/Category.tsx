@@ -1,9 +1,8 @@
-import React from "react";
 import Chip from "./Chip";
 import styled from "styled-components";
 
-const Filter = () => {
-  const filter = ["정렬", "성별", "키·연령", "카테고리", "스타일"];
+const Category = () => {
+  const filter = ["성별", "카테고리", "스타일"];
   return (
     <Layout>
       {filter.map((data, index) => (
@@ -13,11 +12,11 @@ const Filter = () => {
   );
 };
 
-export default Filter;
+export default Category;
 
 const Layout = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 5px;
 `;

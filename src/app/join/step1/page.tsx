@@ -37,14 +37,20 @@ const Step1 = () => {
 
   /* 닉네임 중복확인 */
   useEffect(() => {
-    Axios.get(`/api/v1/users/check-nickname/${inputs.nickname}`)
-      .then((response) => {
-        console.log("닉네임 중복확인 성공", response.data);
-        setErrors({ ...errors, nickname: response.data.message });
-      })
-      .catch((error) => {
-        console.log("닉네임 중복확인 실패", error);
-      });
+    if (inputs.nickname !== "") {
+      Axios.get(`/api/v1/users/check-nickname/${inputs.nickname}`)
+        .then((response) => {
+          console.log("닉네임 중복확인 성공", response.data);
+          setErrors({ ...errors, nickname: response.data.message });
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 409) {
+            setErrors({ ...errors, nickname: error.response.data.message });
+          } else {
+            console.log("닉네임 중복확인 실패", error);
+          }
+        });
+    }
   }, [inputs.nickname]);
 
   /* 이메일 발송 여부 */
@@ -137,7 +143,7 @@ const Step1 = () => {
           dispatch(
             setStep1({
               ...inputs,
-              [inputs.nickname]: value,
+              nickname: value,
             })
           );
         }}
@@ -155,7 +161,7 @@ const Step1 = () => {
             dispatch(
               setStep1({
                 ...inputs,
-                [inputs.email]: value,
+                email: value,
               })
             );
           }}
@@ -182,7 +188,7 @@ const Step1 = () => {
             dispatch(
               setStep1({
                 ...inputs,
-                [inputs.emailAuth]: value,
+                emailAuth: value,
               })
             );
           }}

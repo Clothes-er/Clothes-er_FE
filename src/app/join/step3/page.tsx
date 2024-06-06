@@ -26,7 +26,7 @@ const Step3 = () => {
       .unwrap()
       .then((data) => {
         console.log("회원가입 성공:", data);
-        () => router.push("/join/finish");
+        router.push("/join/finish");
       })
       .catch((error) => {
         console.error("회원가입 실패:", error.message);
@@ -50,7 +50,7 @@ const Step3 = () => {
             dispatch(
               setStep3({
                 ...inputs,
-                [inputs.phone]: value,
+                phone: value,
               })
             );
           }}
@@ -74,7 +74,7 @@ const Step3 = () => {
             dispatch(
               setStep3({
                 ...inputs,
-                [inputs.phoneAuth]: value,
+                phoneAuth: value,
               })
             );
           }}

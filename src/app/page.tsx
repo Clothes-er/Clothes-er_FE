@@ -4,9 +4,12 @@ import Axios from "@/api/axios";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Tabbar from "@/components/common/Tabbar";
+import { setUser } from "@/redux/slices/userSlice";
+import { useAppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -15,6 +18,9 @@ interface SaveProps {
 }
 
 export default function Home() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [save, setSave] = useState(false);
@@ -30,6 +36,24 @@ export default function Home() {
     })
       .then((response) => {
         console.log("로그인 성공", response.data);
+        const userData = {
+          name: "",
+          nickname: "",
+          email: response.data.result.email,
+          password: "",
+          phone: "",
+          birth: "",
+          token: response.data.result.token.accessToken,
+          isFirstLogin: response.data.result.isFirstLogin,
+        };
+        dispatch(setUser(userData));
+        localStorage.setItem("accessToken", userData.token);
+        console.log("userData", userData.isFirstLogin);
+        if (userData.isFirstLogin) {
+          router.push("/first/step1");
+        } else {
+          router.push("/home");
+        }
       })
       .catch((error) => {
         console.log("로그인 실패", error);

@@ -1,11 +1,24 @@
+import { PostList } from "@/data/homeData";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 import styled from "styled-components";
 
-const Post = () => {
+const Post: React.FC<PostList> = ({
+  id,
+  imgUrl,
+  nickname,
+  title,
+  minPrice,
+  createdAt,
+}) => {
+  const router = useRouter();
+  const handleDetail = () => {
+    router.push(`/home/${id}`);
+  };
   return (
-    <Container>
+    <Container onClick={handleDetail}>
       <Image
         src="/assets/images/post_image.svg"
         width={76}
@@ -13,10 +26,10 @@ const Post = () => {
         alt="image"
       />
       <Box>
-        <Title>스퀘어 아이보리 블라우스</Title>
-        <Price>3,000원~</Price>
+        <Title>{title}</Title>
+        <Price>{minPrice}원~</Price>
         <Sub>
-          1일전 | <span>러블리걸</span> 님
+          {createdAt} | <Span>{nickname}</Span> 님
         </Sub>
       </Box>
     </Container>
@@ -34,7 +47,7 @@ const Container = styled.div`
   align-items: center;
   gap: 19px;
   border-top: 0.5px solid rgba(219, 219, 219, 0.7);
-  border-bottom: 0.5px solid rgba(219, 219, 219, 0.7);
+  cursor: pointer;
 `;
 
 const Box = styled.div`
@@ -58,4 +71,8 @@ const Price = styled.div`
 const Sub = styled.div`
   color: ${theme.colors.gray400};
   ${(props) => props.theme.fonts.c2_regular};
+`;
+
+const Span = styled.span`
+  color: ${theme.colors.purple400};
 `;

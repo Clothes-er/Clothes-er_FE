@@ -8,9 +8,15 @@ interface DropdownProps {
   value: string;
   placeholder: string;
   options: string[];
+  size?: "large" | "medium" | "small";
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ value, placeholder, options }) => {
+const Dropdown: React.FC<DropdownProps> = ({
+  value,
+  placeholder,
+  options,
+  size,
+}) => {
   const [dropdown, setDropdown] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
 
@@ -27,6 +33,7 @@ const Dropdown: React.FC<DropdownProps> = ({ value, placeholder, options }) => {
     <Box>
       <DropInput
         value={selectedOption || value}
+        size={size}
         placeholder={placeholder}
         onChange={() => {}}
         readOnly
@@ -54,6 +61,7 @@ const Dropdown: React.FC<DropdownProps> = ({ value, placeholder, options }) => {
 export default Dropdown;
 
 const Box = styled.div`
+  width: 100%;
   position: relative;
   height: 44px;
 `;

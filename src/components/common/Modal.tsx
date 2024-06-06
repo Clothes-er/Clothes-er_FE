@@ -1,43 +1,79 @@
 import { theme } from "@/styles/theme";
 import React from "react";
 import styled from "styled-components";
-import Button from "./Button";
 
 interface ModalProps {
   title: string;
   text?: string;
   no?: string;
   yes?: string;
+  onClose: () => void;
+  onCheck: () => void;
 }
 const Modal = (props: ModalProps) => {
-  const { title, text, no = "아니요", yes = "네" } = props;
+  const { title, text, no = "아니요", yes = "네", onClose, onCheck } = props;
   return (
-    <StyledModal>
-      <Title>{title}</Title>
-      {text}
-      <Pair>
-        <Button text={no} />
-        <Button text={yes} />
-      </Pair>
-    </StyledModal>
+    <>
+      <StyledModal>
+        <Div>
+          <Title>{title}</Title>
+          {text}
+        </Div>
+        <Pair>
+          <StyledButton className="no" onClick={onClose}>
+            {no}
+          </StyledButton>
+          <StyledButton className="yes" onClick={onCheck}>
+            {yes}
+          </StyledButton>
+        </Pair>
+      </StyledModal>
+      <Overlay onClick={onClose} />
+    </>
   );
 };
 
 export default Modal;
 
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 100;
+`;
 const StyledModal = styled.div`
   width: 305px;
-  height: 224px;
+  height: auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding: 35px 33px;
+  padding: 35px 33px 18px 33px;
   border-radius: 20px;
+  gap: 20px;
   background: ${theme.colors.white};
   box-shadow: 0px 4px 20px 0px rgba(144, 144, 144, 0.25);
   color: ${theme.colors.purple500};
   ${(props) => props.theme.fonts.b3_regular};
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200;
+`;
+
+const Div = styled.div`
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 
 const Title = styled.div`
@@ -50,4 +86,26 @@ const Pair = styled.div`
   flex-direction: row;
   justify-content: space-around;
   gap: 10px;
+`;
+
+const StyledButton = styled.div`
+  width: 116px;
+  height: 40px;
+  border-radius: 10px;
+  color: ${theme.colors.purple300};
+  ${(props) => props.theme.fonts.h2_bold};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover {
+    background: ${theme.colors.purple100};
+  }
+
+  &.yes {
+    color: ${theme.colors.gray700};
+    &:hover {
+      background: ${theme.colors.gray100};
+    }
+  }
 `;
