@@ -14,6 +14,19 @@ html {
   min-height: 100%;
   margin: 0 auto;
   box-shadow: 0px 0px 64px 0px rgba(30, 41, 59, 0.1);
+  
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    height: 20%; /* 스크롤바의 길이 */
+    background: #D5D5D6; /* 스크롤바의 색상 */
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #EBEBEB;  /*스크롤바 뒷 배경 색상*/
+    border-radius: 10px;
+  }
 }
 
 body {
@@ -21,6 +34,7 @@ body {
   height: 100%;
   font-family: "Pretendard";
   white-space: pre-line;
+  overflow: hidden;
 }
 
 a {
