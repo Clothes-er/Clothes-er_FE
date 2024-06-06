@@ -4,6 +4,8 @@ import Axios from "@/api/axios";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Tabbar from "@/components/common/Tabbar";
+import { setUser } from "@/redux/slices/userSlice";
+import { useAppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,6 +20,7 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [save, setSave] = useState(false);
+  const dispatch = useAppDispatch();
 
   const handleSave = () => {
     setSave(!save);
@@ -29,6 +32,18 @@ export default function Home() {
       password: password,
     })
       .then((response) => {
+        const userData = {
+          name: "",
+          nickname: "",
+          email: response.data.email,
+          password: response.data.password,
+          phone: "",
+          birth: "",
+          token: response.data.token.accessToken,
+          isFirstLogin: response.data.isFirstLogin,
+        };
+        dispatch(setUser(userData));
+        localStorage.setItem("accessToken", response.data.token.accessToken);
         console.log("로그인 성공", response.data);
       })
       .catch((error) => {
