@@ -16,43 +16,45 @@ const Home = () => {
 
   return (
     <>
-      <Layout>
-        <Header />
-        <Topbar text="홈" align="left" />
-        <Location onClick={() => router.push("/home/location")}>
+      <Contain>
+        <Layout>
+          <Header />
+          <Topbar text="홈" align="left" />
+          <Location onClick={() => router.push("/home/location")}>
+            <Image
+              src="/assets/icons/ic_pin.svg"
+              width={24}
+              height={24}
+              alt="pin"
+            />
+            강남구 역삼로 150길
+          </Location>
+          <Content>
+            <SearchBox placeholder="원하는 상품명을 검색하세요!"></SearchBox>
+            <Filter />
+            <Posts>
+              {postList.map((data) => (
+                <Post
+                  key={data.id}
+                  id={data.id}
+                  title={data.title}
+                  minPrice={data.minPrice}
+                  createdAt={data.createdAt}
+                  nickname={data.nickname}
+                />
+              ))}
+            </Posts>
+          </Content>
+        </Layout>
+        <Edit onClick={() => router.push("/home/write")}>
           <Image
-            src="/assets/icons/ic_pin.svg"
-            width={24}
-            height={24}
-            alt="pin"
+            src="/assets/icons/ic_edit.svg"
+            width={48}
+            height={48}
+            alt="edit"
           />
-          강남구 역삼로 150길
-        </Location>
-        <Content>
-          <SearchBox placeholder="원하는 상품명을 검색하세요!"></SearchBox>
-          <Filter />
-          <Posts>
-            {postList.map((data) => (
-              <Post
-                key={data.id}
-                id={data.id}
-                title={data.title}
-                minPrice={data.minPrice}
-                createdAt={data.createdAt}
-                nickname={data.nickname}
-              />
-            ))}
-          </Posts>
-        </Content>
-      </Layout>
-      <Edit onClick={() => router.push("/home/write")}>
-        <Image
-          src="/assets/icons/ic_edit.svg"
-          width={48}
-          height={48}
-          alt="edit"
-        />
-      </Edit>
+        </Edit>
+      </Contain>
       <Tabbar />
     </>
   );
@@ -60,15 +62,20 @@ const Home = () => {
 
 export default Home;
 
+const Contain = styled.div`
+  width: 100%;
+  height: 100vh;
+  position: relative;
+`;
+
 const Layout = styled.div`
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 60px);
   overflow-x: hidden;
   padding: 42px 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  position: relative;
 `;
 
 const Location = styled.div`
@@ -116,9 +123,9 @@ const Edit = styled.div`
   border-radius: 50px;
   background: ${theme.colors.purple400};
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  position: sticky;
+  position: absolute;
   bottom: 100px;
-  left: 440px;
+  right: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
