@@ -9,6 +9,7 @@ import { useAppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -17,10 +18,12 @@ interface SaveProps {
 }
 
 export default function Home() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [save, setSave] = useState(false);
-  const dispatch = useAppDispatch();
 
   const handleSave = () => {
     setSave(!save);
@@ -32,19 +35,25 @@ export default function Home() {
       password: password,
     })
       .then((response) => {
+        console.log("로그인 성공", response.data);
         const userData = {
           name: "",
           nickname: "",
-          email: response.data.email,
-          password: response.data.password,
+          email: response.data.result.email,
+          password: "",
           phone: "",
           birth: "",
-          token: response.data.token.accessToken,
-          isFirstLogin: response.data.isFirstLogin,
+          token: response.data.result.token.accessToken,
+          isFirstLogin: response.data.result.isFirstLogin,
         };
         dispatch(setUser(userData));
-        localStorage.setItem("accessToken", response.data.token.accessToken);
-        console.log("로그인 성공", response.data);
+        localStorage.setItem("accessToken", userData.token);
+        console.log("userData", userData.isFirstLogin);
+        if (userData.isFirstLogin) {
+          router.push("/first/step1");
+        } else {
+          router.push("/home");
+        }
       })
       .catch((error) => {
         console.log("로그인 실패", error);
