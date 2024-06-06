@@ -17,20 +17,17 @@ const Step1 = () => {
   const [location, setLocation] = useState("");
 
   const handleNext = async () => {
-    try {
-      console.log("location-page", location);
-      const coords = await getAddressCoords(location);
-      dispatch(
-        setStep1({
-          address: location,
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        })
-      );
-      router.push("/first/step2");
-    } catch (error) {
-      console.error("주소 변환에 실패하였습니다.");
-    }
+    console.log("location-page", location);
+    const coords = await getAddressCoords(location);
+    router.push("/first/step2");
+
+    // const step1Info = {
+    //   address: location,
+    //   latitude: coords.latitude,
+    //   longitude: coords.longitude,
+    // };
+
+    // dispatch(setStep1(step1Info));
   };
 
   return (

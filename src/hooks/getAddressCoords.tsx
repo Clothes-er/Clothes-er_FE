@@ -4,7 +4,7 @@ export const getAddressCoords = async (address: string): Promise<any> => {
   const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
 
   if (address !== "") {
-    Axios.get(
+    await Axios.get(
       `https://dapi.kakao.com/v2/local/search/address.json?query=${address}`,
       {
         headers: {
@@ -20,6 +20,7 @@ export const getAddressCoords = async (address: string): Promise<any> => {
       })
       .catch((error) => {
         console.error("주소 변환 실패", error);
+        return null;
       });
   }
 };
