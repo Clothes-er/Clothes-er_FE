@@ -2,7 +2,6 @@
 
 import Button from "@/components/common/Button";
 import Category from "@/components/common/Category";
-import Filter from "@/components/common/Filter";
 import Input from "@/components/common/Input";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
