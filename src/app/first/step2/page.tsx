@@ -4,21 +4,26 @@ import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import RadioButton from "@/components/common/RadioButton";
+import { Gender } from "@/interface/Gender";
+import { setStep2 } from "@/redux/slices/firstLoginSlice";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const Step2 = () => {
   const router = useRouter();
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
-  const [foot, setFoot] = useState("");
-  const [body, setBody] = useState("");
+  const dispatch = useDispatch();
+
+  const [height, setHeight] = useState<number | undefined>();
+  const [weight, setWeight] = useState<number | undefined>();
+  const [foot, setFoot] = useState<string[]>([""]);
+  const [body, setBody] = useState([""]);
 
   const genderOptions = ["남자", "여자"];
-  const [gender, setGender] = useState(genderOptions[0]);
+  const [gender, setGender] = useState<Gender | undefined>();
 
   const sizeOptions = [
     "210",
@@ -39,10 +44,23 @@ const Step2 = () => {
     "285",
     "290",
   ];
-  const [selectedSizeOption, setSelectedSizeOption] = useState("");
 
   const handleChange = (selectedOption: string) => {
-    setGender(selectedOption);
+    setGender(selectedOption === "남자" ? Gender.MALE : Gender.FEMALE);
+  };
+
+  const handleNext = () => {
+    const step2Info = {
+      gender: gender,
+      height: Number(height),
+      weight: Number(weight),
+      shoeSize: 235,
+      bodyShapes: body,
+    };
+
+    dispatch(setStep2(step2Info));
+    console.log("step2Info", step2Info);
+    router.push("/first/step3");
   };
 
   return (
@@ -74,20 +92,21 @@ const Step2 = () => {
                 value={height}
                 placeholder="키"
                 size="medium"
-                onChange={(value: string) => setHeight(value)}
+                onChange={(value: any) => setHeight(value)}
               />
               <Input
                 value={weight}
                 placeholder="몸무게"
                 size="medium"
-                onChange={(value: string) => setWeight(value)}
+                onChange={(value: any) => setWeight(value)}
               />
             </Row>
             <Dropdown
-              value={selectedSizeOption}
+              value={foot}
               placeholder="발 사이즈"
               size="medium"
               options={sizeOptions}
+              setValue={setFoot}
             />
           </Gap>
         </div>
@@ -97,10 +116,11 @@ const Step2 = () => {
             <Span>(,로 복수입력)</Span>
           </Label>
           <Input
+            inputType="array"
             value={body}
             placeholder="어깨가 넓어요, 허리가 길어요"
             size="medium"
-            onChange={(value: string) => setBody(value)}
+            onChange={(value: string[]) => setBody(value)}
           />
         </div>
       </Card>
@@ -115,7 +135,7 @@ const Step2 = () => {
           text="다음 단계"
           buttonType="primaryDeep"
           size="medium"
-          onClick={() => router.push("/first/step3")}
+          onClick={handleNext}
         />
       </Row>
     </Layout>

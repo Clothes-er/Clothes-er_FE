@@ -23,8 +23,8 @@ const Step1 = () => {
 
     const step1Info = {
       address: location,
-      latitude: coords.y,
-      longitude: coords.x,
+      latitude: Number(coords.y),
+      longitude: Number(coords.x),
     };
 
     dispatch(setStep1(step1Info));

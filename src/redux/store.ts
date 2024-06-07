@@ -2,11 +2,13 @@ import { Action, ThunkAction, configureStore, combineReducers } from '@reduxjs/t
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import signInReducer from "./slices/signInSlice";
+import firstLoginReducer from "./slices/firstLoginSlice";
 import { useDispatch } from "react-redux";
 
 
 const rootReducer = combineReducers({
     signIn: signInReducer,
+    firstLogin: firstLoginReducer,
 });
   
 const persistConfig = {
@@ -19,6 +21,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
     reducer: {
     signIn: signInReducer,
+    firstLogin: firstLoginReducer,
     },
 });
 
