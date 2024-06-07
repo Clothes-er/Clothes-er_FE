@@ -5,10 +5,11 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 
 interface DropdownProps {
-  value: string;
+  value: any;
   placeholder: string;
   options: string[];
   size?: "large" | "medium" | "small";
+  setValue: (value: any) => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -16,6 +17,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   placeholder,
   options,
   size,
+  setValue,
 }) => {
   const [dropdown, setDropdown] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
@@ -27,6 +29,8 @@ const Dropdown: React.FC<DropdownProps> = ({
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
     setDropdown(false);
+    setValue(option);
+    console.log(option);
   };
 
   return (
@@ -75,15 +79,15 @@ const DropInput = styled(Input)`
 const MoreIcon = styled(Image)`
   position: absolute;
   top: 50%;
-  right: 13px;
-  transform: translate(0, -50%);
+  right: 20px;
+  transform: translate(-50%, 0);
   cursor: pointer;
 `;
 
 const DropBox = styled.div`
   width: 100%;
   position: absolute;
-  top: 44px;
+  top: 50px;
   left: 0;
   border-radius: 15px;
   border: 1px solid ${theme.colors.gray400};
