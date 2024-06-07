@@ -73,6 +73,7 @@ const Guide = () => {
           value={selectedSizeOption}
           placeholder="발 사이즈"
           options={sizeOptions}
+          setValue={setSelectedSizeOption}
         />
       </Layout>
     </>
