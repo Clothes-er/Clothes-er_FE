@@ -3,21 +3,47 @@
 import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
+import Modal from "@/components/common/Modal";
+import { setStep3 } from "@/redux/slices/firstLoginSlice";
+import { useAppDispatch } from "@/redux/store";
+import { postFirstLoginData } from "@/redux/thunks/postFirstLogin";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-const Step1 = () => {
+const Step3 = () => {
   const router = useRouter();
-  const [category, setCategory] = useState("");
+  const dispatch = useAppDispatch();
 
+  const [category, setCategory] = useState<string[]>([""]);
   const styleOptions = ["러블리", "빈티지", "시크", "힙합"];
-  const [style, setStyle] = useState("");
+  const [style, setStyle] = useState<string[]>([""]);
+  const [modal, setModal] = useState(false);
 
-  const handleChange = (selectedOption: string) => {
-    setStyle(selectedOption);
+  const handleSubmit = () => {
+    setModal(true);
+  };
+
+  const handleSubmitYes = () => {
+    const step3Info = {
+      categories: category,
+      styles: style,
+    };
+
+    dispatch(setStep3(step3Info));
+    console.log("step3Info", step3Info);
+
+    dispatch(postFirstLoginData())
+      .unwrap()
+      .then((data) => {
+        console.log("최초 로그인 성공:", data);
+        router.push("/home");
+      })
+      .catch((error) => {
+        console.error("최초 로그인 실패:", error.message);
+      });
   };
 
   return (
@@ -43,9 +69,10 @@ const Step1 = () => {
             <Span>(,로 복수입력)</Span>
           </Label>
           <Input
+            inputType="array"
             value={category}
             placeholder="가디건, 셔츠, 청바지 등"
-            onChange={(value: string) => setCategory(value)}
+            onChange={(value: string[]) => setCategory(value)}
           />
         </div>
         <div>
@@ -58,6 +85,7 @@ const Step1 = () => {
             placeholder="스타일"
             size="medium"
             options={styleOptions}
+            setValue={setStyle}
           />
         </div>
       </Card>
@@ -72,14 +100,24 @@ const Step1 = () => {
           text="제출하기"
           buttonType="primaryDeep"
           size="medium"
-          onClick={() => router.push("/home")}
+          onClick={handleSubmit}
         />
       </Row>
+      {modal && (
+        <Modal
+          title="정말 제출하시겠습니까?"
+          text={`원활한 서비스 이용을 위해서는\n모든 항목을 작성해주세요!`}
+          onClose={() => {
+            setModal(false);
+          }}
+          onCheck={handleSubmitYes}
+        />
+      )}
     </Layout>
   );
 };
 
-export default Step1;
+export default Step3;
 
 const Layout = styled.div`
   max-width: 560px;

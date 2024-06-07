@@ -21,13 +21,13 @@ const Step1 = () => {
     const coords = await getAddressCoords(location);
     router.push("/first/step2");
 
-    // const step1Info = {
-    //   address: location,
-    //   latitude: coords.latitude,
-    //   longitude: coords.longitude,
-    // };
+    const step1Info = {
+      address: location,
+      latitude: Number(coords.y),
+      longitude: Number(coords.x),
+    };
 
-    // dispatch(setStep1(step1Info));
+    dispatch(setStep1(step1Info));
   };
 
   return (

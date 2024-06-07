@@ -1,10 +1,6 @@
+import { Gender } from '@/interface/Gender';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-enum Gender {
-  Male = 'MALE',
-  Female = 'FEMALE',
-  None = 'NONE',
-}
 
 interface FirstLoginState {
   step1: {
@@ -13,11 +9,11 @@ interface FirstLoginState {
     longitude: number;
   };
   step2: {
-    gender: Gender;
-    height: number;
-    weight: number;
-    shoeSize: number;
-    bodyShapes: string[];
+    gender: Gender | undefined;
+    height: number | undefined;
+    weight: number | undefined;
+    shoeSize: number | undefined;
+    bodyShapes: string[] | undefined;
   };
   step3: {
     categories: string[];
@@ -32,10 +28,10 @@ const initialState: FirstLoginState = {
     longitude: 0,
   },
   step2: {
-    gender: Gender.None,
-    height: 0,
-    weight: 0,
-    shoeSize: 0,
+    gender: undefined,
+    height: undefined,
+    weight: undefined,
+    shoeSize: undefined,
     bodyShapes: [""],
   },
   step3: {

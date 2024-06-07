@@ -1,16 +1,16 @@
 import { theme } from "@/styles/theme";
-import React from "react";
+import React, { ReactNode } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 
 export interface InputProps {
   label?: string;
-  value: string;
+  value: any;
   size?: "large" | "medium" | "small";
-  onChange: (value: string) => void;
+  onChange: (value: any) => void;
   onClick?: () => void;
   placeholder?: string;
-  inputType?: "text" | "password" | "write" | "textarea";
+  inputType?: "text" | "password" | "write" | "textarea" | "array";
   errorMsg?: string;
   readOnly?: boolean;
 }
@@ -28,8 +28,16 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
     readOnly = false,
   } = props;
 
-  const handleChange = (event: any) => {
-    onChange(event.target.value);
+  // const handleChange = (event: any) => {
+  //   onChange(event.target.value);
+  // };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    if (inputType === "array") {
+      onChange(inputValue.split(",").map((item) => item.trim()));
+    } else {
+      onChange(inputValue);
+    }
   };
 
   const handleClick = () => {
@@ -59,7 +67,7 @@ export default Input;
 
 const Container = styled.div<{ $label: string }>`
   width: 100%;
-  display: flex;
+  display: ${({ $label }) => $label && "flex"};
   flex-direction: ${({ $label }) => $label && "column"};
   justify-content: center;
   align-items: flex-start;
@@ -74,7 +82,8 @@ const Label = styled.div`
 const StyledInput = styled.input<InputProps>`
   width: 100%;
   &.text,
-  &.password {
+  &.password,
+  &.array {
     height: 44px;
     padding: 12px 18px;
     display: flex;
