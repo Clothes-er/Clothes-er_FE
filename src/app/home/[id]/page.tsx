@@ -1,18 +1,48 @@
 "use client";
 
+import AuthAxios from "@/api/authAxios";
 import Header from "@/components/common/Header";
 import Bottom from "@/components/home/Bottom";
 import ModifyMenu from "@/components/home/ModifyMenu";
 import Profile from "@/components/home/Profile";
+import { Gender, getGenderLabel } from "@/interface/Gender";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+
+interface Price {
+  days: number;
+  price: number;
+}
+
+interface PostInfo {
+  id: number;
+  profileUrl: string;
+  nickname: string;
+  isWriter: boolean;
+  followers: number;
+  followees: number;
+  imgUrl: string;
+  title: string;
+  description: string;
+  gender: Gender;
+  category: string;
+  style: String;
+  prices: Price[];
+  brand: string;
+  size: string;
+  fit: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const Page = () => {
   const router = useRouter();
+  const { id } = useParams();
   const [menu, setMenu] = useState(false);
+  const [postInfo, setPostInfo] = useState<PostInfo>();
 
   const handleBackButtonClick = () => {
     router.back();
@@ -21,6 +51,19 @@ const Page = () => {
   const handleMoreMenu = () => {
     setMenu(!menu);
   };
+
+  useEffect(() => {
+    AuthAxios.get(`/api/v1/rentals/${id}`)
+      .then((response) => {
+        const data = response.data.result;
+        setPostInfo(data);
+        console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <>
@@ -51,28 +94,33 @@ const Page = () => {
           </Top>
         </Head>
         <ImageSlide></ImageSlide>
-        <Profile nickname="러블리걸" />
+        <Profile nickname={postInfo?.nickname ? postInfo.nickname : ""} />
         <Body>
-          <Title>제목</Title>
-          <Category>여성 / 블라우스 / 러블리</Category>
+          <Title>{postInfo?.title}</Title>
+          <Category>
+            {postInfo?.gender && getGenderLabel(postInfo?.gender)}
+            {postInfo?.category && postInfo?.gender
+              ? ` / ${postInfo?.category}`
+              : postInfo?.category}
+            {postInfo?.style && (postInfo?.gender || postInfo?.category)
+              ? ` / ${postInfo?.style}`
+              : postInfo?.style}
+          </Category>
           <Info>
             <Row>
               <div>브랜드</div>
-              <div>없음</div>
+              <div>{postInfo?.brand ? postInfo.brand : "없음"}</div>
             </Row>
             <Row>
               <div>사이즈</div>
-              <div>Free</div>
+              <div>{postInfo?.size ? postInfo.size : "없음"}</div>
             </Row>
             <Row>
               <div>핏</div>
-              <div>정핏</div>
+              <div>{postInfo?.fit ? postInfo.fit : "없음"}</div>
             </Row>
           </Info>
-          <Box>
-            리본이 포인트인 봄 블라우스입니다. 러블리한 스타일의 옷을 시도해보고
-            싶으신 분이 입으시면 좋을 것 같아요.
-          </Box>
+          <Box>{postInfo?.description}</Box>
         </Body>
       </Layout>
       <Bottom />
