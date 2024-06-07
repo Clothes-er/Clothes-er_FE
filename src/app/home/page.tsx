@@ -10,9 +10,34 @@ import Post from "@/components/home/Post";
 import { postList } from "@/data/homeData";
 import Tabbar from "@/components/common/Tabbar";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import AuthAxios from "@/api/authAxios";
+
+interface PostList {
+  id: number;
+  imgUrl: string;
+  nickname: string;
+  title: string;
+  minPrice: number;
+  createdAt: string;
+}
 
 const Home = () => {
   const router = useRouter();
+  const [postList, setPostList] = useState<PostList[]>();
+
+  useEffect(() => {
+    AuthAxios.get("/api/v1/rentals")
+      .then((response) => {
+        const data = response.data.result;
+        setPostList(data);
+        console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <>
@@ -33,7 +58,7 @@ const Home = () => {
             <SearchBox placeholder="원하는 상품명을 검색하세요!"></SearchBox>
             <Filter />
             <Posts>
-              {postList.map((data) => (
+              {postList?.map((data) => (
                 <Post
                   key={data.id}
                   id={data.id}
