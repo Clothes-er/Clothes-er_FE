@@ -3,7 +3,6 @@
 import AuthAxios from "@/api/authAxios";
 import Header from "@/components/common/Header";
 import Bottom from "@/components/home/Bottom";
-import ModifyMenu from "@/components/home/ModifyMenu";
 import Profile from "@/components/home/Profile";
 import { Gender, getGenderLabel } from "@/interface/Gender";
 import { theme } from "@/styles/theme";
@@ -11,6 +10,11 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import Slider from "react-slick";
+import "../../../styles/slick.css";
+import "../../../styles/slick-theme.css";
+import NextArrow from "@/components/common/NextArrow";
+import PrevArrow from "@/components/common/PrevArrow";
 
 interface Price {
   days: number;
@@ -24,7 +28,7 @@ interface PostInfo {
   isWriter: boolean;
   followers: number;
   followees: number;
-  imgUrl: string;
+  imgUrls: string[];
   title: string;
   description: string;
   gender: Gender;
@@ -81,7 +85,7 @@ const Page = () => {
             />
             공유 옷장
             <Menu>
-              <Image
+              {/* <Image
                 src="/assets/icons/ic_more_vertical.svg"
                 width={24}
                 height={24}
@@ -89,11 +93,40 @@ const Page = () => {
                 onClick={handleMoreMenu}
                 style={{ cursor: "pointer" }}
               />
-              {menu && <ModifyMenu />}
+              {menu && <ModifyMenu />} */}
             </Menu>
           </Top>
         </Head>
-        <ImageSlide></ImageSlide>
+        <ImageSlide>
+          <StyledSlider
+            dots={true}
+            infinite={true}
+            speed={500}
+            slidesToShow={1}
+            slidesToScroll={1}
+            prevArrow={
+              <Div>
+                <PrevArrow />
+              </Div>
+            }
+            nextArrow={
+              <DivNext>
+                <NextArrow />
+              </DivNext>
+            }
+          >
+            {postInfo?.imgUrls?.map((url, index) => (
+              <Image
+                key={index}
+                src={url}
+                alt={`image-${index}`}
+                width={500}
+                height={400}
+              />
+              // </div>
+            ))}
+          </StyledSlider>
+        </ImageSlide>
         <Profile nickname={postInfo?.nickname ? postInfo.nickname : ""} />
         <Body>
           <Title>{postInfo?.title}</Title>
@@ -134,6 +167,7 @@ const Layout = styled.div`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -162,9 +196,47 @@ const Menu = styled.div`
 
 const ImageSlide = styled.div`
   width: 100%;
-  height: 270px;
+  height: 400px;
   border-radius: 7px;
-  background-color: black;
+  .slick-slide img {
+    width: 100%;
+    height: 400px;
+    border-radius: 7px;
+  }
+`;
+
+const StyledSlider = styled(Slider)`
+  height: 400px;
+  width: 100%;
+  position: relative;
+  .slick-prev::before,
+  .slick-next::before {
+    opacity: 0;
+    display: none;
+  }
+  .slick-slide div {
+    cursor: pointer;
+  }
+`;
+
+const Div = styled.div`
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 50%;
+  left: 30px;
+  transform: translateY(-50%);
+  z-index: 99;
+`;
+
+const DivNext = styled.div`
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%);
+  z-index: 99;
 `;
 
 const Body = styled.div`
