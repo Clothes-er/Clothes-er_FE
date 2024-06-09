@@ -1,10 +1,11 @@
 export interface PostList {
     id?: number;
     imgUrl?: string | null;
-    nickname: string;
+    nickname?: string;
     title: string;
     minPrice: number;
-    createdAt: string;
+    createdAt?: string;
+    size?: "nomal" | "small";
 }
 
 export const postList :PostList[] = [

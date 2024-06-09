@@ -12,6 +12,7 @@ const Post: React.FC<PostList> = ({
   title,
   minPrice,
   createdAt,
+  size = "nomal",
 }) => {
   const router = useRouter();
   const handleDetail = () => {
@@ -20,16 +21,21 @@ const Post: React.FC<PostList> = ({
   return (
     <Container onClick={handleDetail}>
       <Image
-        src="/assets/images/post_image.svg"
-        width={76}
-        height={76}
-        alt="image"
+        src={`${imgUrl ? imgUrl : "/assets/images/post_image.svg"}`}
+        width={size === "small" ? 60 : 76}
+        height={size === "small" ? 60 : 76}
+        alt="profile"
       />
       <Box>
         <Title>{title}</Title>
         <Price>{minPrice}원~</Price>
         <Sub>
-          {createdAt} | <Span>{nickname}</Span> 님
+          {createdAt}{" "}
+          {nickname && (
+            <>
+              | <Span>{nickname}</Span> 님
+            </>
+          )}
         </Sub>
       </Box>
     </Container>
