@@ -1,20 +1,28 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 interface ChatPreviewProps {
+  id: number;
   nickname: string;
   recentMessage: string;
   title: string;
 }
 
 const ChatPreview: React.FC<ChatPreviewProps> = ({
+  id,
   nickname,
   recentMessage,
   title,
 }) => {
+  const router = useRouter();
+  const handleChatDetail = () => {
+    router.push(`/chat/${id}`);
+  };
+
   return (
-    <Container>
+    <Container onClick={handleChatDetail}>
       <Left>
         <ProfileImage
           src="/assets/images/profile.svg"

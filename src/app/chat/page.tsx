@@ -60,6 +60,7 @@ const Chat = () => {
           {chatList?.map((data) => (
             <ChatPreview
               key={data.id}
+              id={data.id}
               nickname={data.nickname}
               recentMessage={data.recentMessage}
               title={data.title}
