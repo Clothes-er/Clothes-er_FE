@@ -41,11 +41,7 @@ const UserInfo = () => {
       <Layout>
         <Top>
           <Image
-            src={`${
-              userInfo?.profileUrl
-                ? userInfo.profileUrl
-                : "/assets/icons/ic_arrow.svg"
-            }`}
+            src="/assets/icons/ic_arrow.svg"
             width={24}
             height={24}
             alt="back"
@@ -56,7 +52,11 @@ const UserInfo = () => {
         </Top>
         <Profile>
           <Image
-            src="/assets/images/profile.svg"
+            src={`${
+              userInfo?.profileUrl
+                ? userInfo.profileUrl
+                : "/assets/images/profile.svg"
+            }`}
             width={100}
             height={100}
             alt="profile"
