@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const Post: React.FC<PostList> = ({
   id,
@@ -19,7 +19,7 @@ const Post: React.FC<PostList> = ({
     router.push(`/home/${id}`);
   };
   return (
-    <Container onClick={handleDetail}>
+    <Container onClick={handleDetail} size={size}>
       <Image
         src={`${imgUrl ? imgUrl : "/assets/images/post_image.svg"}`}
         width={size === "small" ? 60 : 76}
@@ -44,7 +44,7 @@ const Post: React.FC<PostList> = ({
 
 export default Post;
 
-const Container = styled.div`
+const Container = styled.div<{ size: string }>`
   display: flex;
   width: 100%;
   height: 100px;
@@ -53,6 +53,11 @@ const Container = styled.div`
   align-items: center;
   gap: 19px;
   border-top: 0.5px solid rgba(219, 219, 219, 0.7);
+  ${(props) =>
+    props.size === "small" &&
+    css`
+      border-bottom: 0.5px solid rgba(219, 219, 219, 0.7);
+    `}
   cursor: pointer;
 `;
 
