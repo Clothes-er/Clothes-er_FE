@@ -21,10 +21,11 @@ const Post: React.FC<PostList> = ({
   return (
     <Container onClick={handleDetail} size={size}>
       <Image
-        src={`${imgUrl ? imgUrl : "/assets/images/post_image.svg"}`}
+        src={`${imgUrl ? imgUrl : "/assets/images/noImage.svg"}`}
         width={size === "small" ? 60 : 76}
         height={size === "small" ? 60 : 76}
         alt="profile"
+        style={{ borderRadius: "10px" }}
       />
       <Box>
         <Title>{title}</Title>

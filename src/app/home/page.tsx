@@ -56,12 +56,13 @@ const Home = () => {
           </Location>
           <Content>
             <SearchBox placeholder="원하는 상품명을 검색하세요!"></SearchBox>
-            <Filter />
+            {/* <Filter /> */}
             <Posts>
               {postList?.map((data) => (
                 <Post
                   key={data.id}
                   id={data.id}
+                  imgUrl={data.imgUrl}
                   title={data.title}
                   minPrice={data.minPrice}
                   createdAt={data.createdAt}
