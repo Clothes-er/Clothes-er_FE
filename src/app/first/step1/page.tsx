@@ -10,6 +10,7 @@ import Postcode from "@/components/common/Postcode";
 import { getAddressCoords } from "@/hooks/getAddressCoords";
 import { useDispatch } from "react-redux";
 import { setStep1 } from "@/redux/slices/firstLoginSlice";
+import AuthAxios from "@/api/authAxios";
 
 const Step1 = () => {
   const router = useRouter();
@@ -47,7 +48,11 @@ const Step1 = () => {
           주소를 입력해주세요.
         </Story>
         <Box>
-          <Postcode location={location} setLocation={setLocation} />
+          <Postcode
+            location={location}
+            setLocation={setLocation}
+            size="small"
+          />
         </Box>
         <StyledButton>
           <Button

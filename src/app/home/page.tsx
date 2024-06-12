@@ -26,8 +26,6 @@ interface PostList {
 const Home = () => {
   const router = useRouter();
   const [postList, setPostList] = useState<PostList[]>();
-  const [latitude, setLatitude] = useState<number>();
-  const [longitude, setLongitude] = useState<number>();
   const [location, setLocation] = useState<number>();
 
   useEffect(() => {
@@ -43,18 +41,23 @@ const Home = () => {
       });
   }, []);
 
+  /* 위치 정보 받아오기 */
   useEffect(() => {
-    AuthAxios.get(`/api/v1/users/address`)
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        const response = await AuthAxios.get(`/api/v1/users/address`);
         const latitude = response.data.result.latitude;
         const longitude = response.data.result.longitude;
-        setLatitude(latitude);
-        setLongitude(longitude);
+        console.log("데이터", response.data);
         console.log(response.data.message);
-      })
-      .catch((error) => {
+        const newLocation = await getCoordsAddress(latitude, longitude);
+        setLocation(newLocation);
+      } catch (error) {
         console.log(error);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -70,7 +73,7 @@ const Home = () => {
               height={24}
               alt="pin"
             />
-            {getCoordsAddress(longitude, latitude)}
+            {location}
           </Location>
           <Content>
             <SearchBox placeholder="원하는 상품명을 검색하세요!"></SearchBox>
