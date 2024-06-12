@@ -10,9 +10,55 @@ import Post from "@/components/home/Post";
 import { postList } from "@/data/homeData";
 import Tabbar from "@/components/common/Tabbar";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import AuthAxios from "@/api/authAxios";
+import { getCoordsAddress } from "@/hooks/getCoordsAddress";
+
+interface PostList {
+  id: number;
+  imgUrl: string;
+  nickname: string;
+  title: string;
+  minPrice: number;
+  createdAt: string;
+}
 
 const Home = () => {
   const router = useRouter();
+  const [postList, setPostList] = useState<PostList[]>();
+  const [location, setLocation] = useState<number>();
+
+  useEffect(() => {
+    AuthAxios.get("/api/v1/rentals")
+      .then((response) => {
+        const data = response.data.result;
+        setPostList(data);
+        console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  /* 위치 정보 받아오기 */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await AuthAxios.get(`/api/v1/users/address`);
+        const latitude = response.data.result.latitude;
+        const longitude = response.data.result.longitude;
+        console.log("데이터", response.data);
+        console.log(response.data.message);
+        const newLocation = await getCoordsAddress(latitude, longitude);
+        setLocation(newLocation);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -27,16 +73,17 @@ const Home = () => {
               height={24}
               alt="pin"
             />
-            강남구 역삼로 150길
+            {location}
           </Location>
           <Content>
             <SearchBox placeholder="원하는 상품명을 검색하세요!"></SearchBox>
-            <Filter />
+            {/* <Filter /> */}
             <Posts>
-              {postList.map((data) => (
+              {postList?.map((data) => (
                 <Post
                   key={data.id}
                   id={data.id}
+                  imgUrl={data.imgUrl}
                   title={data.title}
                   minPrice={data.minPrice}
                   createdAt={data.createdAt}

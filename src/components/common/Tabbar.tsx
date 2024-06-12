@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
+import { tabs } from "@/data/tabsData";
 
 interface TabProps {
   selected: boolean;
 }
 
 const Tabbar = () => {
-  const [selected, setSelected] = useState("/home");
+  const pathname = usePathname();
+  const [selected, setSelected] = useState(pathname);
   const router = useRouter();
 
   const handleTabClick = (path: any) => {
@@ -19,96 +21,24 @@ const Tabbar = () => {
 
   return (
     <Container>
-      <Tab
-        onClick={() => handleTabClick("/home")}
-        selected={selected === "/home"}
-      >
-        <Bar selected={selected === "/home"} />
-        {selected === "/home" ? (
-          <>
-            <Image
-              src="/assets/icons/ic_home_select.svg"
-              width="24"
-              height="24"
-              alt="home"
-            />
-          </>
-        ) : (
+      {tabs.map((tab, index) => (
+        <Tab
+          key={index}
+          onClick={() => handleTabClick(tab.path)}
+          selected={pathname === tab.path}
+        >
+          <Bar selected={pathname === tab.path} />
           <Image
-            src="/assets/icons/ic_home.svg"
+            src={`/assets/icons/${
+              selected === tab.path ? tab.icon + "_select" : tab.icon
+            }.svg`}
             width="24"
             height="24"
-            alt="home"
+            alt={tab.label}
           />
-        )}
-        홈
-      </Tab>
-      <Tab
-        onClick={() => handleTabClick("/chat")}
-        selected={selected === "/chat"}
-      >
-        <Bar selected={selected === "/chat"} />
-        {selected === "/chat" ? (
-          <Image
-            src="/assets/icons/ic_chat_select.svg"
-            width="24"
-            height="24"
-            alt="chat"
-          />
-        ) : (
-          <Image
-            src="/assets/icons/ic_chat.svg"
-            width="24"
-            height="24"
-            alt="chat"
-          />
-        )}
-        채팅
-      </Tab>
-      <Tab
-        onClick={() => handleTabClick("/people")}
-        selected={selected === "/people"}
-      >
-        <Bar selected={selected === "/people"} />
-        {selected === "/people" ? (
-          <Image
-            src="/assets/icons/ic_closet_select.svg"
-            width="24"
-            height="24"
-            alt="closet"
-          />
-        ) : (
-          <Image
-            src="/assets/icons/ic_closet.svg"
-            width="24"
-            height="24"
-            alt="closet"
-          />
-        )}
-        옷장 구경
-      </Tab>
-      <Tab
-        onClick={() => handleTabClick("/mycloset")}
-        selected={selected === "/mycloset"}
-      >
-        <Bar selected={selected === "/mycloset"} />
-        {selected === "/mycloset" ? (
-          <Image
-            src="/assets/icons/ic_my_select.svg"
-            width="24"
-            height="24"
-            alt="my"
-          />
-        ) : (
-          <Image
-            src="/assets/icons/ic_my.svg"
-            width="24"
-            height="24"
-            alt="my"
-          />
-        )}
-        나의 옷장
-      </Tab>
+          {tab.label}
+        </Tab>
+      ))}
     </Container>
   );
 };

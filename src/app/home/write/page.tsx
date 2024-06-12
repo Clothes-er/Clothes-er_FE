@@ -8,21 +8,142 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styled from "styled-components";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+import "../../../styles/animation.css";
+import axios from "axios";
+import { getToken } from "@/hooks/getToken";
 
+interface Price {
+  days: number | null;
+  price: number | null;
+}
 const Write = () => {
   const router = useRouter();
 
-  const [inputs, setInputs] = useState({
+  const [images, setImages] = useState<File[]>([]);
+  const [inputs, setInputs] = useState<{
+    title: string;
+    description: string;
+    gender: string;
+    category: string;
+    style: string;
+    prices: Price[];
+    brand: string;
+    size: string;
+    fit: string;
+  }>({
     title: "",
     description: "",
-    gender: "",
-    category: "",
-    style: "",
-    price: [{ days: "", price: "" }],
+    gender: "FEMALE",
+    category: "자켓",
+    style: "힙합",
+    prices: [
+      { days: 5, price: null },
+      { days: 10, price: null },
+    ],
     brand: "",
     size: "",
     fit: "",
+    // title: "골지 반팔 니트",
+    // description: "여름에 여리한 핏감으로 데일리하게 즐기기 좋아요!",
+    // gender: "FEMALE",
+    // category: "니트",
+    // style: "러블리",
+    // prices: [
+    //   {
+    //     days: 5,
+    //     price: 3000,
+    //   },
+    //   {
+    //     days: 10,
+    //     price: 5000,
+    //   },
+    //   {
+    //     days: 3,
+    //     price: 2000,
+    //   },
+    // ],
+    // brand: "에이블리",
+    // size: "",
+    // fit: "슬림핏",
   });
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const selectedImages: File[] = Array.from(files).slice(0, 3);
+      if (images.length + selectedImages.length > 3) {
+        alert("이미지는 최대 3개까지 선택할 수 있습니다.");
+        return;
+      }
+      setImages((prevImages) => [...prevImages, ...selectedImages]);
+    }
+  };
+
+  const handleImageClick = (index: number) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
+  const handleNewPost = () => {
+    const formData = new FormData();
+
+    formData.append(
+      "post",
+      new Blob(
+        [
+          JSON.stringify({
+            title: inputs.title,
+            description: inputs.description,
+            gender: inputs.gender,
+            category: inputs.category,
+            style: inputs.style,
+            prices: inputs.prices,
+            brand: inputs.brand,
+            size: inputs.size,
+            fit: inputs.fit,
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+
+    images.forEach((file, index) => {
+      formData.append(`images`, file, file.name);
+    });
+
+    console.log(inputs);
+    console.log(images);
+    console.log("전달하는 formData", formData);
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+    axios
+      .post(`http://13.209.137.34:8080/api/v1/rentals`, formData, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data.result);
+        router.push(`/home`);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
+  };
+
+  const handlePriceChange = (index: number, key: string, value: string) => {
+    const newPrices = [...inputs.prices];
+    newPrices[index] = { ...newPrices[index], [key]: value };
+    setInputs({ ...inputs, prices: newPrices });
+  };
+
+  const handleAddPrice = () => {
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      prices: [...prevInputs.prices, { days: null, price: null }],
+    }));
+  };
 
   return (
     <Layout>
@@ -49,6 +170,13 @@ const Write = () => {
         <Content>
           <Photo>
             <AddPhoto>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileUpload}
+                style={{ display: "none" }}
+              />
               <Image
                 src="/assets/icons/ic_camera.svg"
                 width={24}
@@ -56,13 +184,23 @@ const Write = () => {
                 alt="add phote"
               />
             </AddPhoto>
-            <Image
-              src="/assets/images/post_image.svg"
-              width={65}
-              height={65}
-              alt="photo"
-              style={{ cursor: "pointer" }}
-            />
+            <PhotoList>
+              <TransitionGroup component={null}>
+                {images.map((image, index) => (
+                  <CSSTransition key={index} timeout={300} classNames="fade">
+                    <StyledImage
+                      key={index}
+                      src={URL.createObjectURL(image)}
+                      width={65}
+                      height={65}
+                      alt={`photo-${index}`}
+                      onClick={() => handleImageClick(index)}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </CSSTransition>
+                ))}
+              </TransitionGroup>
+            </PhotoList>
           </Photo>
           <Label>카테고리</Label>
           <Category />
@@ -82,7 +220,7 @@ const Write = () => {
           <Column>
             <Label>
               가격<Span>*</Span>
-              <AddPrice>
+              <AddPrice onClick={handleAddPrice}>
                 <Image
                   src="/assets/icons/ic_plus_purple.svg"
                   width={16}
@@ -92,14 +230,30 @@ const Write = () => {
                 가격 추가하기
               </AddPrice>
             </Label>
-            {/* <Input
-              inputType="write"
-              value={inputs.price}
-              placeholder="가격"
-              onChange={(value: string) => {
-                setInputs({ ...inputs, price: value });
-              }}
-            /> */}
+            <PriceBoxList>
+              {inputs.prices.map((price, index) => (
+                <PriceBox key={index}>
+                  <Input
+                    inputType="write"
+                    value={price.days}
+                    // value={price.days ? `${price.days}일` : ""}
+                    placeholder="날짜"
+                    onChange={(value: string) =>
+                      handlePriceChange(index, "days", value)
+                    }
+                    disabled={price.days === 5 || price.days === 10}
+                  />
+                  <Input
+                    inputType="write"
+                    value={price.price}
+                    placeholder="가격"
+                    onChange={(value: string) =>
+                      handlePriceChange(index, "price", value)
+                    }
+                  />
+                </PriceBox>
+              ))}
+            </PriceBoxList>
           </Column>
           <Row>
             <Column>
@@ -150,7 +304,15 @@ const Write = () => {
           </Column>
         </Content>
       </div>
-      <Button buttonType="primary" size="large" text="작성 완료" disabled />
+      <SubmitButton>
+        <Button
+          buttonType="primary"
+          size="large"
+          text="작성 완료"
+          onClick={handleNewPost}
+          // disabled
+        />
+      </SubmitButton>
     </Layout>
   );
 };
@@ -159,11 +321,13 @@ export default Write;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  overflow-y: scroll;
   padding: 37px 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
 `;
 
 const Top = styled.div`
@@ -188,21 +352,47 @@ const Photo = styled.div`
   gap: 11px;
 `;
 
-const AddPhoto = styled.div`
+const AddPhoto = styled.label`
   width: 65px;
   height: 65px;
   border-radius: 10px;
   border: 1px solid ${theme.colors.gray700};
+  box-shadow: 2px 2px 5px 2px rgba(220, 220, 220, 0.25);
   background: ${theme.colors.white};
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
+const PhotoList = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const StyledImage = styled(Image)`
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px 2px rgba(220, 220, 220, 0.25);
+`;
 const Label = styled.div`
   display: flex;
   gap: 3px;
   ${(props) => props.theme.fonts.c1_bold};
+`;
+
+const PriceBoxList = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 11px;
+`;
+
+const PriceBox = styled.div`
+  max-width: 184px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 11px;
 `;
 
 const Span = styled.span`
@@ -243,4 +433,10 @@ const TextAreaInput = styled.textarea`
   &::placeholder {
     color: ${theme.colors.gray600};
   }
+`;
+
+const SubmitButton = styled.div`
+  position: sticky;
+  bottom: 20px;
+  left: 50%;
 `;

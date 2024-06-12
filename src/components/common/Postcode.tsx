@@ -6,9 +6,10 @@ import Input from "./Input";
 interface PostcodeProps {
   location: string;
   setLocation: (location: string) => void;
+  size: "large" | "medium" | "small";
 }
 
-const Postcode: React.FC<PostcodeProps> = ({ location, setLocation }) => {
+const Postcode: React.FC<PostcodeProps> = ({ location, setLocation, size }) => {
   const [locationPopup, setLocationPopup] = useState(false);
 
   const completeHandler = (data: any) => {
@@ -27,9 +28,10 @@ const Postcode: React.FC<PostcodeProps> = ({ location, setLocation }) => {
         onChange={(value: string) => setLocation(value)}
         placeholder="주소"
         onClick={() => setLocationPopup(!locationPopup)}
+        size={size}
         readOnly
       />
-      {locationPopup && <DaumPostcode onComplete={completeHandler} />}
+      {locationPopup && <StyledDaumPostcode onComplete={completeHandler} />}
     </Div>
   );
 };
@@ -38,8 +40,15 @@ export default Postcode;
 
 const Div = styled.div`
   width: 100%;
+  height: 50px;
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  /* gap: 20px; */
+`;
+
+const StyledDaumPostcode = styled(DaumPostcode)`
+  position: absolute;
+  top: 80px;
+  width: 100%;
 `;

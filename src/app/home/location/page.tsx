@@ -5,22 +5,64 @@ import Image from "next/image";
 import Header from "@/components/common/Header";
 import { useRouter } from "next/navigation";
 import Postcode from "@/components/common/Postcode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/common/Button";
 import { getAddressCoords } from "@/hooks/getAddressCoords";
+import AuthAxios from "@/api/authAxios";
+import { getCoordsAddress } from "@/hooks/getCoordsAddress";
 
 const Location = () => {
   const router = useRouter();
+  const [latitude, setLatitude] = useState<number>();
+  const [longitude, setLongitude] = useState<number>();
   const [location, setLocation] = useState("");
 
+  /* 위치 설정 변경 */
   const handleChangeAddress = async () => {
     try {
+      console.log("location", location);
       const coords = await getAddressCoords(location);
       console.log("주소 변환에 성공하였습니다.", coords);
+
+      setLatitude(coords.x);
+      setLongitude(coords.y);
+
+      const response = await AuthAxios.patch(`/api/v1/users/address`, {
+        latitude: coords.x,
+        longitude: coords.y,
+      });
+
+      console.log("주소 업데이트 성공", response.data);
+      console.log("업데이트한 위도경도", coords.x, coords.y);
+      console.log(response.data.message);
     } catch (error) {
       console.error("주소 변환에 실패하였습니다.");
     }
   };
+
+  useEffect(() => {
+    console.log("위도 경도 set");
+  }, [longitude, latitude]);
+
+  /* 위치 정보 받아오기 */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await AuthAxios.get(`/api/v1/users/address`);
+        const latitude = response.data.result.latitude;
+        const longitude = response.data.result.longitude;
+        setLatitude(latitude);
+        setLongitude(longitude);
+        console.log(response.data.message);
+        const newLocation = await getCoordsAddress(latitude, longitude);
+        setLocation(newLocation);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [latitude, longitude]);
 
   return (
     <>
@@ -44,7 +86,7 @@ const Location = () => {
             height={24}
             alt="pin"
           />
-          강남구 역삼로 150길
+          {location}
         </Map>
         <InputBox>
           <InfoIcon
@@ -54,7 +96,11 @@ const Location = () => {
             alt="info"
           />
           {/* <InfoText>상자</InfoText> */}
-          <Postcode location={location} setLocation={setLocation} />
+          <Postcode
+            location={location}
+            setLocation={setLocation}
+            size="medium"
+          />
           <Button
             buttonType="primaryLight"
             text="변경"
@@ -96,12 +142,16 @@ const Map = styled.div`
   gap: 4px;
   ${(props) => props.theme.fonts.b2_medium};
   cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 22px;
 `;
 
 const InputBox = styled.div`
   width: 100%;
+  height: 50px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
 `;
 

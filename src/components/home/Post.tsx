@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const Post: React.FC<PostList> = ({
   id,
@@ -12,24 +12,31 @@ const Post: React.FC<PostList> = ({
   title,
   minPrice,
   createdAt,
+  size = "nomal",
 }) => {
   const router = useRouter();
   const handleDetail = () => {
     router.push(`/home/${id}`);
   };
   return (
-    <Container onClick={handleDetail}>
+    <Container onClick={handleDetail} size={size}>
       <Image
-        src="/assets/images/post_image.svg"
-        width={76}
-        height={76}
-        alt="image"
+        src={`${imgUrl ? imgUrl : "/assets/images/noImage.svg"}`}
+        width={size === "small" ? 60 : 76}
+        height={size === "small" ? 60 : 76}
+        alt="profile"
+        style={{ borderRadius: "10px" }}
       />
       <Box>
         <Title>{title}</Title>
         <Price>{minPrice}원~</Price>
         <Sub>
-          {createdAt} | <Span>{nickname}</Span> 님
+          {createdAt}{" "}
+          {nickname && (
+            <>
+              | <Span>{nickname}</Span> 님
+            </>
+          )}
         </Sub>
       </Box>
     </Container>
@@ -38,7 +45,7 @@ const Post: React.FC<PostList> = ({
 
 export default Post;
 
-const Container = styled.div`
+const Container = styled.div<{ size: string }>`
   display: flex;
   width: 100%;
   height: 100px;
@@ -47,6 +54,11 @@ const Container = styled.div`
   align-items: center;
   gap: 19px;
   border-top: 0.5px solid rgba(219, 219, 219, 0.7);
+  ${(props) =>
+    props.size === "small" &&
+    css`
+      border-bottom: 0.5px solid rgba(219, 219, 219, 0.7);
+    `}
   cursor: pointer;
 `;
 

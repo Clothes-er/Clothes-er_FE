@@ -1,18 +1,52 @@
 "use client";
 
+import AuthAxios from "@/api/authAxios";
 import Header from "@/components/common/Header";
 import Bottom from "@/components/home/Bottom";
-import ModifyMenu from "@/components/home/ModifyMenu";
 import Profile from "@/components/home/Profile";
+import { Gender, getGenderLabel } from "@/interface/Gender";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import Slider from "react-slick";
+import "../../../styles/slick.css";
+import "../../../styles/slick-theme.css";
+import NextArrow from "@/components/common/NextArrow";
+import PrevArrow from "@/components/common/PrevArrow";
+
+interface Price {
+  days: number;
+  price: number;
+}
+
+interface PostInfo {
+  id: number;
+  profileUrl: string;
+  nickname: string;
+  isWriter: boolean;
+  followers: number;
+  followees: number;
+  imgUrls: string[];
+  title: string;
+  description: string;
+  gender: Gender;
+  category: string;
+  style: String;
+  prices: Price[];
+  brand: string;
+  size: string;
+  fit: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const Page = () => {
   const router = useRouter();
+  const { id } = useParams();
   const [menu, setMenu] = useState(false);
+  const [postInfo, setPostInfo] = useState<PostInfo>();
 
   const handleBackButtonClick = () => {
     router.back();
@@ -21,6 +55,19 @@ const Page = () => {
   const handleMoreMenu = () => {
     setMenu(!menu);
   };
+
+  useEffect(() => {
+    AuthAxios.get(`/api/v1/rentals/${id}`)
+      .then((response) => {
+        const data = response.data.result;
+        setPostInfo(data);
+        console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <>
@@ -38,7 +85,7 @@ const Page = () => {
             />
             공유 옷장
             <Menu>
-              <Image
+              {/* <Image
                 src="/assets/icons/ic_more_vertical.svg"
                 width={24}
                 height={24}
@@ -46,36 +93,75 @@ const Page = () => {
                 onClick={handleMoreMenu}
                 style={{ cursor: "pointer" }}
               />
-              {menu && <ModifyMenu />}
+              {menu && <ModifyMenu />} */}
             </Menu>
           </Top>
         </Head>
-        <ImageSlide></ImageSlide>
-        <Profile nickname="러블리걸" />
+        {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (
+          <ImageSlide>
+            <StyledSlider
+              dots={true}
+              infinite={true}
+              speed={500}
+              slidesToShow={1}
+              slidesToScroll={1}
+              prevArrow={
+                <Div>
+                  <PrevArrow />
+                </Div>
+              }
+              nextArrow={
+                <DivNext>
+                  <NextArrow />
+                </DivNext>
+              }
+            >
+              {postInfo?.imgUrls?.map((url, index) => (
+                <ImageBox key={index}>
+                  <Image src={url} alt={`image-${index}`} layout="fill" />
+                </ImageBox>
+              ))}
+            </StyledSlider>
+          </ImageSlide>
+        ) : (
+          <>
+            {postInfo?.imgUrls?.map((url, index) => (
+              <ImageBox key={index}>
+                <Image src={url} alt={`image-${index}`} layout="fill" />
+              </ImageBox>
+            ))}
+          </>
+        )}
+        <Profile nickname={postInfo?.nickname ? postInfo.nickname : ""} />
         <Body>
-          <Title>제목</Title>
-          <Category>여성 / 블라우스 / 러블리</Category>
+          <Title>{postInfo?.title}</Title>
+          <Category>
+            {postInfo?.gender && getGenderLabel(postInfo?.gender)}
+            {postInfo?.category && postInfo?.gender
+              ? ` / ${postInfo?.category}`
+              : postInfo?.category}
+            {postInfo?.style && (postInfo?.gender || postInfo?.category)
+              ? ` / ${postInfo?.style}`
+              : postInfo?.style}
+          </Category>
           <Info>
             <Row>
               <div>브랜드</div>
-              <div>없음</div>
+              <div>{postInfo?.brand ? postInfo.brand : "없음"}</div>
             </Row>
             <Row>
               <div>사이즈</div>
-              <div>Free</div>
+              <div>{postInfo?.size ? postInfo.size : "없음"}</div>
             </Row>
             <Row>
               <div>핏</div>
-              <div>정핏</div>
+              <div>{postInfo?.fit ? postInfo.fit : "없음"}</div>
             </Row>
           </Info>
-          <Box>
-            리본이 포인트인 봄 블라우스입니다. 러블리한 스타일의 옷을 시도해보고
-            싶으신 분이 입으시면 좋을 것 같아요.
-          </Box>
+          <Box>{postInfo?.description}</Box>
         </Body>
       </Layout>
-      <Bottom />
+      {postInfo && <Bottom id={postInfo.id} prices={postInfo.prices} />}
     </>
   );
 };
@@ -86,6 +172,7 @@ const Layout = styled.div`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -114,11 +201,54 @@ const Menu = styled.div`
 
 const ImageSlide = styled.div`
   width: 100%;
-  height: 270px;
+  height: 400px;
   border-radius: 7px;
-  background-color: black;
+  .slick-slide img {
+    width: 100%;
+    height: 400px;
+    border-radius: 7px;
+  }
 `;
 
+const StyledSlider = styled(Slider)`
+  height: 400px;
+  width: 100%;
+  position: relative;
+  .slick-prev::before,
+  .slick-next::before {
+    opacity: 0;
+    display: none;
+  }
+  .slick-slide div {
+    cursor: pointer;
+  }
+`;
+
+const Div = styled.div`
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 50%;
+  left: 30px;
+  transform: translateY(-50%);
+  z-index: 30;
+`;
+
+const DivNext = styled.div`
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%);
+  z-index: 30;
+`;
+
+const ImageBox = styled.div`
+  position: relative;
+  width: 100%;
+  height: 400px;
+`;
 const Body = styled.div`
   width: 100%;
   display: flex;
