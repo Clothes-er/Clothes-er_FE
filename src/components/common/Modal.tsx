@@ -1,5 +1,5 @@
 import { theme } from "@/styles/theme";
-import React from "react";
+import React, { ReactNode } from "react";
 import styled from "styled-components";
 
 interface ModalProps {
@@ -9,16 +9,30 @@ interface ModalProps {
   yes?: string;
   onClose: () => void;
   onCheck: () => void;
+  width?: string;
+  height?: string;
+  content?: ReactNode;
 }
 const Modal = (props: ModalProps) => {
-  const { title, text, no = "아니요", yes = "네", onClose, onCheck } = props;
+  const {
+    title,
+    text,
+    no = "아니요",
+    yes = "네",
+    onClose,
+    onCheck,
+    width,
+    height,
+    content,
+  } = props;
   return (
     <>
-      <StyledModal>
+      <StyledModal width={width} height={height}>
         <Div>
           <Title>{title}</Title>
           {text}
         </Div>
+        {content && <div>{content}</div>}
         <Pair>
           <StyledButton className="no" onClick={onClose}>
             {no}
@@ -48,9 +62,9 @@ const Overlay = styled.div`
   align-items: flex-end;
   z-index: 100;
 `;
-const StyledModal = styled.div`
-  width: 305px;
-  height: auto;
+const StyledModal = styled.div<{ width?: string; height?: string }>`
+  width: ${(props) => props.width || "305px"};
+  height: ${(props) => props.height || "auto"};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
