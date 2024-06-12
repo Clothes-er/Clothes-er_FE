@@ -11,46 +11,48 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../../../styles/animation.css";
+import axios from "axios";
+import { getToken } from "@/hooks/getToken";
 
 const Write = () => {
   const router = useRouter();
 
   const [images, setImages] = useState<File[]>([]);
   const [inputs, setInputs] = useState({
-    // title: "",
-    // description: "",
-    // // gender: "",
-    // // category: "",
-    // // style: "",
-    // gender: "FEMALE",
-    // category: "블라우스",
-    // style: "러블리",
-    // price: [{ days: "3", price: "10" }],
-    // brand: "",
-    // size: "",
-    // fit: "",
-    title: "스퀘어 아이보리 블라우스",
-    description:
-      "옷 1회 착용한 새것입니다. 지난 여름에 구입했어요!\n저렴한 가격에 새로운 스타일을 시도해보세요!",
-
+    title: "",
+    description: "",
     gender: "FEMALE",
-    category: "블라우스",
-    style: "러블리",
-
+    category: "자켓",
+    style: "힙합",
     prices: [
-      {
-        days: 5,
-        price: 3000,
-      },
-      {
-        days: 10,
-        price: 8000,
-      },
+      { days: 5, price: null },
+      { days: 10, price: null },
     ],
-
-    brand: "무신사",
-    size: "95",
-    fit: "정핏",
+    brand: "",
+    size: "",
+    fit: "",
+    // title: "골지 반팔 니트",
+    // description: "여름에 여리한 핏감으로 데일리하게 즐기기 좋아요!",
+    // gender: "FEMALE",
+    // category: "니트",
+    // style: "러블리",
+    // prices: [
+    //   {
+    //     days: 5,
+    //     price: 3000,
+    //   },
+    //   {
+    //     days: 10,
+    //     price: 5000,
+    //   },
+    //   {
+    //     days: 3,
+    //     price: 2000,
+    //   },
+    // ],
+    // brand: "에이블리",
+    // size: "",
+    // fit: "슬림핏",
   });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,29 +76,40 @@ const Write = () => {
 
     formData.append(
       "post",
-      JSON.stringify({
-        title: inputs.title,
-        description: inputs.description,
-        gender: inputs.gender,
-        category: inputs.category,
-        style: inputs.style,
-        prices: inputs.prices,
-        brand: inputs.brand,
-        size: inputs.size,
-        fit: inputs.fit,
-      })
+      new Blob(
+        [
+          JSON.stringify({
+            title: inputs.title,
+            description: inputs.description,
+            gender: inputs.gender,
+            category: inputs.category,
+            style: inputs.style,
+            prices: inputs.prices,
+            brand: inputs.brand,
+            size: inputs.size,
+            fit: inputs.fit,
+          }),
+        ],
+        { type: "application/json" }
+      )
     );
 
-    for (const file of images) {
-      formData.append("images", file);
-    }
+    images.forEach((file, index) => {
+      formData.append(`images`, file, file.name);
+    });
 
-    AuthAxios.post(`/api/v1/rentals`, formData, {
-      // headers: {
-      //   Authorization: `Bearer ${getToken()}`,
-      //   "Content-Type": "multipart/form-data",
-      // },
-    })
+    console.log(inputs);
+    console.log(images);
+    console.log("전달하는 formData", formData);
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+    axios
+      .post(`http://13.209.137.34:8080/api/v1/rentals`, formData, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
       .then((response) => {
         console.log(response.data.result);
         router.push(`/home`);
