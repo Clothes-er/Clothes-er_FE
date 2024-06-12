@@ -128,6 +128,6 @@ const Label = styled.div`
 `;
 
 const Value = styled.div`
-  color: ${theme.colors.gray900};
+  color: ${theme.colors.b100};
   ${(props) => props.theme.fonts.b2_bold};
 `;

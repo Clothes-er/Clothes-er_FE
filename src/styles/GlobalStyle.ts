@@ -32,6 +32,7 @@ html {
 body {
   width: 100%;
   height: 100%;
+  max-width: 480px;
   font-family: "Pretendard";
   white-space: pre-line;
 }

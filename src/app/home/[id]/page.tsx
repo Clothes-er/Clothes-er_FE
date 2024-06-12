@@ -156,7 +156,7 @@ const Page = () => {
           <Box>{postInfo?.description}</Box>
         </Body>
       </Layout>
-      <Bottom />
+      {postInfo && <Bottom id={postInfo.id} prices={postInfo.prices} />}
     </>
   );
 };
@@ -226,7 +226,7 @@ const Div = styled.div`
   top: 50%;
   left: 30px;
   transform: translateY(-50%);
-  z-index: 99;
+  z-index: 30;
 `;
 
 const DivNext = styled.div`
@@ -236,7 +236,7 @@ const DivNext = styled.div`
   top: 50%;
   right: 30px;
   transform: translateY(-50%);
-  z-index: 99;
+  z-index: 30;
 `;
 
 const Body = styled.div`
