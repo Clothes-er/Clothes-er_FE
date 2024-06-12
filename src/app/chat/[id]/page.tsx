@@ -46,6 +46,9 @@ const ChatDetail = () => {
   const [rentaled, setRentaled] = useState<boolean>();
   const [rentalState, setRentalState] = useState<string>();
 
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
   useEffect(() => {
     AuthAxios.get(`/api/v1/chats/rooms/${id}`)
       .then((response) => {
@@ -124,20 +127,27 @@ const ChatDetail = () => {
   };
 
   const handleCheckRentaling = () => {
-    AuthAxios.patch(`/api/v1/rentals/${id}/rental`, {
-      startDate: startDate,
-      endDate: endDate,
-    })
-      .then((response) => {
-        const data = response.data.result;
-        console.log(data);
-        setRentalState(data.rentalState);
-        console.log(response.data.message);
+    if (startDate && endDate) {
+      const formattedStartDate = startDate.toISOString().split("T")[0];
+      const formattedEndDate = endDate.toISOString().split("T")[0];
+
+      console.log("시작일: ", startDate, "반납일: ", endDate);
+      console.log("시작일: ", formattedStartDate, "반납일: ", formattedEndDate);
+      AuthAxios.post(`/api/v1/rentals/${id}/rental`, {
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
       })
-      .catch((error) => {
-        console.log(error);
-        console.log(error.response.data.message);
-      });
+        .then((response) => {
+          const data = response.data.result;
+          console.log(data);
+          setRentalState(data.rentalState);
+          console.log(response.data.message);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log(error.response.data.message);
+        });
+    }
   };
 
   const handleCheckRentaled = () => {
@@ -237,7 +247,14 @@ const ChatDetail = () => {
             yes="대여 중"
             width="340px"
             height="400px"
-            content={<RentalDate />}
+            content={
+              <RentalDate
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+              />
+            }
           />
         )}
         {rentaled && (

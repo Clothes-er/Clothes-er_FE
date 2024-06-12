@@ -4,10 +4,19 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { theme } from "@/styles/theme";
 
-const RentalDate = () => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+interface RentalDateProps {
+  startDate: Date | null;
+  endDate: Date | null;
+  setStartDate: (date: Date | null) => void;
+  setEndDate: (date: Date | null) => void;
+}
 
+const RentalDate: React.FC<RentalDateProps> = ({
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
+}) => {
   return (
     <RentalDateWrapper>
       <Label>대여 시작일</Label>
