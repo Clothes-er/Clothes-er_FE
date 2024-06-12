@@ -1,11 +1,5 @@
+import { getToken } from "@/hooks/getToken";
 import axios from "axios";
-
-const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("accessToken");
-    }
-    return null;
-  };
   
 const AuthAxios = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BASE_URL,
