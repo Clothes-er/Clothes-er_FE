@@ -97,36 +97,41 @@ const Page = () => {
             </Menu>
           </Top>
         </Head>
-        <ImageSlide>
-          <StyledSlider
-            dots={true}
-            infinite={true}
-            speed={500}
-            slidesToShow={1}
-            slidesToScroll={1}
-            prevArrow={
-              <Div>
-                <PrevArrow />
-              </Div>
-            }
-            nextArrow={
-              <DivNext>
-                <NextArrow />
-              </DivNext>
-            }
-          >
+        {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (
+          <ImageSlide>
+            <StyledSlider
+              dots={true}
+              infinite={true}
+              speed={500}
+              slidesToShow={1}
+              slidesToScroll={1}
+              prevArrow={
+                <Div>
+                  <PrevArrow />
+                </Div>
+              }
+              nextArrow={
+                <DivNext>
+                  <NextArrow />
+                </DivNext>
+              }
+            >
+              {postInfo?.imgUrls?.map((url, index) => (
+                <ImageBox key={index}>
+                  <Image src={url} alt={`image-${index}`} layout="fill" />
+                </ImageBox>
+              ))}
+            </StyledSlider>
+          </ImageSlide>
+        ) : (
+          <>
             {postInfo?.imgUrls?.map((url, index) => (
-              <Image
-                key={index}
-                src={url}
-                alt={`image-${index}`}
-                width={500}
-                height={400}
-              />
-              // </div>
+              <ImageBox key={index}>
+                <Image src={url} alt={`image-${index}`} layout="fill" />
+              </ImageBox>
             ))}
-          </StyledSlider>
-        </ImageSlide>
+          </>
+        )}
         <Profile nickname={postInfo?.nickname ? postInfo.nickname : ""} />
         <Body>
           <Title>{postInfo?.title}</Title>
@@ -239,6 +244,11 @@ const DivNext = styled.div`
   z-index: 30;
 `;
 
+const ImageBox = styled.div`
+  position: relative;
+  width: 100%;
+  height: 400px;
+`;
 const Body = styled.div`
   width: 100%;
   display: flex;
