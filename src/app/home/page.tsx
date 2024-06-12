@@ -12,6 +12,7 @@ import Tabbar from "@/components/common/Tabbar";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
+import { getCoordsAddress } from "@/hooks/getCoordsAddress";
 
 interface PostList {
   id: number;
@@ -25,6 +26,9 @@ interface PostList {
 const Home = () => {
   const router = useRouter();
   const [postList, setPostList] = useState<PostList[]>();
+  const [latitude, setLatitude] = useState<number>();
+  const [longitude, setLongitude] = useState<number>();
+  const [location, setLocation] = useState<number>();
 
   useEffect(() => {
     AuthAxios.get("/api/v1/rentals")
@@ -32,6 +36,20 @@ const Home = () => {
         const data = response.data.result;
         setPostList(data);
         console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    AuthAxios.get(`/api/v1/users/address`)
+      .then((response) => {
+        const latitude = response.data.result.latitude;
+        const longitude = response.data.result.longitude;
+        setLatitude(latitude);
+        setLongitude(longitude);
         console.log(response.data.message);
       })
       .catch((error) => {
@@ -52,7 +70,7 @@ const Home = () => {
               height={24}
               alt="pin"
             />
-            강남구 역삼로 150길
+            {getCoordsAddress(longitude, latitude)}
           </Location>
           <Content>
             <SearchBox placeholder="원하는 상품명을 검색하세요!"></SearchBox>
