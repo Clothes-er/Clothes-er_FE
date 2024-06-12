@@ -13,6 +13,7 @@ export interface InputProps {
   inputType?: "text" | "password" | "write" | "textarea" | "array";
   errorMsg?: string;
   readOnly?: boolean;
+  disabled?: boolean;
 }
 
 const Input: React.FC<InputProps> = (props: InputProps) => {
@@ -26,6 +27,7 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
     inputType = "text",
     errorMsg,
     readOnly = false,
+    disabled = false,
   } = props;
 
   // const handleChange = (event: any) => {
@@ -57,6 +59,7 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
         onClick={handleClick}
         placeholder={placeholder}
         readOnly={readOnly}
+        disabled={disabled}
       />
       <Error errorMsg={errorMsg}>{errorMsg}</Error>
     </Container>
@@ -128,6 +131,9 @@ const StyledInput = styled.input<InputProps>`
     &::placeholder {
       color: ${theme.colors.gray600};
     }
+  }
+  &:disabled {
+    background: ${theme.colors.gray100};
   }
 `;
 
