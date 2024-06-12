@@ -1,17 +1,72 @@
+import AuthAxios from "@/api/authAxios";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
+import Modal from "../common/Modal";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-const Bottom = () => {
+interface Price {
+  days: number;
+  price: number;
+}
+
+interface BottomProps {
+  id: number;
+  prices: Price[];
+}
+
+const Bottom: React.FC<BottomProps> = ({ id, prices }) => {
+  const router = useRouter();
+  const [pricePop, setPricePop] = useState<boolean>(false);
+  const handleShowPrice = () => {
+    setPricePop(true);
+  };
+
+  const handleNewChat = () => {
+    AuthAxios.post(`/api/v1/chats/rooms/${id}`)
+      .then((response) => {
+        const data = response.data.result;
+        console.log(data);
+        console.log(response.data.message);
+        router.push(`/chat/${data.id}`);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.response.data.message);
+        router.push(`/chat/${error.response.data.result.roomId}`);
+      });
+  };
+
+  const onClose = () => {
+    setPricePop(false);
+  };
+
   return (
     <StyledBottom>
       <div>
         <Price>
-          3,000원~
+          {prices[0].price}원~
           <Days>3days</Days>
         </Price>
-        <MorePrice>가격표 보기</MorePrice>
+        <MorePrice onClick={handleShowPrice}>가격표 보기</MorePrice>
+        {pricePop && (
+          <div>
+            <PricePopup>
+              가격표
+              <Table>
+                {prices.map((data, index) => (
+                  <Set key={index}>
+                    <DaysPopup>{data.days}일 :</DaysPopup>
+                    <PricesPopup>{data.price}원</PricesPopup>
+                  </Set>
+                ))}
+              </Table>
+            </PricePopup>
+            <Overlay onClick={onClose} />
+          </div>
+        )}
       </div>
-      <Chat>문의하기</Chat>
+      <Chat onClick={handleNewChat}>문의하기</Chat>
     </StyledBottom>
   );
 };
@@ -49,7 +104,9 @@ const MorePrice = styled.div`
   ${(props) => props.theme.fonts.c1_regular};
   text-decoration: underline;
   margin-top: 6px;
+  cursor: pointer;
 `;
+
 const Chat = styled.div`
   width: 137px;
   height: 40px;
@@ -61,4 +118,58 @@ const Chat = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.b2_regular};
   cursor: pointer;
+`;
+
+const PricePopup = styled.div`
+  width: 305px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 35px 33px;
+  border-radius: 20px;
+  gap: 20px;
+  background: ${theme.colors.white};
+  box-shadow: 0px 4px 20px 0px rgba(144, 144, 144, 0.25);
+  ${(props) => props.theme.fonts.b1_medium};
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200;
+`;
+
+const Table = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+`;
+
+const Set = styled.div`
+  display: flex;
+  gap: 5px;
+`;
+const DaysPopup = styled.div`
+  color: ${theme.colors.purple500};
+  ${(props) => props.theme.fonts.b2_medium};
+`;
+
+const PricesPopup = styled.div`
+  color: ${theme.colors.b100};
+  ${(props) => props.theme.fonts.b2_medium};
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 100;
 `;
