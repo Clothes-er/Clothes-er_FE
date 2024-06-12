@@ -1,6 +1,5 @@
 "use client";
 
-import AuthAxios from "@/api/authAxios";
 import Button from "@/components/common/Button";
 import Category from "@/components/common/Category";
 import Input from "@/components/common/Input";
@@ -14,11 +13,25 @@ import "../../../styles/animation.css";
 import axios from "axios";
 import { getToken } from "@/hooks/getToken";
 
+interface Price {
+  days: number | null;
+  price: number | null;
+}
 const Write = () => {
   const router = useRouter();
 
   const [images, setImages] = useState<File[]>([]);
-  const [inputs, setInputs] = useState({
+  const [inputs, setInputs] = useState<{
+    title: string;
+    description: string;
+    gender: string;
+    category: string;
+    style: string;
+    prices: Price[];
+    brand: string;
+    size: string;
+    fit: string;
+  }>({
     title: "",
     description: "",
     gender: "FEMALE",
@@ -128,7 +141,7 @@ const Write = () => {
   const handleAddPrice = () => {
     setInputs((prevInputs) => ({
       ...prevInputs,
-      prices: [...prevInputs.prices, { days: 0, price: 0 }],
+      prices: [...prevInputs.prices, { days: null, price: null }],
     }));
   };
 
