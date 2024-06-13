@@ -146,7 +146,7 @@ export default function Home() {
           </Nav>
         </Login>
       </Layout>
-      <Tabbar />
+      <Tabbar disabled={true} />
     </>
   );
 }
