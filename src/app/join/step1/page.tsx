@@ -31,7 +31,10 @@ const Step1 = () => {
     nickname: "",
     email: "",
     emailAuth: "",
+    green: null,
   });
+
+  const [correct, setCorrect] = useState("");
 
   useEffect(() => {
     setInputs(step1);
@@ -43,7 +46,7 @@ const Step1 = () => {
       Axios.get(`/api/v1/users/check-nickname/${inputs.nickname}`)
         .then((response) => {
           console.log("닉네임 중복확인 성공", response.data);
-          setErrors({ ...errors, nickname: response.data.message });
+          setCorrect("사용가능한 닉네임입니다.");
         })
         .catch((error) => {
           if (error.response && error.response.status === 409) {
@@ -138,7 +141,7 @@ const Step1 = () => {
         value={inputs.nickname}
         size="medium"
         placeholder="둘리"
-        errorMsg={errors.nickname}
+        errorMsg={correct && errors.nickname}
         onChange={(value: string) => {
           validateNickname(value);
           setInputs({ ...inputs, nickname: value });
@@ -155,7 +158,7 @@ const Step1 = () => {
           label="이메일"
           value={inputs.email}
           size="medium"
-          placeholder="이메일"
+          placeholder="hello123@gmail.com"
           errorMsg={errors.email}
           onChange={(value: string) => {
             validateEmail(value);
@@ -168,7 +171,7 @@ const Step1 = () => {
             );
           }}
         />
-        <Small>
+        {/* <Small>
           <Button
             buttonType="primaryLight"
             size="small"
@@ -176,9 +179,9 @@ const Step1 = () => {
             onClick={handleSendEmail}
             disabled={!inputs.email}
           />
-        </Small>
+        </Small> */}
       </Row>
-      <Row>
+      {/* <Row>
         <Input
           label="이메일 인증"
           value={inputs.emailAuth}
@@ -204,7 +207,7 @@ const Step1 = () => {
             disabled={!inputs.email}
           />
         </Small>
-      </Row>
+      </Row> */}
       <ButtonRow>
         <Button
           text="이전 단계"
@@ -217,10 +220,12 @@ const Step1 = () => {
           onClick={handleNextStep}
           disabled={
             !(
-              errors.name !== "" ||
-              errors.nickname !== "" ||
-              errors.email !== "" ||
-              errors.emailAuth !== ""
+              inputs.name !== "" &&
+              inputs.nickname !== "" &&
+              inputs.email !== "" &&
+              errors.name == "" &&
+              errors.nickname == "" &&
+              errors.email == ""
             )
           }
         />

@@ -6,11 +6,11 @@ import { theme } from "@/styles/theme";
 import { tabs } from "@/data/tabsData";
 
 interface TabProps {
-  selected: boolean;
+  selected?: boolean;
   disabled?: boolean;
 }
 
-const Tabbar: React.FC<TabProps> = ({ disabled }) => {
+const Tabbar: React.FC<TabProps> = ({ disabled = "false" }) => {
   const pathname = usePathname();
   const [selected, setSelected] = useState(pathname);
   const router = useRouter();

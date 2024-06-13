@@ -35,8 +35,9 @@ const Step2 = () => {
 
   /* 유효성 검사 */
   const validatePassword = (password: string) => {
-    const reg = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{8,15}$/;
-    if (!reg.test(password)) {
+    const regpw =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}$/;
+    if (!regpw.test(password)) {
       setErrors({
         ...errors,
         password: "영문, 숫자, 특수문자 포함 8~15자 이내로 설정해주세요.",
@@ -60,10 +61,16 @@ const Step2 = () => {
   };
 
   const validateBirth = (birth: string) => {
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
     if (birth.length === 0) {
       setErrors({
         ...errors,
-        repassword: "생년월일을 입력해주세요.",
+        birth: "생년월일을 입력해주세요.",
+      });
+    } else if (!regex.test(birth)) {
+      setErrors({
+        ...errors,
+        birth: "생년월일은 yyyy-mm-dd 형식으로 입력해주세요.",
       });
     } else {
       setErrors({ ...errors, birth: "" });
@@ -81,7 +88,8 @@ const Step2 = () => {
         label="비밀번호"
         inputType="password"
         value={inputs.password}
-        placeholder="비밀번호"
+        errorMsg={errors.password}
+        placeholder="영문, 숫자, 특수문자 포함 8~15자 이내"
         onChange={(value: string) => {
           validatePassword(value);
           setInputs({ ...inputs, password: value });
@@ -97,7 +105,8 @@ const Step2 = () => {
         label="비밀번호 재입력"
         inputType="password"
         value={inputs.repassword}
-        placeholder="비밀번호"
+        errorMsg={errors.repassword}
+        placeholder="비밀번호 재입력"
         onChange={(value: string) => {
           validateRepassword(value);
           setInputs({ ...inputs, repassword: value });
@@ -112,7 +121,8 @@ const Step2 = () => {
       <Input
         label="생년월일"
         value={inputs.birth}
-        placeholder="YYYY/MM/DD"
+        errorMsg={errors.birth}
+        placeholder="YYYY-MM-DD"
         onChange={(value: string) => {
           validateBirth(value);
           setInputs({ ...inputs, birth: value });
@@ -136,9 +146,12 @@ const Step2 = () => {
           onClick={() => router.push("/join/step3")}
           disabled={
             !(
-              errors.password !== "" ||
-              errors.repassword !== "" ||
-              errors.birth !== ""
+              inputs.password !== "" &&
+              inputs.repassword !== "" &&
+              inputs.birth !== "" &&
+              errors.password == "" &&
+              errors.repassword == "" &&
+              errors.birth == ""
             )
           }
         />

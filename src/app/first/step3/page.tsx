@@ -4,7 +4,7 @@ import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
-import { useNoRequireAuth } from "@/hooks/useNoAuth";
+import { useRequireFirstAuth } from "@/hooks/usefirstAuth copy";
 import { setStep3 } from "@/redux/slices/firstLoginSlice";
 import { useAppDispatch } from "@/redux/store";
 import { postFirstLoginData } from "@/redux/thunks/postFirstLogin";
@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Step3 = () => {
-  useNoRequireAuth();
+  useRequireFirstAuth();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -41,6 +41,7 @@ const Step3 = () => {
       .unwrap()
       .then((data) => {
         console.log("최초 로그인 성공:", data);
+        localStorage.removeItem("isFirstLogin");
         router.push("/home");
       })
       .catch((error) => {

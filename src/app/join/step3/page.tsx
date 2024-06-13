@@ -10,7 +10,6 @@ import { postSignUpData } from "@/redux/thunks/postSignIn";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const Step3 = () => {
@@ -22,6 +21,23 @@ const Step3 = () => {
     phone: "",
     phoneAuth: "",
   });
+
+  const [errors, setErrors] = useState({
+    phone: "",
+    phoneAuth: "",
+  });
+
+  const validatePhone = (phone: string) => {
+    const regex = /^010-\d{4}-\d{4}$/;
+    if (!regex.test(phone)) {
+      setErrors({
+        ...errors,
+        phone: "전화번호 형식이 올바르지 않습니다. ex) 010-2049-0773",
+      });
+    } else {
+      setErrors({ ...errors, phone: "" });
+    }
+  };
 
   const handleSignUp = () => {
     dispatch(postSignUpData())
@@ -46,8 +62,10 @@ const Step3 = () => {
         <Input
           label="전화번호"
           value={inputs.phone}
-          placeholder="전화번호"
+          errorMsg={errors.phone}
+          placeholder="010-0000-0000"
           onChange={(value: string) => {
+            validatePhone(value);
             setInputs({ ...inputs, phone: value });
             dispatch(
               setStep3({
@@ -57,16 +75,16 @@ const Step3 = () => {
             );
           }}
         />
-        <Small>
+        {/* <Small>
           <Button
             buttonType="primaryLight"
             text="인증"
             size="small"
             onClick={() => {}}
           />
-        </Small>
+        </Small> */}
       </Row>
-      <Row>
+      {/* <Row>
         <Input
           label="전화번호 인증"
           value={inputs.phoneAuth}
@@ -89,9 +107,15 @@ const Step3 = () => {
             onClick={() => {}}
           />
         </Small>
+      </Row> */}
+      <Row>
+        <Button
+          text="이전 단계"
+          size="medium"
+          onClick={() => router.push("/join/step2")}
+        />
+        <Button text="회원가입" size="medium" onClick={handleSignUp} />
       </Row>
-
-      <Button text="회원가입" size="medium" onClick={handleSignUp} />
     </Container>
   );
 };
