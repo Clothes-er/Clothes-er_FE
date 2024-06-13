@@ -40,6 +40,11 @@ const MyCloset = () => {
       });
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    router.push("/");
+  };
+
   return (
     <>
       <Layout>
@@ -141,10 +146,8 @@ const MyCloset = () => {
             </Box>
           </Inner>
         </User>
-        <Setting>
-          <div>고객센터</div>
-          <div>문의하기</div>
-          <div>상담전화</div>
+        <Setting onClick={handleLogout}>
+          <div>로그아웃</div>
         </Setting>
       </Layout>
       <Tabbar />
@@ -286,8 +289,8 @@ const Keyword = styled.div`
 
 const Setting = styled.div`
   width: 100%;
-  height: 200px;
-  padding: 40px;
+  height: auto;
+  padding: 20px 40px;
   border-radius: 20px;
   background: ${theme.colors.gray100};
   box-shadow: 0px 4px 20px 0px rgba(215, 215, 215, 0.25);
@@ -296,4 +299,8 @@ const Setting = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   color: ${theme.colors.gray900};
+  &:hover {
+    color: ${theme.colors.b100};
+  }
+  cursor: pointer;
 `;
