@@ -428,9 +428,9 @@ const ChatDetail = () => {
               <div>
                 {checkGet.checkList && checkGet.checkList.length > 0 && (
                   <ol>
-                    {checkGet.checkList.map((data, index) => (
-                      <List key={index}>{data}</List>
-                    ))}
+                    {checkGet.checkList.map(
+                      (data, index) => data && <List key={index}>{data}</List>
+                    )}
                   </ol>
                 )}
               </div>
