@@ -169,6 +169,9 @@ const SearchBox = styled.input`
   border: none;
   background: ${theme.colors.white};
   box-shadow: 0px 4px 30px 5px rgba(149, 149, 149, 0.25);
+  color: ${theme.colors.black};
+  ${(props) => props.theme.fonts.b2_regular};
+
   &:focus {
     outline: none;
   }
