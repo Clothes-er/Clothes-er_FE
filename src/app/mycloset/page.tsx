@@ -16,7 +16,7 @@ interface ProfileInfo {
   rentalCount: number;
   height: number;
   weight: number;
-  shoesSize: number;
+  shoeSize: number;
   bodyShapes: string[];
   categories: string[];
   styles: string[];
@@ -89,8 +89,8 @@ const MyCloset = () => {
                   </div>
                   <div>발 크기</div>
                   <div>
-                    {profileInfo?.shoesSize
-                      ? `${profileInfo.shoesSize}mm`
+                    {profileInfo?.shoeSize
+                      ? `${profileInfo.shoeSize}mm`
                       : "미공개"}
                   </div>
                 </Content>
