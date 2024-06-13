@@ -1,14 +1,14 @@
 import Axios from "@/api/axios";
 
 export const getCoordsAddress = async (
-  latitude: number | undefined,
-  longitude: number | undefined
+  longitude: number | undefined,
+  latitude: number | undefined
 ): Promise<any> => {
   const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
 
   try {
     const response = await Axios.get(
-      `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${latitude}&y=${longitude}&input_coord=WGS84`,
+      `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=WGS84`,
       {
         headers: {
           Authorization: `KakaoAK ${REST_API_KEY}`,
