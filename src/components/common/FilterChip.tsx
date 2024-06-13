@@ -6,14 +6,24 @@ import styled from "styled-components";
 interface FilterChipProps {
   label: string;
   value?: string;
+  selected: boolean;
   onClick?: (value: any) => void;
 }
 
-const FilterChip: React.FC<FilterChipProps> = ({ label, value, onClick }) => {
+const FilterChip: React.FC<FilterChipProps> = ({
+  label,
+  value,
+  selected,
+  onClick,
+}) => {
+  const handleClick = () => {
+    if (onClick) onClick(value);
+  };
+
   return (
-    <StyledChip hasValue={!!value} onClick={onClick}>
+    <StyledChip selected={selected} hasValue={!!value} onClick={handleClick}>
       {value || label}
-      {value ? (
+      {/* {value ? (
         <Image
           src="/assets/icons/ic_chevron_down.svg"
           width={10}
@@ -27,7 +37,7 @@ const FilterChip: React.FC<FilterChipProps> = ({ label, value, onClick }) => {
           height={14}
           alt="more"
         />
-      )}
+      )} */}
     </StyledChip>
   );
 };
@@ -35,6 +45,7 @@ const FilterChip: React.FC<FilterChipProps> = ({ label, value, onClick }) => {
 export default FilterChip;
 
 interface StyledChipProps {
+  selected: boolean;
   hasValue: boolean;
 }
 
@@ -44,13 +55,20 @@ const StyledChip = styled.div<StyledChipProps>`
   align-items: center;
   width: auto;
   height: 23px;
-  padding: 3px 8px 3px 8px;
+  padding: 3px 8px;
+  text-align: center;
   border-radius: 15px;
   border: 1px solid
-    ${({ hasValue }) =>
-      hasValue ? theme.colors.purple500 : theme.colors.gray400};
-  color: ${({ hasValue }) => (hasValue ? theme.colors.purple500 : "#2E2E44")};
+    ${({ selected }) =>
+      selected ? theme.colors.purple500 : theme.colors.gray400};
+  color: ${({ selected }) => (selected ? theme.colors.purple500 : "#2E2E44")};
   ${(props) => props.theme.fonts.c1_medium};
   cursor: pointer;
   white-space: nowrap;
 `;
+
+/* border: 1px solid
+  ${({ hasValue }) =>
+  hasValue ? theme.colors.purple500 : theme.colors.gray400};
+color: ${({ hasValue }) =>
+  hasValue ? theme.colors.purple500 : "#2E2E44"}; */
