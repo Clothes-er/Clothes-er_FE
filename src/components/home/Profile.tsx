@@ -3,17 +3,29 @@ import styled from "styled-components";
 
 interface Profile {
   nickname: string;
+  profileUrl: string;
 }
 
-const Profile: React.FC<Profile> = ({ nickname }) => {
+const Profile: React.FC<Profile> = ({ nickname, profileUrl }) => {
   return (
     <Div>
-      <Image
-        src="/assets/images/profile.svg"
-        width={45}
-        height={45}
-        alt="profile"
-      />
+      {profileUrl ? (
+        <Image
+          src={profileUrl}
+          width={45}
+          height={45}
+          alt="profile"
+          style={{ borderRadius: "100px", background: "white" }}
+        />
+      ) : (
+        <Image
+          src="/assets/images/profile.svg"
+          width={45}
+          height={45}
+          alt="profile"
+          style={{ borderRadius: "100px", background: "white" }}
+        />
+      )}
       {nickname}
     </Div>
   );
