@@ -51,16 +51,23 @@ const UserInfo = () => {
           회원 정보
         </Top>
         <Profile>
-          <Image
-            src={`${
-              userInfo?.profileUrl
-                ? userInfo.profileUrl
-                : "/assets/images/profile.svg"
-            }`}
-            width={100}
-            height={100}
-            alt="profile"
-          />
+          {userInfo?.profileUrl ? (
+            <Image
+              src={userInfo.profileUrl}
+              width={100}
+              height={100}
+              alt="profile"
+              style={{ borderRadius: "100px", background: "white" }}
+            />
+          ) : (
+            <Image
+              src={"/assets/images/profile.svg"}
+              width={100}
+              height={100}
+              alt="profile"
+              style={{ borderRadius: "100px" }}
+            />
+          )}
         </Profile>
         <Info>
           <Label>이름</Label>

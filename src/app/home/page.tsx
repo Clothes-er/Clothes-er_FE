@@ -27,7 +27,9 @@ const Home = () => {
   const router = useRouter();
   const [postList, setPostList] = useState<PostList[]>();
   const [location, setLocation] = useState<number>();
+  const [search, setSearch] = useState<string>();
 
+  /* 대여글 목록 조회 */
   useEffect(() => {
     AuthAxios.get("/api/v1/rentals")
       .then((response) => {
@@ -50,7 +52,7 @@ const Home = () => {
         const longitude = response.data.result.longitude;
         console.log("데이터", response.data);
         console.log(response.data.message);
-        const newLocation = await getCoordsAddress(latitude, longitude);
+        const newLocation = await getCoordsAddress(longitude, latitude);
         setLocation(newLocation);
       } catch (error) {
         console.log(error);
@@ -59,6 +61,20 @@ const Home = () => {
 
     fetchData();
   }, []);
+
+  /* 대여글 목록 검색 */
+  useEffect(() => {
+    AuthAxios.get(`/api/v1/rentals?search=${search}`)
+      .then((response) => {
+        const data = response.data.result;
+        setPostList(data);
+        console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [search]);
 
   return (
     <>
@@ -76,7 +92,11 @@ const Home = () => {
             {location}
           </Location>
           <Content>
-            <SearchBox placeholder="원하는 상품명을 검색하세요!"></SearchBox>
+            <SearchBox
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="원하는 상품명을 검색하세요!"
+            ></SearchBox>
             {/* <Filter /> */}
             <Posts>
               {postList?.map((data) => (
@@ -149,6 +169,9 @@ const SearchBox = styled.input`
   border: none;
   background: ${theme.colors.white};
   box-shadow: 0px 4px 30px 5px rgba(149, 149, 149, 0.25);
+  color: ${theme.colors.black};
+  ${(props) => props.theme.fonts.b2_regular};
+
   &:focus {
     outline: none;
   }

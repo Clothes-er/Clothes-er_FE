@@ -3,100 +3,157 @@ import Chip from "./Chip";
 import styled from "styled-components";
 import Checkbox from "./Checkbox";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import FilterChip from "./FilterChip";
 import Button from "./Button";
 import { categories, styles } from "@/data/filterData";
-
-interface ChipProps {
-  label: string;
-  value: string;
-}
-
-interface OptionItemProps {
-  selected: boolean;
-}
+import { theme } from "@/styles/theme";
+import { getGenderLabel } from "@/interface/Gender";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import {
+  setSelectedGender,
+  setSelectedCategory,
+  setSelectedStyle,
+} from "@/redux/slices/categorySlice";
 
 const Category = () => {
-  const filter = ["성별", "카테고리", "스타일"];
-  const router = useRouter();
+  const dispatch = useDispatch();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectedValues, setSelectedValues] = useState([]);
 
+  const selectedGender = useSelector(
+    (state: RootState) => state.category.selectedGender
+  );
+  const selectedCategory = useSelector(
+    (state: RootState) => state.category.selectedCategory
+  );
+  const selectedStyle = useSelector(
+    (state: RootState) => state.category.selectedStyle
+  );
+
+  /* 필터 Popup 열기 */
   const handleChipClick = () => {
     setIsPopupOpen(true);
   };
 
-  // const handleValueSelect = (selectedValue: any) => {
-  //   setSelectedValues([...selectedValues, selectedValue]);
-  // };
-
+  /* 필터 Popup 닫기 */
   const handleComplete = () => {
     setIsPopupOpen(false);
   };
 
+  /* 각각Redux로 dispatch 하는 함수들 */
+  const handleGenderSelect = (gender: string | null) => {
+    dispatch(setSelectedGender(gender));
+  };
+
+  const handleCategorySelect = (category: string | null) => {
+    dispatch(
+      setSelectedCategory(category === selectedCategory ? null : category)
+    );
+  };
+
+  const handleStyleSelect = (style: string | null) => {
+    dispatch(setSelectedStyle(style === selectedStyle ? null : style));
+  };
+
   return (
     <Layout>
-      {filter.map((data, index) => (
-        <Chip key={index} label={data} value={data} onClick={handleChipClick} />
-      ))}
+      <Chip
+        label="성별"
+        value={getGenderLabel(selectedGender) || "성별"}
+        onClick={handleChipClick}
+      />
+      <Chip
+        label="카테고리"
+        value={selectedCategory || "카테고리"}
+        onClick={handleChipClick}
+      />
+      <Chip
+        label="스타일"
+        value={selectedStyle || "스타일"}
+        onClick={handleChipClick}
+      />
       {isPopupOpen && (
         <PopupBackground>
           <PopupContent>
-            <Top>
-              <Image
-                src="/assets/icons/ic_arrow.svg"
-                width={24}
-                height={24}
-                alt="back"
-                onClick={() => router.back()}
-                style={{ cursor: "pointer" }}
-              />
-              필터
-            </Top>
-            <OptionsList>
-              <Label>성별</Label>
-              <Checkbox text="여자" />
-              <Checkbox text="남자" />
-              <Label>카테고리</Label>
-              <CategoryGrid>
-                {Object.keys(categories).map((category) => (
-                  <div key={category}>
-                    {category}
-                    {categories[category].map((data) => (
+            <div>
+              <Top>
+                <Image
+                  src="/assets/icons/ic_arrow.svg"
+                  width={24}
+                  height={24}
+                  alt="back"
+                  onClick={() => setIsPopupOpen(false)}
+                  style={{ cursor: "pointer" }}
+                />
+                필터
+              </Top>
+              <OptionsList>
+                <div>
+                  <Label>성별</Label>
+                  <GenderCheckbox>
+                    <Checkbox
+                      text="여자"
+                      checked={selectedGender === "FEMALE"}
+                      onChange={() =>
+                        handleGenderSelect(
+                          selectedGender === "FEMALE" ? null : "FEMALE"
+                        )
+                      }
+                      color="black"
+                    />
+                    <Checkbox
+                      text="남자"
+                      checked={selectedGender === "MALE"}
+                      onChange={() =>
+                        handleGenderSelect(
+                          selectedGender === "MALE" ? null : "MALE"
+                        )
+                      }
+                      color="black"
+                    />
+                  </GenderCheckbox>
+                </div>
+                <div>
+                  <Label>카테고리</Label>
+                  <CategoryGrid>
+                    {Object.keys(categories).map((category) => (
+                      <SameCategory key={category}>
+                        {category}
+                        {categories[category].map((data) => (
+                          <FilterChip
+                            key={data}
+                            label={data}
+                            value={data}
+                            onClick={handleCategorySelect}
+                            selected={selectedCategory === data}
+                          />
+                        ))}
+                      </SameCategory>
+                    ))}
+                  </CategoryGrid>
+                </div>
+                <div>
+                  <Label>스타일</Label>
+                  <SameStyle>
+                    {styles.map((data) => (
                       <FilterChip
                         key={data}
                         label={data}
                         value={data}
-                        // onClick={() => handleValueSelect(option)}
-                        // selected={selectedValues.includes(option)}
+                        onClick={handleStyleSelect}
+                        selected={selectedStyle === data}
                       />
                     ))}
-                  </div>
-                ))}
-              </CategoryGrid>
-              <Label>스타일</Label>
-              <Grid>
-                {styles.map((data) => (
-                  <FilterChip
-                    key={data}
-                    label={data}
-                    value={data}
-                    // onClick={() => handleValueSelect(option)}
-                    // selected={selectedValues.includes(option)}
-                  />
-                ))}
-              </Grid>
-            </OptionsList>
-            <CompleteButton>
-              <Button
-                buttonType="primary"
-                size="large"
-                text="선택 완료"
-                onClick={handleComplete}
-                // disabled
-              />
-            </CompleteButton>
+                  </SameStyle>
+                </div>
+              </OptionsList>
+            </div>
+            <Button
+              buttonType="primary"
+              size="large"
+              text="선택 완료"
+              onClick={handleComplete}
+            />
           </PopupContent>
         </PopupBackground>
       )}
@@ -133,6 +190,9 @@ const PopupContent = styled.div`
   background-color: #ffffff;
   border-radius: 8px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const Top = styled.div`
@@ -141,28 +201,26 @@ const Top = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 18px;
-  margin-bottom: 15px;
+  margin-bottom: 30px;
   ${(props) => props.theme.fonts.h2_bold};
 `;
 
 const OptionsList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 50px;
 `;
 
 const Label = styled.div`
   display: flex;
-  gap: 3px;
+  margin-bottom: 15px;
+  color: ${theme.colors.b500};
   ${(props) => props.theme.fonts.b1_bold};
 `;
 
-const OptionItem = styled.div<OptionItemProps>`
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 5px;
-  background-color: ${(props) => (props.selected ? "#F3F2FF" : "#ffffff")};
-  color: ${(props) => (props.selected ? "#6C63FF" : "#000000")};
+const GenderCheckbox = styled.div`
+  display: flex;
+  gap: 50px;
 `;
 
 const CategoryGrid = styled.div`
@@ -172,28 +230,18 @@ const CategoryGrid = styled.div`
   align-items: flex-start;
 `;
 
-const Grid = styled.div`
+const SameCategory = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
-  justify-content: flex-start;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
 `;
 
-const CompleteButton = styled.button`
-  width: calc(100% - 40px);
-  display: inline-flex;
-  justify-content: center;
-  align-self: start;
-  cursor: pointer;
-  background-color: #6c63ff;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: bold;
-  position: absolute;
-  bottom: 20;
-  left: 20;
+const SameStyle = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-start;
+  align-items: center;
 `;

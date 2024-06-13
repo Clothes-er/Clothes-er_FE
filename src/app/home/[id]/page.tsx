@@ -132,7 +132,10 @@ const Page = () => {
             ))}
           </>
         )}
-        <Profile nickname={postInfo?.nickname ? postInfo.nickname : ""} />
+        <Profile
+          nickname={postInfo?.nickname ? postInfo.nickname : ""}
+          profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
+        />
         <Body>
           <Title>{postInfo?.title}</Title>
           <Category>

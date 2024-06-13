@@ -6,13 +6,11 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
 import styled from "styled-components";
-import SockJS from "sockjs-client";
-import Stomp from "@stomp/stompjs";
-import { getToken } from "@/hooks/getToken";
 import Modal from "@/components/common/Modal";
 import RentalDate from "@/components/common/RentalDate";
+import { Client } from "@stomp/stompjs";
+import { getToken } from "@/hooks/getToken";
 
 interface Message {
   nickname: string;
@@ -35,25 +33,36 @@ interface ChatMsg {
 
 const ChatDetail = () => {
   const router = useRouter();
+  /* roomId */
   const { id } = useParams();
+  /* get 메소드에서 받아오는 데이터 상태 저장*/
   const [chatMsg, setChatMsg] = useState<ChatMsg>();
-  const [msg, setMsg] = useState<string>();
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [chatMsgList, setChatMsgList] = useState<ChatMsg | null>(null);
-  const [stompClient, setStompClient] = useState<Stomp.Client | null>(null);
+  /* 전송 메세지 */
+  const [msg, setMsg] = useState<string>("");
+  /* 수신 메세지 */
+  const [chatMsgList, setChatMsgList] = useState<Message[]>([]);
+  const [stompClient, setStompClient] = useState<Client | null>(null);
 
+  /* 대여중, 반납완료 Popup */
   const [rentaling, setRentaling] = useState<boolean>();
   const [rentaled, setRentaled] = useState<boolean>();
+
+  /* 대여중, 반납완료 상태 */
   const [rentalState, setRentalState] = useState<string>();
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   useEffect(() => {
+    fetchChatMessages();
+  }, [chatMsgList]);
+
+  const fetchChatMessages = () => {
     AuthAxios.get(`/api/v1/chats/rooms/${id}`)
       .then((response) => {
         const data = response.data.result;
         setChatMsg(data);
+        setChatMsgList(data.messages || []);
         console.log(data);
         console.log(response.data.message);
       })
@@ -61,69 +70,75 @@ const ChatDetail = () => {
         console.log(error);
         console.log(error.response.data.message);
       });
+  };
+
+  useEffect(() => {
+    // 표준 WebSocket 객체 생성
+    // const socket = new WebSocket("ws://13.209.137.34:8080/ws");
+
+    const socketUrl = `ws://13.209.137.34:8080/ws`;
+    const socket = new WebSocket(socketUrl);
+
+    const client = new Client({
+      webSocketFactory: () => socket,
+      connectHeaders: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+      debug: (str) => {
+        console.log(str);
+      },
+      reconnectDelay: 5000, // 재연결 시도 시간 간격 (밀리초)
+    });
+
+    client.onConnect = () => {
+      console.log("WebSocket 연결이 열렸습니다.");
+
+      client.subscribe(`/sub/chats/${id}`, (frame) => {
+        try {
+          const messageBody = JSON.parse(frame.body);
+
+          console.log(messageBody);
+          setChatMsgList((prevMessages) => [...prevMessages, messageBody]);
+        } catch (error) {
+          console.error("오류가 발생했습니다:", error);
+        }
+      });
+    };
+
+    client.onStompError = (frame) => {
+      console.error("Broker reported error: " + frame.headers["message"]);
+      console.error("Additional details: " + frame.body);
+    };
+
+    client.onWebSocketError = (event) => {
+      console.error("WebSocket error:", event);
+      // alert("메시지 전송 중 오류가 발생했습니다.");
+    };
+
+    client.activate();
+    setStompClient(client);
+
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate(); // 연결 해제
+      }
+      socket.close(); // WebSocket 연결 닫기
+    };
   }, []);
 
-  // const connectToWebSocket = () => {
-  //   const socket = new SockJS("ws://13.209.137.34:8080/ws");
-  //   // const socket = io("ws://13.209.137.34:8080/ws");
-  //   const client = Stomp.over(socket);
-
-  //   console.log("WebSocket 연결을 시도합니다.");
-
-  //   // 인증 토큰 가져오기
-  //   const token = getToken();
-
-  //   client.connect(
-  //     { headers: { Authorization: `Bearer ${token}` } },
-  //     () => {
-  //       console.log("WebSocket 연결 성공");
-
-  //       // 데이터 보내는 용 연결망 설정
-  //       const sendSocket = io("ws://13.209.137.34:8080/ws/pub/chats/" + id);
-  //       const sendClient = Stomp.over(sendSocket);
-
-  //       // 데이터 받는 용 연결망 설정
-  //       const recvSocket = io("ws://13.209.137.34:8080/ws/sub/chats/" + id);
-  //       const recvClient = Stomp.over(recvSocket);
-
-  //       // 메시지 수신 처리
-  //       recvClient.connect({}, () => {
-  //         console.log("데이터 받는 용 WebSocket 연결 성공");
-
-  //         recvClient.subscribe(`/chats/${id}`, (message: any) => {
-  //           console.log("수신한 메시지:", message.body);
-  //           // 메시지 처리 로직 추가
-  //         });
-  //       });
-
-  //       // 소켓 및 클라이언트 상태 저장
-  //       setSocket(socket);
-  //       setStompClient(client);
-  //     },
-  //     (error: any) => {
-  //       console.error("WebSocket 연결 오류:", error.body.message);
-  //     }
-  //   );
-
-  //   return () => {
-  //     if (stompClient) {
-  //       stompClient.disconnect();
-  //     }
-  //     if (socket) {
-  //       socket.close();
-  //     }
-  //   };
-  // };
-
-  // useEffect(connectToWebSocket, []);
-
   const handleSendMsg = () => {
-    console.log("전송하기", msg);
-    // if (msg?.trim() && socket) {
-    //   socket.emit("sendMsg", { roomId: id, message: msg });
-    //   setMsg(""); // 메시지 전송 후 입력 필드 비우기
-    //   console.log("전송성공");
-    // }
+    // 메시지
+    const destination = `/pub/chats/${id}`;
+    if (stompClient && stompClient.connected) {
+      stompClient.publish({
+        destination,
+        body: JSON.stringify({
+          message: msg,
+        }),
+      });
+    }
+
+    setMsg("");
   };
 
   const handleCheckRentaling = () => {
@@ -142,6 +157,7 @@ const ChatDetail = () => {
           console.log(data);
           setRentalState(data.rentalState);
           console.log(response.data.message);
+          setRentaling(false);
         })
         .catch((error) => {
           console.log(error);
@@ -157,6 +173,7 @@ const ChatDetail = () => {
         console.log(data);
         setRentalState(data.rentalState);
         console.log(response.data.message);
+        setRentaled(false);
       })
       .catch((error) => {
         console.log(error);
@@ -190,35 +207,22 @@ const ChatDetail = () => {
           <Post
             title={chatMsg.title}
             minPrice={chatMsg.minPrice}
+            imgUrl={chatMsg.rentalImgUrl}
             size="small"
           />
         )}
         {chatMsg && (
           <ChatList>
-            {chatMsg.messages?.map((data, index) => (
+            {chatMsg.messages.map((data, index) => (
               <ChatMsg
                 key={index}
                 nickname={data.nickname}
-                me={data.nickname !== chatMsg.opponentNickname}
+                me={data.nickname !== chatMsg?.opponentNickname}
                 msg={data.message}
               />
             ))}
           </ChatList>
         )}
-        <State>
-          <StateBox
-            check={rentalState === "RENTED"}
-            onClick={() => setRentaling(true)}
-          >
-            대여중
-          </StateBox>
-          <StateBox
-            check={rentalState === "RETURNED"}
-            onClick={() => setRentaled(true)}
-          >
-            대여 완료
-          </StateBox>
-        </State>
         {chatMsg?.opponentNickname === chatMsg?.buyerNickname && (
           <State>
             <StateBox

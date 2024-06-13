@@ -12,6 +12,9 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../../../styles/animation.css";
 import axios from "axios";
 import { getToken } from "@/hooks/getToken";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { clearCategory } from "@/redux/slices/categorySlice";
 
 interface Price {
   days: number | null;
@@ -19,6 +22,17 @@ interface Price {
 }
 const Write = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  const selectedGender = useSelector(
+    (state: RootState) => state.category.selectedGender
+  );
+  const selectedCategory = useSelector(
+    (state: RootState) => state.category.selectedCategory
+  );
+  const selectedStyle = useSelector(
+    (state: RootState) => state.category.selectedStyle
+  );
 
   const [images, setImages] = useState<File[]>([]);
   const [inputs, setInputs] = useState<{
@@ -34,9 +48,9 @@ const Write = () => {
   }>({
     title: "",
     description: "",
-    gender: "FEMALE",
-    category: "자켓",
-    style: "힙합",
+    gender: selectedGender || "",
+    category: selectedCategory || "",
+    style: selectedStyle || "",
     prices: [
       { days: 5, price: null },
       { days: 10, price: null },
@@ -44,28 +58,6 @@ const Write = () => {
     brand: "",
     size: "",
     fit: "",
-    // title: "골지 반팔 니트",
-    // description: "여름에 여리한 핏감으로 데일리하게 즐기기 좋아요!",
-    // gender: "FEMALE",
-    // category: "니트",
-    // style: "러블리",
-    // prices: [
-    //   {
-    //     days: 5,
-    //     price: 3000,
-    //   },
-    //   {
-    //     days: 10,
-    //     price: 5000,
-    //   },
-    //   {
-    //     days: 3,
-    //     price: 2000,
-    //   },
-    // ],
-    // brand: "에이블리",
-    // size: "",
-    // fit: "슬림핏",
   });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,9 +86,9 @@ const Write = () => {
           JSON.stringify({
             title: inputs.title,
             description: inputs.description,
-            gender: inputs.gender,
-            category: inputs.category,
-            style: inputs.style,
+            gender: selectedGender,
+            category: selectedCategory,
+            style: selectedStyle,
             prices: inputs.prices,
             brand: inputs.brand,
             size: inputs.size,
@@ -125,6 +117,7 @@ const Write = () => {
       })
       .then((response) => {
         console.log(response.data.result);
+        dispatch(clearCategory());
         router.push(`/home`);
       })
       .catch((error) => {

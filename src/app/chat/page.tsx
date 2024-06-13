@@ -13,7 +13,7 @@ interface ChatList {
   profileImgUrl: string;
   recentMessage: string;
   recentMessageTime: string;
-  recentImgUrl: string;
+  rentalImgUrl: string;
   recentState: string;
   title: string;
 }
@@ -64,6 +64,8 @@ const Chat = () => {
               nickname={data.nickname}
               recentMessage={data.recentMessage}
               title={data.title}
+              profileImgUrl={data.profileImgUrl}
+              rentalImgUrl={data.rentalImgUrl}
             />
           ))}
         </ChatList>

@@ -3,12 +3,14 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import signInReducer from "./slices/signInSlice";
 import firstLoginReducer from "./slices/firstLoginSlice";
+import categoryReducer from "./slices/categorySlice";
 import { useDispatch } from "react-redux";
 
 
 const rootReducer = combineReducers({
     signIn: signInReducer,
     firstLogin: firstLoginReducer,
+    category: categoryReducer,
 });
   
 const persistConfig = {
@@ -22,6 +24,7 @@ export const store = configureStore({
     reducer: {
     signIn: signInReducer,
     firstLogin: firstLoginReducer,
+    category: categoryReducer,
     },
 });
 

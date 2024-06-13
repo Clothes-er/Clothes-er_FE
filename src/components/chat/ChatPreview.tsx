@@ -8,6 +8,8 @@ interface ChatPreviewProps {
   nickname: string;
   recentMessage: string;
   title: string;
+  profileImgUrl: string;
+  rentalImgUrl: string;
 }
 
 const ChatPreview: React.FC<ChatPreviewProps> = ({
@@ -15,6 +17,8 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
   nickname,
   recentMessage,
   title,
+  profileImgUrl,
+  rentalImgUrl,
 }) => {
   const router = useRouter();
   const handleChatDetail = () => {
@@ -24,19 +28,40 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
   return (
     <Container onClick={handleChatDetail}>
       <Left>
-        <ProfileImage
-          src="/assets/images/profile.svg"
-          width={56}
-          height={56}
-          alt="profile"
-        />
-        <ProductImage
-          src="/assets/images/post_image.svg"
-          width={56}
-          height={56}
-          alt="product"
-          style={{ borderRadius: "50px" }}
-        />
+        {profileImgUrl ? (
+          <ProfileImage
+            src={profileImgUrl}
+            width={56}
+            height={56}
+            alt="profile"
+            style={{ borderRadius: "100px", background: "white" }}
+          />
+        ) : (
+          <ProfileImage
+            src={"/assets/images/profile.svg"}
+            width={56}
+            height={56}
+            alt="profile"
+            style={{ borderRadius: "100px" }}
+          />
+        )}
+        {rentalImgUrl ? (
+          <ProductImage
+            src={rentalImgUrl}
+            width={56}
+            height={56}
+            alt="product"
+            style={{ borderRadius: "190px", background: "white" }}
+          />
+        ) : (
+          <ProductImage
+            src="/assets/images/noImage.svg"
+            width={56}
+            height={56}
+            alt="product"
+            style={{ borderRadius: "100px" }}
+          />
+        )}
       </Left>
       <Right>
         <Top>

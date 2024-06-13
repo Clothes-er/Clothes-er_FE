@@ -24,16 +24,16 @@ const Location = () => {
       const coords = await getAddressCoords(location);
       console.log("주소 변환에 성공하였습니다.", coords);
 
-      setLatitude(coords.x);
-      setLongitude(coords.y);
+      setLatitude(coords.y);
+      setLongitude(coords.x);
 
       const response = await AuthAxios.patch(`/api/v1/users/address`, {
-        latitude: coords.x,
-        longitude: coords.y,
+        latitude: coords.y,
+        longitude: coords.x,
       });
 
       console.log("주소 업데이트 성공", response.data);
-      console.log("업데이트한 위도경도", coords.x, coords.y);
+      console.log("업데이트한 위도경도", coords.y, coords.x);
       console.log(response.data.message);
     } catch (error) {
       console.error("주소 변환에 실패하였습니다.");
@@ -54,7 +54,7 @@ const Location = () => {
         setLatitude(latitude);
         setLongitude(longitude);
         console.log(response.data.message);
-        const newLocation = await getCoordsAddress(latitude, longitude);
+        const newLocation = await getCoordsAddress(longitude, latitude);
         setLocation(newLocation);
       } catch (error) {
         console.log(error);

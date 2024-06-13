@@ -4,7 +4,7 @@ export enum Gender {
 }
 
 // 함수 정의: enum 값에 따라 문자열 반환
-export const getGenderLabel = (gender: Gender): string => {
+export const getGenderLabel = (gender: Gender | string | null): string => {
   switch (gender) {
     case Gender.MALE:
       return "남자";
