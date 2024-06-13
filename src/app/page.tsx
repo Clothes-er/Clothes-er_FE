@@ -24,6 +24,7 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [save, setSave] = useState(false);
+  const [error, setError] = useState<string>("");
 
   const handleSave = () => {
     setSave(!save);
@@ -57,6 +58,11 @@ export default function Home() {
       })
       .catch((error) => {
         console.log("로그인 실패", error);
+        if (error.response) {
+          setError(error.response.data.message);
+        } else {
+          setError("이메일과 비밀번호를 확인해주세요.");
+        }
       });
   };
 
@@ -109,6 +115,7 @@ export default function Home() {
             onChange={(value: string) => setPassword(value)}
             placeholder="비밀번호"
           />
+          <Error error={error}>{error}</Error>
           <Save save={save} onClick={handleSave}>
             {save ? (
               <Image
@@ -127,7 +134,11 @@ export default function Home() {
             )}
             로그인 정보 저장하기
           </Save>
-          <Button text="로그인" onClick={handleLogin} />
+          <Button
+            text="로그인"
+            onClick={handleLogin}
+            disabled={!(email && password)}
+          />
           <Nav>
             <Link href="/join/terms">회원가입</Link>|
             <Link href="/findId">아이디 찾기</Link>|
@@ -196,7 +207,6 @@ const Login = styled.div`
   box-shadow: 0px 4px 30px 0px rgba(171, 171, 171, 0.25);
   display: flex;
   flex-direction: column;
-  gap: 20px;
   text-align: center;
   z-index: 10;
   color: ${theme.colors.gray900};
@@ -210,6 +220,16 @@ const Purple = styled.div`
   margin-bottom: 24px;
 `;
 
+const Error = styled.div<{ error: string }>`
+  text-align: left;
+  height: 16px;
+  padding-left: 10px;
+  color: ${(props) => props.theme.colors.delete};
+  ${(props) => props.theme.fonts.c1_regular};
+  opacity: ${(props) => (props.error ? 1 : 0)};
+  margin-bottom: 10px;
+`;
+
 const Save = styled.div<SaveProps>`
   display: flex;
   flex-direction: row;
@@ -219,6 +239,7 @@ const Save = styled.div<SaveProps>`
   color: ${({ save, theme }) =>
     save ? "rgba(90, 66, 238, 0.7)" : theme.colors.gray900};
   cursor: pointer;
+  margin-bottom: 20px;
 `;
 
 const Nav = styled.div`
@@ -226,4 +247,5 @@ const Nav = styled.div`
   flex-direction: row;
   gap: 3px;
   justify-content: center;
+  margin-top: 20px;
 `;
