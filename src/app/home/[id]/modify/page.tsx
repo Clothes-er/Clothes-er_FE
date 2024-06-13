@@ -3,6 +3,7 @@
 import Button from "@/components/common/Button";
 import Category from "@/components/common/Category";
 import Input from "@/components/common/Input";
+import { useRequireAuth } from "@/hooks/useAuth";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -10,6 +11,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const Modify = () => {
+  useRequireAuth();
   const router = useRouter();
 
   const [inputs, setInputs] = useState({

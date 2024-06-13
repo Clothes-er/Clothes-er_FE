@@ -10,8 +10,10 @@ import Button from "@/components/common/Button";
 import { getAddressCoords } from "@/hooks/getAddressCoords";
 import AuthAxios from "@/api/authAxios";
 import { getCoordsAddress } from "@/hooks/getCoordsAddress";
+import { useRequireAuth } from "@/hooks/useAuth";
 
 const Location = () => {
+  useRequireAuth();
   const router = useRouter();
   const [latitude, setLatitude] = useState<number>();
   const [longitude, setLongitude] = useState<number>();

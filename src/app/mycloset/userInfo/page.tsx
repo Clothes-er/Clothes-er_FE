@@ -3,6 +3,7 @@ import AuthAxios from "@/api/authAxios";
 import Button from "@/components/common/Button";
 import Tabbar from "@/components/common/Tabbar";
 import Topbar from "@/components/common/Topbar";
+import { useRequireAuth } from "@/hooks/useAuth";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -20,6 +21,7 @@ interface UserInfo {
 }
 
 const UserInfo = () => {
+  useRequireAuth();
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<UserInfo>();
 

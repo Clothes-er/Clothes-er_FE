@@ -4,6 +4,7 @@ import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
+import { useNoRequireAuth } from "@/hooks/useNoAuth";
 import { setStep3 } from "@/redux/slices/firstLoginSlice";
 import { useAppDispatch } from "@/redux/store";
 import { postFirstLoginData } from "@/redux/thunks/postFirstLogin";
@@ -14,6 +15,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Step3 = () => {
+  useNoRequireAuth();
   const router = useRouter();
   const dispatch = useAppDispatch();
 

@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
 import { getCoordsAddress } from "@/hooks/getCoordsAddress";
+import { useRequireAuth } from "@/hooks/useAuth";
 
 interface PostList {
   id: number;
@@ -24,6 +25,7 @@ interface PostList {
 }
 
 const Home = () => {
+  useRequireAuth();
   const router = useRouter();
   const [postList, setPostList] = useState<PostList[]>();
   const [location, setLocation] = useState<number>();

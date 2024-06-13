@@ -15,6 +15,7 @@ import "../../../styles/slick.css";
 import "../../../styles/slick-theme.css";
 import NextArrow from "@/components/common/NextArrow";
 import PrevArrow from "@/components/common/PrevArrow";
+import { useRequireAuth } from "@/hooks/useAuth";
 
 interface Price {
   days: number;
@@ -43,6 +44,7 @@ interface PostInfo {
 }
 
 const Page = () => {
+  useRequireAuth();
   const router = useRouter();
   const { id } = useParams();
   const [menu, setMenu] = useState(false);

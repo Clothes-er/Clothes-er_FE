@@ -3,6 +3,7 @@
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Progressbar from "@/components/common/Progressbar";
+import { useNoRequireAuth } from "@/hooks/useNoAuth";
 import { setStep2 } from "@/redux/slices/signInSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
@@ -12,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 const Step2 = () => {
+  useNoRequireAuth();
   const router = useRouter();
   const dispatch = useDispatch();
   const step2 = useSelector((state: RootState) => state.signIn.step2);

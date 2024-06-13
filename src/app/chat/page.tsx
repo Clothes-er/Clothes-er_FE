@@ -2,6 +2,7 @@
 import AuthAxios from "@/api/authAxios";
 import ChatPreview from "@/components/chat/ChatPreview";
 import Tabbar from "@/components/common/Tabbar";
+import { useRequireAuth } from "@/hooks/useAuth";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -19,6 +20,7 @@ interface ChatList {
   title: string;
 }
 const Chat = () => {
+  useRequireAuth();
   const router = useRouter();
   const [chatList, setChatList] = useState<ChatList[]>();
 

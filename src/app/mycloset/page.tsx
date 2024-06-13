@@ -3,6 +3,7 @@ import AuthAxios from "@/api/authAxios";
 import Tabbar from "@/components/common/Tabbar";
 import Topbar from "@/components/common/Topbar";
 import { getLevelText } from "@/data/levelData";
+import { useRequireAuth } from "@/hooks/useAuth";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -24,6 +25,7 @@ interface ProfileInfo {
   followees: number;
 }
 const MyCloset = () => {
+  useRequireAuth();
   const router = useRouter();
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>();
 

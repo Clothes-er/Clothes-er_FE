@@ -2,11 +2,13 @@
 
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
+import { useNoRequireAuth } from "@/hooks/useNoAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Terms = () => {
+  useNoRequireAuth();
   const router = useRouter();
   const [terms, setTerms] = useState({
     all: false,

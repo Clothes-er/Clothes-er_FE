@@ -10,9 +10,10 @@ import Postcode from "@/components/common/Postcode";
 import { getAddressCoords } from "@/hooks/getAddressCoords";
 import { useDispatch } from "react-redux";
 import { setStep1 } from "@/redux/slices/firstLoginSlice";
-import AuthAxios from "@/api/authAxios";
+import { useNoRequireAuth } from "@/hooks/useNoAuth";
 
 const Step1 = () => {
+  useNoRequireAuth();
   const router = useRouter();
   const dispatch = useDispatch();
   const [location, setLocation] = useState("");
