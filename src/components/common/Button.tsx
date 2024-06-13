@@ -67,7 +67,7 @@ const StyledButton = styled.button`
   align-items: center;
   border: none;
   border-radius: 15px;
-  ${(props) => props.theme.fonts.body2_m};
+  ${(props) => props.theme.fonts.b2_regular};
   white-space: nowrap;
   cursor: pointer;
   gap: 10px;
