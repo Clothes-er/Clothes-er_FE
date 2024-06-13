@@ -34,7 +34,11 @@ const Checkbox = (props: CheckBoxProps) => {
 
   return (
     <CheckBoxLayout className={checkboxClassName} checked={checked}>
-      <CheckboxContainer essential={essential ? true : false} checked={checked}>
+      <CheckboxContainer
+        className={checkboxClassName}
+        essential={essential ? true : false}
+        checked={checked}
+      >
         <CheckboxInput
           value={value}
           type="checkbox"
@@ -81,21 +85,6 @@ const CheckBoxLayout = styled.div<CheckBoxProps>`
         ? `1px solid ${theme.colors.primary300}`
         : `1px solid transparent`};
   }
-
-  /* color */
-  &.purple {
-    color: ${theme.colors.purple300};
-    ${({ theme }) => theme.fonts.body3_m};
-  }
-  &.gray {
-    color: ${(props) =>
-      props.checked ? `${theme.colors.purple500}` : `${theme.colors.b400}`};
-    ${({ theme }) => theme.fonts.body2_m};
-  }
-  &.black {
-    color: ${theme.colors.b700};
-    ${({ theme }) => theme.fonts.body1_b};
-  }
 `;
 
 const CheckboxContainer = styled.label<CheckBoxProps>`
@@ -108,7 +97,21 @@ const CheckboxContainer = styled.label<CheckBoxProps>`
     margin-left: 8px;
     ${({ theme }) => theme.fonts.caption1_m};
     color: ${(props) =>
-      props.essential ? theme.colors.primary500 : theme.colors.b400};
+      props.essential ? theme.colors.primary500 : theme.colors.b100};
+    /* color */
+    &.purple {
+      color: ${theme.colors.purple300};
+      ${({ theme }) => theme.fonts.b3_medium};
+    }
+    &.gray {
+      color: ${(props) =>
+        props.checked ? `${theme.colors.purple500}` : `${theme.colors.black}`};
+      ${({ theme }) => theme.fonts.b2_medium};
+    }
+    &.black {
+      color: ${theme.colors.basic};
+      ${({ theme }) => theme.fonts.b2_bold};
+    }
   }
 `;
 
