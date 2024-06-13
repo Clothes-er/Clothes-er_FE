@@ -52,7 +52,7 @@ const Home = () => {
         const longitude = response.data.result.longitude;
         console.log("데이터", response.data);
         console.log(response.data.message);
-        const newLocation = await getCoordsAddress(latitude, longitude);
+        const newLocation = await getCoordsAddress(longitude, latitude);
         setLocation(newLocation);
       } catch (error) {
         console.log(error);
