@@ -2,6 +2,7 @@
 import AuthAxios from "@/api/authAxios";
 import ChatPreview from "@/components/chat/ChatPreview";
 import Tabbar from "@/components/common/Tabbar";
+import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,7 +15,7 @@ interface ChatList {
   recentMessage: string;
   recentMessageTime: string;
   rentalImgUrl: string;
-  recentState: string;
+  rentalState: string;
   title: string;
 }
 const Chat = () => {
@@ -66,6 +67,8 @@ const Chat = () => {
               title={data.title}
               profileImgUrl={data.profileImgUrl}
               rentalImgUrl={data.rentalImgUrl}
+              rentalState={data.rentalState}
+              recentMessageTime={data.recentMessageTime}
             />
           ))}
         </ChatList>
@@ -90,16 +93,16 @@ const Layout = styled.div`
 `;
 
 const Top = styled.div`
-  width: calc(50% + 30px);
+  width: calc(50% + 20px);
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 18px;
-  margin-bottom: 15px;
   ${(props) => props.theme.fonts.h2_bold};
 `;
 
 const ChatList = styled.div`
   display: flex;
   flex-direction: column;
+  border-top: 1px solid ${theme.colors.gray300};
 `;

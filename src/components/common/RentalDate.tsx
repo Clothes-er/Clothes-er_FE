@@ -50,7 +50,7 @@ const RentalDateWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 `;
 
 const Label = styled.div`

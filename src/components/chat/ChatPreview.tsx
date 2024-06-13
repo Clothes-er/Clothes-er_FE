@@ -10,6 +10,8 @@ interface ChatPreviewProps {
   title: string;
   profileImgUrl: string;
   rentalImgUrl: string;
+  rentalState: string;
+  recentMessageTime: string;
 }
 
 const ChatPreview: React.FC<ChatPreviewProps> = ({
@@ -19,6 +21,8 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
   title,
   profileImgUrl,
   rentalImgUrl,
+  rentalState,
+  recentMessageTime,
 }) => {
   const router = useRouter();
   const handleChatDetail = () => {
@@ -65,7 +69,16 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
       </Left>
       <Right>
         <Top>
-          <NickName>{nickname}</NickName>
+          <Name>
+            <NickName>{nickname}</NickName>
+            {rentalState === "RENTED" && (
+              <StateBox check={true}>대여중</StateBox>
+            )}
+            {rentalState === "RETURNED" && (
+              <StateBox check={false}>대여완료</StateBox>
+            )}
+          </Name>
+
           <Chat>
             {/* <Image
               src="/assets/icons/ic_chat_mini.svg"
@@ -77,7 +90,7 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
           </Chat>
         </Top>
         <Preview>{recentMessage}</Preview>
-        <Product>{title}</Product>
+        <Product>{`${title}   |   ${recentMessageTime}`}</Product>
       </Right>
     </Container>
   );
@@ -87,7 +100,7 @@ export default ChatPreview;
 
 const Container = styled.div`
   width: 100%;
-  height: 103px;
+  height: 110px;
   padding: 24px 8px;
   border-bottom: 1px solid ${theme.colors.gray300};
   display: flex;
@@ -124,9 +137,16 @@ const Right = styled.div`
 
 const Top = styled.div`
   width: 100%;
+  height: 25px;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 7px;
+`;
+
+const Name = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
 `;
 
 const Chat = styled.div`
@@ -138,7 +158,7 @@ const Chat = styled.div`
 `;
 
 const NickName = styled.div`
-  ${(props) => props.theme.fonts.b3_medium};
+  ${(props) => props.theme.fonts.b2_medium};
 `;
 const Preview = styled.div`
   ${(props) => props.theme.fonts.b3_regular};
@@ -147,4 +167,22 @@ const Preview = styled.div`
 const Product = styled.div`
   ${(props) => props.theme.fonts.c1_regular};
   color: ${theme.colors.gray800};
+  white-space: pre;
+`;
+
+const StateBox = styled.button<{ check: boolean }>`
+  width: auto;
+  height: 25px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: ${(props) =>
+    props.check ? props.theme.colors.purple100 : props.theme.colors.gray100};
+  color: ${(props) =>
+    props.check ? props.theme.colors.purple300 : props.theme.colors.b100};
+  ${(props) => props.theme.fonts.b3_bold};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
 `;
