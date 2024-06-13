@@ -24,7 +24,7 @@ interface ChatMsg {
   buyerNickname: string;
   lenderNickname: string;
   opponentNickname: string;
-  rentalId: string;
+  rentalId: number;
   rentalImgUrl: string;
   title: string;
   minPrice: number;
@@ -63,6 +63,10 @@ const ChatDetail = () => {
   const [checked, setChecked] = useState<boolean>();
   const [lookChecked, setLookChecked] = useState<boolean>();
 
+  /* 에러 msg */
+  const [rentalingError, setRentalingError] = useState<string>("");
+  const [rentaledError, setRentaledError] = useState<string>("");
+
   /* 대여중, 반납완료 상태 */
   const [rentalState, setRentalState] = useState<string>();
 
@@ -71,6 +75,7 @@ const ChatDetail = () => {
 
   useEffect(() => {
     fetchChatMessages();
+    console.log(checkGet);
   }, [chatMsgList, checkGet.isChecked]);
 
   const fetchChatMessages = () => {
@@ -143,19 +148,22 @@ const ChatDetail = () => {
 
   const handleSendMsg = () => {
     // 메시지
-    const destination = `/pub/chats/${id}`;
-    if (stompClient && stompClient.connected) {
-      stompClient.publish({
-        destination,
-        body: JSON.stringify({
-          message: msg,
-        }),
-      });
-    }
+    if (msg?.trim()) {
+      const destination = `/pub/chats/${id}`;
+      if (stompClient && stompClient.connected) {
+        stompClient.publish({
+          destination,
+          body: JSON.stringify({
+            message: msg,
+          }),
+        });
+      }
 
-    setMsg("");
+      setMsg("");
+    }
   };
 
+  /* 대여중 처리 */
   const handleCheckRentaling = () => {
     if (startDate && endDate) {
       const formattedStartDate = startDate.toISOString().split("T")[0];
@@ -177,10 +185,12 @@ const ChatDetail = () => {
         .catch((error) => {
           console.log(error);
           console.log(error.response.data.message);
+          setRentalingError(error.response.data.message);
         });
     }
   };
 
+  /* 반납 완료 처리 */
   const handleCheckRentaled = () => {
     AuthAxios.patch(`/api/v1/rentals/${id}/return`)
       .then((response) => {
@@ -193,9 +203,11 @@ const ChatDetail = () => {
       .catch((error) => {
         console.log(error);
         console.log(error.response.data.message);
+        setRentaledError(error.response.data.message);
       });
   };
 
+  /* 체크리스트 등록 */
   const handleRecordCheck = () => {
     AuthAxios.post(`/api/v1/rentals/${id}/check`, {
       checkList: checkGet.checkList,
@@ -205,6 +217,10 @@ const ChatDetail = () => {
         setCheckGet(data);
         setChecked(false);
         console.log(response.data.message);
+        setCheckGet((prevState) => ({
+          ...prevState,
+          checkList: ["", "", ""],
+        }));
       })
       .catch((error) => {
         console.log(error);
@@ -212,6 +228,7 @@ const ChatDetail = () => {
       });
   };
 
+  /* 체크리스트 열람 */
   const handleLookCheck = () => {
     AuthAxios.get(`/api/v1/rentals/${id}/check`)
       .then((response) => {
@@ -234,6 +251,23 @@ const ChatDetail = () => {
       ...checkGet,
       checkList: newCheckList,
     });
+  };
+
+  /* 체크리스트 열람 예외처리 */
+  const getContent = () => {
+    if (checkGet.checkList.every((item) => item === "")) {
+      return <NoData>작성 내역이 없습니다</NoData>;
+    } else {
+      return (
+        <div>
+          <ol>
+            {checkGet.checkList.map(
+              (data, index) => data && <List key={index}>{data}</List>
+            )}
+          </ol>
+        </div>
+      );
+    }
   };
 
   return (
@@ -263,6 +297,7 @@ const ChatDetail = () => {
             title={chatMsg.title}
             minPrice={chatMsg.minPrice}
             imgUrl={chatMsg.rentalImgUrl}
+            id={chatMsg.rentalId}
             size="small"
           />
         )}
@@ -281,14 +316,16 @@ const ChatDetail = () => {
         {chatMsg?.opponentNickname === chatMsg?.buyerNickname && (
           <State>
             <StateBox
-              check={rentalState === "RENTED"}
+              check={chatMsg?.rentalState === "RENTED"}
               onClick={() => setRentaling(true)}
+              disabled={chatMsg?.rentalState === "RENTED"}
             >
               대여중
             </StateBox>
             <StateBox
-              check={rentalState === "RETURNED"}
+              check={chatMsg?.rentalState === "RETURNED"}
               onClick={() => setRentaled(true)}
+              disabled={chatMsg?.rentalState === "RETURNED"}
             >
               대여 완료
             </StateBox>
@@ -353,12 +390,15 @@ const ChatDetail = () => {
             width="340px"
             height="400px"
             content={
-              <RentalDate
-                startDate={startDate}
-                endDate={endDate}
-                setStartDate={setStartDate}
-                setEndDate={setEndDate}
-              />
+              <>
+                <RentalDate
+                  startDate={startDate}
+                  endDate={endDate}
+                  setStartDate={setStartDate}
+                  setEndDate={setEndDate}
+                />
+                <Error error={rentalingError}>{rentalingError}</Error>
+              </>
             }
           />
         )}
@@ -373,7 +413,8 @@ const ChatDetail = () => {
             no="취소하기"
             yes="대여 완료"
             width="340px"
-            height="230px"
+            height="250px"
+            content={<Error error={rentaledError}>{rentaledError}</Error>}
           />
         )}
         {checked && (
@@ -382,6 +423,10 @@ const ChatDetail = () => {
             text={`*오염 부위 및 내용, 상태 등을 상세하게\n기록하면 반납 시에 도움이 될 거예요!`}
             onClose={() => {
               setChecked(false);
+              setCheckGet((prevState) => ({
+                ...prevState,
+                checkList: ["", "", ""],
+              }));
             }}
             onCheck={handleRecordCheck}
             no="취소하기"
@@ -412,8 +457,8 @@ const ChatDetail = () => {
         )}
         {lookChecked && (
           <Modal
-            title={`대여 전, 옷 상태를\n판매자와 함께 체크해보세요!`}
-            text={`*오염 부위 및 내용, 상태 등을 상세하게\n기록하면 반납 시에 도움이 될 거예요!`}
+            title={`대여 시 작성했던 옷 상태와\n 일치한지 확인해보세요!`}
+            text={`*혹여나 문제가 있다면,\n본 기록을 바탕으로 공정하게 해결할 수 있어요!`}
             onClose={() => {
               setLookChecked(false);
             }}
@@ -424,17 +469,7 @@ const ChatDetail = () => {
             yes="확인 완료"
             width="340px"
             height="430px"
-            content={
-              <div>
-                {checkGet.checkList && checkGet.checkList.length > 0 && (
-                  <ol>
-                    {checkGet.checkList.map(
-                      (data, index) => data && <List key={index}>{data}</List>
-                    )}
-                  </ol>
-                )}
-              </div>
-            }
+            content={<div>{getContent()}</div>}
           />
         )}
         <InputMsgBox>
@@ -567,4 +602,18 @@ const CheckListPurple = styled.div`
   position: absolute;
   top: 0px;
   right: 20px;
+`;
+
+const Error = styled.div<{ error: string }>`
+  text-align: center;
+  height: 16px;
+  padding-left: 10px;
+  color: ${(props) => props.theme.colors.delete};
+  ${(props) => props.theme.fonts.c1_regular};
+  opacity: ${(props) => (props.error ? 1 : 0)};
+`;
+
+const NoData = styled.div`
+  color: ${(props) => props.theme.colors.gray900};
+  ${(props) => props.theme.fonts.b2_regular};
 `;
