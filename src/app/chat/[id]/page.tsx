@@ -76,7 +76,7 @@ const ChatDetail = () => {
   useEffect(() => {
     fetchChatMessages();
     console.log(checkGet);
-  }, [chatMsgList, checkGet.isChecked]);
+  }, [chatMsgList, checkGet.isChecked, rentalState]);
 
   const fetchChatMessages = () => {
     AuthAxios.get(`/api/v1/chats/rooms/${id}`)
@@ -383,6 +383,7 @@ const ChatDetail = () => {
             text={`*정확한 대여 시작일과 반납 예정일을\n입력해주세요.`}
             onClose={() => {
               setRentaling(false);
+              setRentalingError("");
             }}
             onCheck={handleCheckRentaling}
             no="취소하기"
@@ -408,6 +409,7 @@ const ChatDetail = () => {
             text={`*반납 의류에 하자가 없는지\n꼼꼼히 확인 후, 대여 완료를 눌러주세요!`}
             onClose={() => {
               setRentaled(false);
+              setRentaledError("");
             }}
             onCheck={handleCheckRentaled}
             no="취소하기"
