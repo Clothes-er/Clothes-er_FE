@@ -53,12 +53,23 @@ const MyCloset = () => {
         />
         <Topbar text="내 옷장" align="left" />
         <Profile>
-          <Image
-            src="/assets/images/profile.svg"
-            width={70}
-            height={70}
-            alt="profile"
-          />
+          {profileInfo?.profileUrl ? (
+            <Image
+              src={profileInfo.profileUrl}
+              width={70}
+              height={70}
+              alt="profile"
+              style={{ borderRadius: "100px", background: "white" }}
+            />
+          ) : (
+            <Image
+              src={"/assets/images/profile.svg"}
+              width={70}
+              height={70}
+              alt="profile"
+              style={{ borderRadius: "100px" }}
+            />
+          )}
           <Text>
             <Nickname>{profileInfo?.nickname}</Nickname>
             <Level>

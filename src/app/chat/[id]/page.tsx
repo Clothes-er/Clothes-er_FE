@@ -8,11 +8,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import styled from "styled-components";
-import SockJS from "sockjs-client";
-import Stomp from "@stomp/stompjs";
+// import SockJS from "sockjs-client";
+// import Stomp from "@stomp/stompjs";
 import { getToken } from "@/hooks/getToken";
 import Modal from "@/components/common/Modal";
 import RentalDate from "@/components/common/RentalDate";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
+import { Client } from "@stomp/stompjs";
 
 interface Message {
   nickname: string;
@@ -40,7 +43,8 @@ const ChatDetail = () => {
   const [msg, setMsg] = useState<string>();
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [chatMsgList, setChatMsgList] = useState<ChatMsg | null>(null);
-  const [stompClient, setStompClient] = useState<Stomp.Client | null>(null);
+  // const [stompClient, setStompClient] = useState<Stomp.Client | null>(null);
+  const [stompClient, setStompClient] = useState<Client | null>(null);
 
   const [rentaling, setRentaling] = useState<boolean>();
   const [rentaled, setRentaled] = useState<boolean>();
@@ -106,8 +110,11 @@ const ChatDetail = () => {
   //   );
 
   //   return () => {
+  //     // if (stompClient) {
+  //     //   stompClient.disconnect();
+  //     // }
   //     if (stompClient) {
-  //       stompClient.disconnect();
+  //       stompClient.deactivate();
   //     }
   //     if (socket) {
   //       socket.close();
@@ -115,15 +122,59 @@ const ChatDetail = () => {
   //   };
   // };
 
+  useEffect(() => {
+    // 표준 WebSocket 객체 생성
+    const socket = new WebSocket("ws://13.209.137.34:8080/ws");
+
+    const client = new Client({
+      webSocketFactory: () => socket,
+      debug: (str) => {
+        console.log(str);
+      },
+      reconnectDelay: 5000, // 재연결 시도 시간 간격 (밀리초)
+    });
+
+    client.onConnect = (frame) => {
+      console.log("Connected:", frame);
+
+      //메시지 수신
+      // client.subscribe(`/sub/chats/${id}`, (message: IMessage) => {
+      //   const messageBody = message.body;
+      //   // setMessages((prevMessages) => [...prevMessages, messageBody]);
+      // });
+
+      // 연결된 후에 메시지 발행 예시
+      client.publish({
+        destination: `/pub/chats/${id}`,
+        body: "Hello, STOMP over WebSocket!",
+      });
+    };
+
+    client.onStompError = (frame) => {
+      console.error("Broker reported error: " + frame.headers["message"]);
+      console.error("Additional details: " + frame.body);
+    };
+
+    client.activate();
+    setStompClient(client);
+
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate(); // 연결 해제
+      }
+      socket.close(); // WebSocket 연결 닫기
+    };
+  }, []);
+
   // useEffect(connectToWebSocket, []);
 
   const handleSendMsg = () => {
     console.log("전송하기", msg);
-    // if (msg?.trim() && socket) {
-    //   socket.emit("sendMsg", { roomId: id, message: msg });
-    //   setMsg(""); // 메시지 전송 후 입력 필드 비우기
-    //   console.log("전송성공");
-    // }
+    if (msg?.trim() && socket) {
+      socket.emit("sendMsg", { roomId: id, message: msg });
+      setMsg(""); // 메시지 전송 후 입력 필드 비우기
+      console.log("전송성공");
+    }
   };
 
   const handleCheckRentaling = () => {
@@ -142,6 +193,7 @@ const ChatDetail = () => {
           console.log(data);
           setRentalState(data.rentalState);
           console.log(response.data.message);
+          setRentaling(false);
         })
         .catch((error) => {
           console.log(error);
@@ -157,6 +209,7 @@ const ChatDetail = () => {
         console.log(data);
         setRentalState(data.rentalState);
         console.log(response.data.message);
+        setRentaled(false);
       })
       .catch((error) => {
         console.log(error);
@@ -205,20 +258,6 @@ const ChatDetail = () => {
             ))}
           </ChatList>
         )}
-        <State>
-          <StateBox
-            check={rentalState === "RENTED"}
-            onClick={() => setRentaling(true)}
-          >
-            대여중
-          </StateBox>
-          <StateBox
-            check={rentalState === "RETURNED"}
-            onClick={() => setRentaled(true)}
-          >
-            대여 완료
-          </StateBox>
-        </State>
         {chatMsg?.opponentNickname === chatMsg?.buyerNickname && (
           <State>
             <StateBox
