@@ -25,7 +25,7 @@ const Tabbar: React.FC<TabProps> = ({ disabled = "false" }) => {
       {tabs.map((tab, index) => (
         <Tab
           key={index}
-          onClick={disabled ? () => {} : () => handleTabClick(tab.path)}
+          onClick={pathname === "/" ? () => {} : () => handleTabClick(tab.path)}
           selected={pathname === tab.path}
         >
           <Bar selected={pathname === tab.path} />
