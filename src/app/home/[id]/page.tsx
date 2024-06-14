@@ -166,7 +166,9 @@ const Page = () => {
           <Box>{postInfo?.description}</Box>
         </Body>
       </Layout>
-      {postInfo && <Bottom id={postInfo.id} prices={postInfo.prices} />}
+      {postInfo && (
+        <Bottom id={postInfo.id} prices={postInfo.prices} isWriter={isWriter} />
+      )}
     </>
   );
 };
@@ -275,10 +277,11 @@ const Category = styled.div`
 const Info = styled.div`
   color: ${theme.colors.b100};
   ${(props) => props.theme.fonts.b2_regular};
+  text-align: left;
 `;
 
 const Row = styled.div`
-  width: 110px;
+  width: 160px;
   display: flex;
   justify-content: space-between;
 `;
