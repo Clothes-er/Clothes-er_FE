@@ -146,4 +146,5 @@ const Error = styled.div<StyledInputProps>`
   color: ${(props) => props.theme.colors.red};
   ${(props) => props.theme.fonts.c1_regular};
   opacity: ${(props) => (props.errorMsg ? 1 : 0)};
+  margin-top: 5px;
 `;

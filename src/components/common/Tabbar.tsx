@@ -6,10 +6,11 @@ import { theme } from "@/styles/theme";
 import { tabs } from "@/data/tabsData";
 
 interface TabProps {
-  selected: boolean;
+  selected?: boolean;
+  disabled?: boolean;
 }
 
-const Tabbar = () => {
+const Tabbar: React.FC<TabProps> = ({ disabled = "false" }) => {
   const pathname = usePathname();
   const [selected, setSelected] = useState(pathname);
   const router = useRouter();
@@ -24,7 +25,7 @@ const Tabbar = () => {
       {tabs.map((tab, index) => (
         <Tab
           key={index}
-          onClick={() => handleTabClick(tab.path)}
+          onClick={pathname === "/" ? () => {} : () => handleTabClick(tab.path)}
           selected={pathname === tab.path}
         >
           <Bar selected={pathname === tab.path} />

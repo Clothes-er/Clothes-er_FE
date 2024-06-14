@@ -4,6 +4,7 @@ import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import RadioButton from "@/components/common/RadioButton";
+import { useRequireFirstAuth } from "@/hooks/usefirstAuth copy";
 import { Gender } from "@/interface/Gender";
 import { setStep2 } from "@/redux/slices/firstLoginSlice";
 import { theme } from "@/styles/theme";
@@ -14,6 +15,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const Step2 = () => {
+  useRequireFirstAuth();
   const router = useRouter();
   const dispatch = useDispatch();
 

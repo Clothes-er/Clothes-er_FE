@@ -3,6 +3,7 @@
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Progressbar from "@/components/common/Progressbar";
+import { useNoRequireAuth } from "@/hooks/useNoAuth";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -10,6 +11,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const Step3 = () => {
+  useNoRequireAuth();
   const router = useRouter();
 
   return (

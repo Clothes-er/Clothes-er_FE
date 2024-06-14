@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
 import { RootState } from '../store'
-import Axios from '@/api/axios';
+import BasicAxios from '@/api/basicAxios';
 
 /* 회원가입 정보를 서버에 보내는 Thunk 액션 생성자 */
 export const postSignUpData = createAsyncThunk(
@@ -24,7 +24,7 @@ export const postSignUpData = createAsyncThunk(
 
       console.log("requestData", requestData);
 
-      const response = await Axios.post('/api/v1/users/signup', requestData);
+      const response = await BasicAxios.post('/api/v1/users/signup', requestData);
       console.log("리덕스", requestData);
       return response.data;
     } catch (error) {

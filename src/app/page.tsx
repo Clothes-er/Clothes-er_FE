@@ -49,6 +49,7 @@ export default function Home() {
         };
         dispatch(setUser(userData));
         localStorage.setItem("accessToken", userData.token);
+        localStorage.setItem("isFirstLogin", userData.isFirstLogin);
         console.log("userData", userData.isFirstLogin);
         if (userData.isFirstLogin) {
           router.push("/first/step1");
@@ -140,13 +141,13 @@ export default function Home() {
             disabled={!(email && password)}
           />
           <Nav>
-            <Link href="/join/terms">회원가입</Link>|
-            <Link href="/findId">아이디 찾기</Link>|
-            <Link href="/findPw">비밀번호 찾기</Link>
+            <Link href="/join/terms">회원가입</Link>
+            {/* <Link href="/findId">아이디 찾기</Link>|
+            <Link href="/findPw">비밀번호 찾기</Link> */}
           </Nav>
         </Login>
       </Layout>
-      <Tabbar />
+      <Tabbar disabled={true} />
     </>
   );
 }

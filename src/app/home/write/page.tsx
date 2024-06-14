@@ -15,12 +15,14 @@ import { getToken } from "@/hooks/getToken";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { clearCategory } from "@/redux/slices/categorySlice";
+import { useRequireAuth } from "@/hooks/useAuth";
 
 interface Price {
   days: number | null;
   price: number | null;
 }
 const Write = () => {
+  useRequireAuth();
   const router = useRouter();
   const dispatch = useDispatch();
 

@@ -15,6 +15,7 @@ import "../../../styles/slick.css";
 import "../../../styles/slick-theme.css";
 import NextArrow from "@/components/common/NextArrow";
 import PrevArrow from "@/components/common/PrevArrow";
+import { useRequireAuth } from "@/hooks/useAuth";
 
 interface Price {
   days: number;
@@ -43,6 +44,7 @@ interface PostInfo {
 }
 
 const Page = () => {
+  useRequireAuth();
   const router = useRouter();
   const { id } = useParams();
   const [menu, setMenu] = useState(false);
@@ -164,7 +166,13 @@ const Page = () => {
           <Box>{postInfo?.description}</Box>
         </Body>
       </Layout>
-      {postInfo && <Bottom id={postInfo.id} prices={postInfo.prices} />}
+      {postInfo && (
+        <Bottom
+          id={postInfo.id}
+          prices={postInfo.prices}
+          isWriter={postInfo.isWriter}
+        />
+      )}
     </>
   );
 };
@@ -273,10 +281,11 @@ const Category = styled.div`
 const Info = styled.div`
   color: ${theme.colors.b100};
   ${(props) => props.theme.fonts.b2_regular};
+  text-align: left;
 `;
 
 const Row = styled.div`
-  width: 110px;
+  width: 160px;
   display: flex;
   justify-content: space-between;
 `;

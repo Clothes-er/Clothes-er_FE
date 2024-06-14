@@ -12,6 +12,7 @@ import RentalDate from "@/components/common/RentalDate";
 import { Client } from "@stomp/stompjs";
 import { getToken } from "@/hooks/getToken";
 import Input from "@/components/common/Input";
+import { useRequireAuth } from "@/hooks/useAuth";
 
 interface Message {
   nickname: string;
@@ -40,6 +41,7 @@ interface CheckList {
 }
 
 const ChatDetail = () => {
+  useRequireAuth();
   const router = useRouter();
   /* roomId */
   const { id } = useParams();
