@@ -167,7 +167,11 @@ const Page = () => {
         </Body>
       </Layout>
       {postInfo && (
-        <Bottom id={postInfo.id} prices={postInfo.prices} isWriter={isWriter} />
+        <Bottom
+          id={postInfo.id}
+          prices={postInfo.prices}
+          isWriter={postInfo.isWriter}
+        />
       )}
     </>
   );

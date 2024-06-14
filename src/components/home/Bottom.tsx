@@ -13,9 +13,10 @@ interface Price {
 interface BottomProps {
   id: number;
   prices: Price[];
+  isWriter: boolean;
 }
 
-const Bottom: React.FC<BottomProps> = ({ id, prices }) => {
+const Bottom: React.FC<BottomProps> = ({ id, prices, isWriter }) => {
   const router = useRouter();
   const [pricePop, setPricePop] = useState<boolean>(false);
   const handleShowPrice = () => {
@@ -66,7 +67,7 @@ const Bottom: React.FC<BottomProps> = ({ id, prices }) => {
           </div>
         )}
       </div>
-      <Chat onClick={handleNewChat}>문의하기</Chat>
+      {!isWriter && <Chat onClick={handleNewChat}>문의하기</Chat>}
     </StyledBottom>
   );
 };
