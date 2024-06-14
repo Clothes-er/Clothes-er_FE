@@ -4,7 +4,7 @@ import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
-import { useRequireFirstAuth } from "@/hooks/usefirstAuth copy";
+// import { useRequireFirstAuth } from "@/hooks/usefirstAuth copy";
 import { setStep3 } from "@/redux/slices/firstLoginSlice";
 import { useAppDispatch } from "@/redux/store";
 import { postFirstLoginData } from "@/redux/thunks/postFirstLogin";
@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Step3 = () => {
-  useRequireFirstAuth();
+  // useRequireFirstAuth();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -30,8 +30,9 @@ const Step3 = () => {
 
   const handleSubmitYes = () => {
     const step3Info = {
-      categories: category,
-      styles: style,
+      categories: category.map((s) => s),
+      // styles: style,
+      styles: Array.isArray(style) ? style : [style],
     };
 
     dispatch(setStep3(step3Info));
@@ -69,7 +70,7 @@ const Step3 = () => {
         <div>
           <Label>
             카테고리
-            <Span>(,로 복수입력)</Span>
+            {/* <Span>(,로 복수입력)</Span> */}
           </Label>
           <Input
             inputType="array"

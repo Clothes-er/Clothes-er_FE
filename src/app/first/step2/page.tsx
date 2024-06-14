@@ -4,7 +4,7 @@ import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import RadioButton from "@/components/common/RadioButton";
-import { useRequireFirstAuth } from "@/hooks/usefirstAuth copy";
+// import { useRequireFirstAuth } from "@/hooks/usefirstAuth copy";
 import { Gender } from "@/interface/Gender";
 import { setStep2 } from "@/redux/slices/firstLoginSlice";
 import { theme } from "@/styles/theme";
@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const Step2 = () => {
-  useRequireFirstAuth();
+  // useRequireFirstAuth();
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -57,7 +57,7 @@ const Step2 = () => {
       height: Number(height),
       weight: Number(weight),
       shoeSize: 235,
-      bodyShapes: body,
+      bodyShapes: body.map((s) => s),
     };
 
     dispatch(setStep2(step2Info));
