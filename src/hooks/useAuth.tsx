@@ -10,10 +10,10 @@ export const useRequireAuth = () => {
     const isFirstLogin = localStorage.getItem("isFirstLogin");
 
     // 토큰이 없으면 로그인 페이지로 리다이렉트
-    if (!token) {
-      router.push("/");
-    } else if (isFirstLogin) {
-      router.push("/first/step1");
-    }
+    // if (!token) {
+    //   router.push("/");
+    // } else if (isFirstLogin) {
+    //   router.push("/first/step1");
+    // }
   }, []);
 };
