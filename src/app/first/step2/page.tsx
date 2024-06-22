@@ -54,7 +54,7 @@ const Step2 = () => {
       gender: gender,
       height: Number(height),
       weight: Number(weight),
-      shoeSize: 235,
+      shoeSize: Number(foot),
       bodyShapes: body,
     };
 
