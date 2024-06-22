@@ -44,6 +44,7 @@ const MyCloset = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("isFirstLogin");
     router.push("/");
   };
 
@@ -130,7 +131,10 @@ const MyCloset = () => {
                 <Title>취향</Title>
                 <Style>
                   {profileInfo?.categories.map((data, index) => (
-                    <span key={index}>{data}</span>
+                    <span key={index}>
+                      {data}
+                      {`  `}
+                    </span>
                   ))}
                 </Style>
               </div>
