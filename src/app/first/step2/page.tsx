@@ -4,24 +4,22 @@ import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import RadioButton from "@/components/common/RadioButton";
-// import { useRequireFirstAuth } from "@/hooks/usefirstAuth copy";
 import { Gender } from "@/interface/Gender";
 import { setStep2 } from "@/redux/slices/firstLoginSlice";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const Step2 = () => {
-  // useRequireFirstAuth();
   const router = useRouter();
   const dispatch = useDispatch();
 
   const [height, setHeight] = useState<number | undefined>();
   const [weight, setWeight] = useState<number | undefined>();
-  const [foot, setFoot] = useState<string[]>([""]);
+  const [foot, setFoot] = useState("");
   const [body, setBody] = useState([""]);
 
   const genderOptions = ["남자", "여자"];
@@ -57,12 +55,16 @@ const Step2 = () => {
       height: Number(height),
       weight: Number(weight),
       shoeSize: 235,
-      bodyShapes: body.map((s) => s),
+      bodyShapes: body,
     };
 
     dispatch(setStep2(step2Info));
     console.log("step2Info", step2Info);
     router.push("/first/step3");
+  };
+
+  const handleFootChange = (selectedFoot: string) => {
+    setFoot(selectedFoot);
   };
 
   return (
@@ -105,10 +107,11 @@ const Step2 = () => {
             </Row>
             <Dropdown
               value={foot}
+              dropdownType="single"
               placeholder="발 사이즈"
               size="medium"
               options={sizeOptions}
-              setValue={setFoot}
+              setValue={handleFootChange}
             />
           </Gap>
         </div>

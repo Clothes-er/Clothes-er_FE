@@ -4,24 +4,22 @@ import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
-// import { useRequireFirstAuth } from "@/hooks/usefirstAuth copy";
 import { setStep3 } from "@/redux/slices/firstLoginSlice";
 import { useAppDispatch } from "@/redux/store";
 import { postFirstLoginData } from "@/redux/thunks/postFirstLogin";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 const Step3 = () => {
-  // useRequireFirstAuth();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const [category, setCategory] = useState<string[]>([""]);
   const styleOptions = ["러블리", "빈티지", "시크", "힙합"];
-  const [style, setStyle] = useState<string[]>([""]);
+  const [style, setStyle] = useState<string[]>([]);
   const [modal, setModal] = useState(false);
 
   const handleSubmit = () => {
@@ -30,13 +28,13 @@ const Step3 = () => {
 
   const handleSubmitYes = () => {
     const step3Info = {
-      categories: category.map((s) => s),
-      // styles: style,
-      styles: Array.isArray(style) ? style : [style],
+      categories: category,
+      styles: style,
     };
 
     dispatch(setStep3(step3Info));
     console.log("step3Info", step3Info);
+    console.log("최초 로그인");
 
     dispatch(postFirstLoginData())
       .unwrap()
@@ -48,6 +46,15 @@ const Step3 = () => {
       .catch((error) => {
         console.error("최초 로그인 실패:", error.message);
       });
+  };
+
+  /* style - 현재 선택되어 있으면 선택 취소, 선택되어 있지 않으면 추가 */
+  const handleStyleChange = (selectedStyle: string) => {
+    setStyle((prevStyles) =>
+      prevStyles.includes(selectedStyle)
+        ? prevStyles.filter((style) => style !== selectedStyle)
+        : [...prevStyles, selectedStyle]
+    );
   };
 
   return (
@@ -70,7 +77,7 @@ const Step3 = () => {
         <div>
           <Label>
             카테고리
-            {/* <Span>(,로 복수입력)</Span> */}
+            <Span>(,로 복수입력)</Span>
           </Label>
           <Input
             inputType="array"
@@ -86,10 +93,10 @@ const Step3 = () => {
           </Label>
           <Dropdown
             value={style}
+            dropdownType="multi"
             placeholder="스타일"
-            size="medium"
             options={styleOptions}
-            setValue={setStyle}
+            setValue={handleStyleChange}
           />
         </div>
       </Card>
