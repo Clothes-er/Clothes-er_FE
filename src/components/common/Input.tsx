@@ -19,7 +19,7 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
   const {
     label,
     value,
-    size,
+    size = "medium",
     onChange,
     onClick,
     placeholder,
@@ -60,7 +60,7 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
         readOnly={readOnly}
         disabled={disabled}
       />
-      <Error errorMsg={errorMsg}>{errorMsg}</Error>
+      {errorMsg && <Error errorMsg={errorMsg}>{errorMsg}</Error>}
     </Container>
   );
 };
@@ -78,7 +78,9 @@ const Container = styled.div<{ $label: string }>`
 const Label = styled.div`
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.b2_bold};
-  margin-bottom: 5px;
+  font-size: 15px;
+  margin-left: 5px;
+  margin-bottom: 7px;
 `;
 
 const StyledInput = styled.input<InputProps>`
@@ -86,13 +88,12 @@ const StyledInput = styled.input<InputProps>`
   &.text,
   &.password,
   &.array {
-    height: 44px;
-    padding: 12px 18px;
+    padding: 12px 22px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    border-radius: 15px;
+    border-radius: 10px;
     border: 1px solid
       ${({ errorMsg, theme }) =>
         errorMsg && errorMsg.length > 0
@@ -116,6 +117,9 @@ const StyledInput = styled.input<InputProps>`
   &.medium {
     height: 50px;
   }
+  &.small {
+    height: 44px;
+  }
 
   &.write,
   &.textarea {
@@ -132,7 +136,11 @@ const StyledInput = styled.input<InputProps>`
     }
   }
   &:disabled {
+    border: none;
     background: ${theme.colors.gray100};
+  }
+  &:focus {
+    border: 1px solid ${theme.colors.purple800};
   }
 `;
 
