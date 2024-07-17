@@ -108,14 +108,14 @@ const Step3 = () => {
           />
         </Small>
       </Row> */}
-      <Row>
+      <ButtonRow>
         <Button
           text="이전 단계"
           size="medium"
           onClick={() => router.push("/join/step2")}
         />
         <Button text="회원가입" size="medium" onClick={handleSignUp} />
-      </Row>
+      </ButtonRow>
     </Container>
   );
 };
@@ -145,4 +145,11 @@ const Row = styled.div`
 
 const Small = styled.div`
   margin-bottom: 21px;
+`;
+
+const ButtonRow = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 22px;
+  gap: 14px;
 `;

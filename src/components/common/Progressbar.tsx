@@ -19,15 +19,17 @@ const Bar = styled.div`
   width: 100%;
   height: 5px;
   background: ${theme.colors.gray400};
+  border-radius: 10px;
   position: relative;
   overflow-x: hidden;
-  margin-bottom: 41px;
+  margin-bottom: 30px;
 `;
 
 const Inner = styled.div<ProgressivebarProps>`
   width: calc(33.3 * ${(props) => props.step}%);
   height: 5px;
   background: ${theme.colors.purple500};
+  border-radius: 10px;
   position: absolute;
   top: 50%;
   left: 0;

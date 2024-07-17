@@ -29,7 +29,7 @@ const StyledLayout = styled.div`
   width: 100%;
   height: 100vh;
   overflow-x: hidden;
-  padding: 42px 20px;
+  padding: 25px 23px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -37,12 +37,6 @@ const StyledLayout = styled.div`
 
 const Logo = styled.div`
   width: 100%;
-  margin-bottom: 10px;
+  margin-left: 21px;
   z-index: 10;
-`;
-
-const Top = styled.div`
-  width: 100%;
-  color: ${theme.colors.black};
-  ${(props) => props.theme.fonts.h2_bold};
 `;

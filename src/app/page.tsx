@@ -229,19 +229,17 @@ const Purple = styled.div`
 const InputBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
 `;
 
 const Save = styled.div<SaveProps>`
   display: flex;
   flex-direction: row;
-  gap: 3px;
+  gap: 7px;
   justify-content: flex-start;
   align-items: center;
   color: ${({ save, theme }) =>
     save ? "rgba(90, 66, 238, 0.7)" : theme.colors.gray900};
   cursor: pointer;
-  margin-top: 18px;
   margin-bottom: 8px;
 `;
 

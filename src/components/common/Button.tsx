@@ -66,7 +66,7 @@ const StyledButton = styled.button`
   justify-content: center;
   align-items: center;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   ${(props) => props.theme.fonts.b2_regular};
   white-space: nowrap;
   cursor: pointer;
@@ -101,8 +101,11 @@ const StyledButton = styled.button`
     }
   }
   &.primaryLight {
-    color: ${theme.colors.gray900};
-    background: ${theme.colors.purple100};
+    border-radius: 5px;
+    border: 1.5px solid ${theme.colors.purple800};
+    color: ${theme.colors.purple800};
+    background: ${theme.colors.purple50};
+
     &:hover {
       background: ${theme.colors.purple150};
     }
@@ -110,6 +113,8 @@ const StyledButton = styled.button`
       background: ${theme.colors.purple150};
     }
     &:disabled {
+      border: 1.5px solid ${theme.colors.gray800};
+      color: ${theme.colors.b100};
       background: ${theme.colors.gray100};
     }
   }
@@ -134,7 +139,7 @@ const StyledButton = styled.button`
   &.medium {
     height: 50px;
     padding: 16px 25px;
-    ${(props) => props.theme.fonts.b2_bold};
+    ${(props) => props.theme.fonts.b2_medium};
   }
 
   &.small {
