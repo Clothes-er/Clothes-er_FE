@@ -26,16 +26,29 @@ const Step1 = () => {
     emailAuth: "",
   });
 
+  /* 에러 메세지 */
   const [errors, setErrors] = useState({
     name: "",
     nickname: "",
     email: "",
     emailAuth: "",
-    green: null,
   });
 
-  const [correct, setCorrect] = useState("");
+  /* 성공 메세지 */
+  const [success, setSeccess] = useState({
+    name: "",
+    nickname: "",
+    email: "",
+    emailAuth: "",
+  });
 
+  /* 이메일 발송 여부 */
+  const [emailSent, setEmailSent] = useState(false);
+
+  /* 이메일 인증 코드 확인 여부 */
+  const [correctCode, setCorrectCode] = useState(false);
+
+  /* redux 업데이트 */
   useEffect(() => {
     setInputs(step1);
   }, []);
@@ -46,10 +59,11 @@ const Step1 = () => {
       Axios.get(`/api/v1/users/check-nickname/${inputs.nickname}`)
         .then((response) => {
           console.log("닉네임 중복확인 성공", response.data);
-          setCorrect("사용가능한 닉네임입니다.");
+          setSeccess({ ...success, nickname: "사용가능한 닉네임입니다." });
         })
         .catch((error) => {
           if (error.response && error.response.status === 409) {
+            setSeccess({ ...success, nickname: "" });
             setErrors({ ...errors, nickname: error.response.data.message });
           } else {
             console.log("닉네임 중복확인 실패", error);
@@ -57,9 +71,6 @@ const Step1 = () => {
         });
     }
   }, [inputs.nickname]);
-
-  /* 이메일 발송 여부 */
-  const [emailSent, setEmailSent] = useState(false);
 
   /* 유효성 검사 */
   const validateName = (name: string) => {
@@ -99,17 +110,47 @@ const Step1 = () => {
 
   /* 이메일 인증번호 전송 */
   const handleSendEmail = () => {
-    alert("인증 이메일이 전송되었습니다.");
+    Axios.post("/api/v1/users/send-email", { email: inputs.email })
+      .then((response) => {
+        console.log("이메일 전송 성공", response.data);
+        setEmailSent(true);
+        setInputs({ ...inputs, emailAuth: "" });
+        setErrors({ ...errors, emailAuth: "" });
+        setSeccess({ ...success, email: "인증번호가 전송되었습니다." });
+      })
+      .catch((error) => {
+        console.log("이메일 전송 실패", error);
+        setSeccess({ ...success, email: "" });
+        setErrors({ ...errors, email: error.response.data.message });
+      });
   };
+
+  /* 이메일 인증번호 확인 */
+  const handleValidateCode = () => {
+    Axios.post("/api/v1/users/check-email", {
+      email: inputs.email,
+      authCode: inputs.emailAuth,
+    })
+      .then((response) => {
+        console.log("이메일 인증 성공", response.data);
+        setCorrectCode(true);
+        setSeccess({ ...success, emailAuth: "이메일이 인증되었습니다." });
+      })
+      .catch((error) => {
+        console.log("이메일 인증 실패", error);
+        setSeccess({ ...success, emailAuth: "" });
+        setErrors({ ...errors, emailAuth: error.response.data.message });
+      });
+  };
+
+  /* inputs.email 변경 시 correctSendEmail 초기화 */
+  useEffect(() => {
+    setSeccess({ ...success, email: "" });
+  }, [inputs.email]);
 
   /* 다음 단계 이동 */
   const handleNextStep = () => {
     router.push("/join/step2");
-    // if (emailSent && inputs.emailAuth) {
-    //   router.push("/join/step2");
-    // } else {
-    //   alert("이메일을 인증해주세요.");
-    // }
   };
 
   return (
@@ -119,95 +160,104 @@ const Step1 = () => {
         Clothes:er에 오신 것을
         <br /> 환영합니다!
       </Hello>
-      <Input
-        label="이름"
-        value={inputs.name}
-        size="medium"
-        placeholder="홍길동"
-        errorMsg={errors.name}
-        onChange={(value: string) => {
-          validateName(value);
-          setInputs({ ...inputs, name: value });
-          dispatch(
-            setStep1({
-              ...inputs,
-              [inputs.name]: value,
-            })
-          );
-        }}
-      />
-      <Input
-        label="닉네임"
-        value={inputs.nickname}
-        size="medium"
-        placeholder="둘리"
-        errorMsg={correct && errors.nickname}
-        onChange={(value: string) => {
-          validateNickname(value);
-          setInputs({ ...inputs, nickname: value });
-          dispatch(
-            setStep1({
-              ...inputs,
-              nickname: value,
-            })
-          );
-        }}
-      />
-      <Row>
+      <InputBox>
         <Input
-          label="이메일"
-          value={inputs.email}
-          size="medium"
-          placeholder="hello123@gmail.com"
-          errorMsg={errors.email}
+          inputType="text"
+          label="이름"
+          value={inputs.name}
+          size="small"
+          placeholder="홍길동"
+          errorMsg={errors.name}
           onChange={(value: string) => {
-            validateEmail(value);
-            setInputs({ ...inputs, email: value });
+            validateName(value);
+            setInputs({ ...inputs, name: value });
             dispatch(
               setStep1({
                 ...inputs,
-                email: value,
+                [inputs.name]: value,
               })
             );
           }}
         />
-        {/* <Small>
-          <Button
-            buttonType="primaryLight"
-            size="small"
-            text="인증"
-            onClick={handleSendEmail}
-            disabled={!inputs.email}
-          />
-        </Small> */}
-      </Row>
-      {/* <Row>
         <Input
-          label="이메일 인증"
-          value={inputs.emailAuth}
-          size="medium"
-          placeholder="인증번호"
+          label="닉네임"
+          value={inputs.nickname}
+          size="small"
+          placeholder="둘리"
+          successMsg={success.nickname}
+          errorMsg={errors.nickname}
           onChange={(value: string) => {
-            validateEmailAuth(value);
-            setInputs({ ...inputs, emailAuth: value });
+            validateNickname(value);
+            setInputs({ ...inputs, nickname: value });
             dispatch(
               setStep1({
                 ...inputs,
-                emailAuth: value,
+                nickname: value,
               })
             );
           }}
         />
-        <Small>
-          <Button
-            buttonType="primaryLight"
+        <Row>
+          <Input
+            label="이메일"
+            value={inputs.email}
             size="small"
-            text="확인"
-            onClick={handleSendEmail}
-            disabled={!inputs.email}
+            placeholder="이메일"
+            successMsg={success.email}
+            errorMsg={errors.email}
+            onChange={(value: string) => {
+              validateEmail(value);
+              setInputs({ ...inputs, email: value });
+              dispatch(
+                setStep1({
+                  ...inputs,
+                  email: value,
+                })
+              );
+            }}
           />
-        </Small>
-      </Row> */}
+          <CheckButton>
+            <Button
+              buttonType="primaryLight"
+              size="small"
+              text="인증"
+              onClick={handleSendEmail}
+            />
+          </CheckButton>
+        </Row>
+        <Row>
+          <Input
+            label="이메일 인증"
+            value={inputs.emailAuth}
+            size="small"
+            placeholder="인증번호"
+            successMsg={success.emailAuth}
+            errorMsg={errors.emailAuth}
+            onChange={(value: string) => {
+              validateEmailAuth(value);
+              setInputs({ ...inputs, emailAuth: value });
+              dispatch(
+                setStep1({
+                  ...inputs,
+                  emailAuth: value,
+                })
+              );
+            }}
+            disabled={!emailSent}
+          />
+          <CheckButton>
+            <Button
+              buttonType="primaryLight"
+              size="small"
+              text="확인"
+              onClick={handleValidateCode}
+              disabled={
+                !emailSent || !!errors.emailAuth || inputs.emailAuth === ""
+              }
+            />
+          </CheckButton>
+        </Row>
+      </InputBox>
       <ButtonRow>
         <Button
           text="이전 단계"
@@ -225,7 +275,8 @@ const Step1 = () => {
               inputs.email !== "" &&
               errors.name == "" &&
               errors.nickname == "" &&
-              errors.email == ""
+              errors.email == "" &&
+              correctCode === true
             )
           }
         />
@@ -248,7 +299,14 @@ const Hello = styled.div`
   text-align: left;
   color: ${theme.colors.b500};
   ${(props) => props.theme.fonts.h2_bold};
-  margin-bottom: 24px;
+  margin-bottom: 29px;
+`;
+
+const InputBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
 `;
 
 const Row = styled.div`
@@ -256,16 +314,16 @@ const Row = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 24px;
+  gap: 16px;
+`;
+
+const CheckButton = styled.div`
+  margin-bottom: 20px;
 `;
 
 const ButtonRow = styled.div`
   display: flex;
-  padding: 46px;
   justify-content: center;
-  gap: 24px;
-`;
-
-const Small = styled.div`
-  margin-bottom: 21px;
+  margin-top: 22px;
+  gap: 14px;
 `;
