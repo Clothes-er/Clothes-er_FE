@@ -1,6 +1,7 @@
+import { blink } from "@/styles/Animation";
 import { theme } from "@/styles/theme";
 import React, { ReactNode } from "react";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 export type buttonType = "primaryDeep" | "primary" | "primaryLight" | "gray";
 
@@ -17,6 +18,7 @@ export interface ButtonProps extends ButtonTypes {
   onClick?: (e: React.MouseEvent) => void;
   style?: React.CSSProperties & { fontSize?: string };
   disabled?: boolean;
+  blink?: boolean;
 }
 
 const Button = (props: ButtonProps) => {
@@ -27,6 +29,7 @@ const Button = (props: ButtonProps) => {
     onClick,
     style,
     disabled,
+    blink = false,
   } = props;
 
   let buttonClassName = buttonType;
@@ -50,6 +53,7 @@ const Button = (props: ButtonProps) => {
       style={style}
       onClick={onClick}
       disabled={disabled}
+      $isBlink={blink}
     >
       {text}
     </StyledButton>
@@ -58,7 +62,7 @@ const Button = (props: ButtonProps) => {
 
 export default Button;
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<{ $isBlink: boolean }>`
   display: flex;
   width: 100%;
   padding: 16px 28px;
@@ -144,7 +148,13 @@ const StyledButton = styled.button`
 
   &.small {
     height: 46px;
-    max-width: 79px;
     ${(props) => props.theme.fonts.b2_regular};
   }
+
+  /* 깜빡거리는 효과 */
+  ${({ $isBlink }) =>
+    $isBlink &&
+    css`
+      animation: ${blink} 1.5s infinite;
+    `}
 `;
