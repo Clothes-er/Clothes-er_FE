@@ -29,8 +29,8 @@ const Topbar = (props: TopbarProps) => {
       {icon && (
         <Image
           src="/assets/icons/ic_arrow.svg"
-          width={16}
-          height={16}
+          width={24}
+          height={24}
           alt="back"
           onClick={handleBackButtonClick}
         />
@@ -47,7 +47,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   padding: 1.2rem 0;
-  gap: 0.8rem;
   background: ${theme.colors.white};
 
   img {

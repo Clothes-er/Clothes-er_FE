@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import "../../../styles/animation.css";
 import axios from "axios";
 import { getToken } from "@/hooks/getToken";
 import { useDispatch, useSelector } from "react-redux";

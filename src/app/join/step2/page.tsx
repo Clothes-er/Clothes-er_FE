@@ -88,6 +88,7 @@ const Step2 = () => {
         label="비밀번호"
         inputType="password"
         value={inputs.password}
+        size="small"
         errorMsg={errors.password}
         placeholder="영문, 숫자, 특수문자 포함 8~15자 이내"
         onChange={(value: string) => {
@@ -105,6 +106,7 @@ const Step2 = () => {
         label="비밀번호 재입력"
         inputType="password"
         value={inputs.repassword}
+        size="small"
         errorMsg={errors.repassword}
         placeholder="비밀번호 재입력"
         onChange={(value: string) => {
@@ -116,11 +118,14 @@ const Step2 = () => {
               repassword: value,
             })
           );
+          console.log("비번", value);
         }}
       />
       <Input
         label="생년월일"
+        inputType="datepicker"
         value={inputs.birth}
+        size="small"
         errorMsg={errors.birth}
         placeholder="YYYY-MM-DD"
         onChange={(value: string) => {
@@ -132,9 +137,10 @@ const Step2 = () => {
               birth: value,
             })
           );
+          console.log("생년", value);
         }}
       />
-      <Row>
+      <ButtonRow>
         <Button
           text="이전 단계"
           size="medium"
@@ -155,7 +161,7 @@ const Step2 = () => {
             )
           }
         />
-      </Row>
+      </ButtonRow>
     </Container>
   );
 };
@@ -167,18 +173,23 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  gap: 5px;
 `;
 
 const Hello = styled.div`
   text-align: left;
   color: ${theme.colors.b500};
   ${(props) => props.theme.fonts.h2_bold};
+  margin-bottom: 29px;
 `;
 
-const Row = styled.div`
+const ButtonRow = styled.div`
+  width: 100%;
   display: flex;
-  padding: 46px;
-  justify-content: space-between;
-  gap: 24px;
+  justify-content: center;
+  margin-top: auto;
+  gap: 14px;
+  position: sticky;
+  bottom: 25px;
+  left: 0;
 `;

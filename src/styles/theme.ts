@@ -18,6 +18,7 @@ const colors = {
   b200: "#4B4B4B",
   b400: "#94A3B8",
   b500: "#2E2E44;",
+  b700: "#334155;",
   basic: "#CBD5E1",
 
   gray50: "#FAF9FF",
@@ -116,7 +117,7 @@ const fonts = {
     size: 14,
   }),
   b3_medium: FONT({
-    weight: 600,
+    weight: 500,
     size: 14,
   }),
   b3_regular: FONT({

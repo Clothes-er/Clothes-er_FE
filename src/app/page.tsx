@@ -105,18 +105,21 @@ export default function Home() {
         </Story>
         <Login>
           <Purple>LOGIN</Purple>
-          <Input
-            value={email}
-            onChange={(value: string) => setEmail(value)}
-            placeholder="이메일"
-          />
-          <Input
-            inputType="password"
-            value={password}
-            onChange={(value: string) => setPassword(value)}
-            placeholder="비밀번호"
-          />
-          <Error error={error}>{error}</Error>
+          <InputBox>
+            <Input
+              size="small"
+              value={email}
+              onChange={(value: string) => setEmail(value)}
+              placeholder="이메일"
+            />
+            <Input
+              size="small"
+              inputType="password"
+              value={password}
+              onChange={(value: string) => setPassword(value)}
+              placeholder="비밀번호"
+            />
+          </InputBox>
           <Save save={save} onClick={handleSave}>
             {save ? (
               <Image
@@ -135,8 +138,10 @@ export default function Home() {
             )}
             로그인 정보 저장하기
           </Save>
+          <Error error={error}>{error}</Error>
           <Button
             text="로그인"
+            buttonType="primaryDeep"
             onClick={handleLogin}
             disabled={!(email && password)}
           />
@@ -211,36 +216,41 @@ const Login = styled.div`
   text-align: center;
   z-index: 10;
   color: ${theme.colors.gray900};
-  ${(props) => props.theme.fonts.b3_regular};
+  ${(props) => props.theme.fonts.b3_medium};
 `;
 
 const Purple = styled.div`
-  color: ${theme.colors.purple200};
+  color: ${theme.colors.purple500};
   text-align: center;
   ${(props) => props.theme.fonts.h1_medium}
   margin-bottom: 24px;
 `;
 
-const Error = styled.div<{ error: string }>`
-  text-align: left;
-  height: 16px;
-  padding-left: 10px;
-  color: ${(props) => props.theme.colors.delete};
-  ${(props) => props.theme.fonts.c1_regular};
-  opacity: ${(props) => (props.error ? 1 : 0)};
-  margin-bottom: 10px;
+const InputBox = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Save = styled.div<SaveProps>`
   display: flex;
   flex-direction: row;
-  gap: 3px;
+  gap: 7px;
   justify-content: flex-start;
   align-items: center;
   color: ${({ save, theme }) =>
     save ? "rgba(90, 66, 238, 0.7)" : theme.colors.gray900};
   cursor: pointer;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
+`;
+
+const Error = styled.div<{ error: string }>`
+  text-align: center;
+  height: 16px;
+  padding-left: 10px;
+  color: ${(props) => props.theme.colors.red};
+  ${(props) => props.theme.fonts.c1_regular};
+  opacity: ${(props) => (props.error ? 1 : 0)};
+  margin-bottom: 8px;
 `;
 
 const Nav = styled.div`
@@ -248,5 +258,10 @@ const Nav = styled.div`
   flex-direction: row;
   gap: 3px;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 16px;
+  ${(props) => props.theme.fonts.b3_regular};
+  &:hover {
+    color: ${theme.colors.purple500};
+    ${(props) => props.theme.fonts.b3_medium};
+  }
 `;

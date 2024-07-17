@@ -68,7 +68,7 @@ const Tab = styled.div<TabProps>`
   text-align: center;
   color: ${({ selected, theme }) =>
     selected ? theme.colors.purple800 : theme.colors.basic};
-  ${(props) => props.theme.fonts.caption3_r}
+  ${(props) => props.theme.fonts.c3_regular}
   gap: 2px;
 `;
 

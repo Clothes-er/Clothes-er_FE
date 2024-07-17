@@ -12,6 +12,7 @@ export interface CheckBoxProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   checkboxType?: string;
   essential?: boolean;
+  labelFontSize?: string;
   color?: "purple" | "gray" | "black";
 }
 
@@ -24,6 +25,7 @@ const Checkbox = (props: CheckBoxProps) => {
     onChange,
     checkboxType = "checkbox",
     essential,
+    labelFontSize = "b3_medium",
     color = "black",
   } = props;
 
@@ -38,6 +40,7 @@ const Checkbox = (props: CheckBoxProps) => {
         className={checkboxClassName}
         essential={essential ? true : false}
         checked={checked}
+        labelFontSize={labelFontSize}
       >
         <CheckboxInput
           value={value}
@@ -45,8 +48,8 @@ const Checkbox = (props: CheckBoxProps) => {
           checked={checked}
           onChange={onChange}
         />
-        {label}
-        <span>{text}</span>
+        <div>{label}</div>
+        <span className={color}>{text}</span>
       </CheckboxContainer>
       {checkboxType === "checkArrow" && (
         <Image
@@ -63,6 +66,9 @@ const Checkbox = (props: CheckBoxProps) => {
 export default Checkbox;
 
 const CheckBoxLayout = styled.div<CheckBoxProps>`
+  display: flex;
+  align-items: center;
+
   &.checkArrow {
     width: 100%;
     display: flex;
@@ -91,26 +97,32 @@ const CheckboxContainer = styled.label<CheckBoxProps>`
   display: flex;
   align-items: center;
   flex-grow: 1;
+  color: ${theme.colors.b700};
+  ${({ theme, labelFontSize }) =>
+    labelFontSize &&
+    theme.fonts[labelFontSize] &&
+    `
+    ${theme.fonts[labelFontSize]};
+  `}
   cursor: pointer;
 
   span {
+    display: flex;
+    align-items: center;
     margin-left: 8px;
-    ${({ theme }) => theme.fonts.caption1_m};
+    ${({ theme }) => theme.fonts.c1_medium};
     color: ${(props) =>
       props.essential ? theme.colors.primary500 : theme.colors.b100};
+
     /* color */
     &.purple {
-      color: ${theme.colors.purple300};
-      ${({ theme }) => theme.fonts.b3_medium};
+      color: ${theme.colors.purple250};
     }
     &.gray {
-      color: ${(props) =>
-        props.checked ? `${theme.colors.purple500}` : `${theme.colors.black}`};
-      ${({ theme }) => theme.fonts.b2_medium};
+      color: ${theme.colors.b400};
     }
     &.black {
       color: ${theme.colors.basic};
-      ${({ theme }) => theme.fonts.b2_bold};
     }
   }
 `;

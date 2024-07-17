@@ -1,6 +1,7 @@
+import { blink } from "@/styles/Animation";
 import { theme } from "@/styles/theme";
 import React, { ReactNode } from "react";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 export type buttonType = "primaryDeep" | "primary" | "primaryLight" | "gray";
 
@@ -17,6 +18,7 @@ export interface ButtonProps extends ButtonTypes {
   onClick?: (e: React.MouseEvent) => void;
   style?: React.CSSProperties & { fontSize?: string };
   disabled?: boolean;
+  blink?: boolean;
 }
 
 const Button = (props: ButtonProps) => {
@@ -27,6 +29,7 @@ const Button = (props: ButtonProps) => {
     onClick,
     style,
     disabled,
+    blink = false,
   } = props;
 
   let buttonClassName = buttonType;
@@ -50,6 +53,7 @@ const Button = (props: ButtonProps) => {
       style={style}
       onClick={onClick}
       disabled={disabled}
+      $isBlink={blink}
     >
       {text}
     </StyledButton>
@@ -58,7 +62,7 @@ const Button = (props: ButtonProps) => {
 
 export default Button;
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<{ $isBlink: boolean }>`
   display: flex;
   width: 100%;
   padding: 16px 28px;
@@ -66,7 +70,7 @@ const StyledButton = styled.button`
   justify-content: center;
   align-items: center;
   border: none;
-  border-radius: 15px;
+  border-radius: 8px;
   ${(props) => props.theme.fonts.b2_regular};
   white-space: nowrap;
   cursor: pointer;
@@ -89,7 +93,7 @@ const StyledButton = styled.button`
   }
   &.primary {
     color: ${theme.colors.white};
-    background: ${theme.colors.purple600};
+    background: ${theme.colors.purple500};
     &:hover {
       background: ${theme.colors.purple900};
     }
@@ -97,18 +101,25 @@ const StyledButton = styled.button`
       background: ${theme.colors.purple900};
     }
     &:disabled {
-      background: ${theme.colors.gray500};
+      background: ${theme.colors.gray700};
     }
   }
   &.primaryLight {
-    color: ${theme.colors.gray900};
-    background: ${theme.colors.purple100};
-    border: 1.5px solid ${theme.colors.gray400};
+    border-radius: 5px;
+    border: 1.5px solid ${theme.colors.purple800};
+    color: ${theme.colors.purple800};
+    background: ${theme.colors.purple50};
+
     &:hover {
-      background: #e8e4ff;
+      background: ${theme.colors.purple150};
     }
     &:active {
-      background: #e8e4ff;
+      background: ${theme.colors.purple150};
+    }
+    &:disabled {
+      border: 1.5px solid ${theme.colors.gray800};
+      color: ${theme.colors.b100};
+      background: ${theme.colors.gray100};
     }
   }
   &.gray {
@@ -126,7 +137,7 @@ const StyledButton = styled.button`
   &.large {
     height: 56px;
     padding: 18px 82px;
-    ${(props) => props.theme.fonts.b2_medium};
+    ${(props) => props.theme.fonts.b2_bold};
   }
 
   &.medium {
@@ -136,8 +147,14 @@ const StyledButton = styled.button`
   }
 
   &.small {
-    height: 50px;
-    max-width: 79px;
+    height: 46px;
     ${(props) => props.theme.fonts.b2_regular};
   }
+
+  /* 깜빡거리는 효과 */
+  ${({ $isBlink }) =>
+    $isBlink &&
+    css`
+      animation: ${blink} 1.5s infinite;
+    `}
 `;

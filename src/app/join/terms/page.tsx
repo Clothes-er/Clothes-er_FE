@@ -59,6 +59,8 @@ const Terms = () => {
             checkboxType="checkBtn"
             label="약관 전체 동의"
             text="선택사항 포함"
+            color="gray"
+            labelFontSize="b1_bold"
             value={terms.all}
             checked={terms.all}
             onChange={onChangeAll}
@@ -67,6 +69,7 @@ const Terms = () => {
             checkboxType="checkArrow"
             label="서비스 이용약관"
             text="필수"
+            color="purple"
             value={terms.service}
             checked={terms.service}
             onChange={onChangeService}
@@ -75,6 +78,7 @@ const Terms = () => {
             checkboxType="checkArrow"
             label="개인정보 수집 및 동의"
             text="필수"
+            color="purple"
             value={terms.private}
             checked={terms.private}
             onChange={onChangePrivate}
@@ -83,6 +87,7 @@ const Terms = () => {
             checkboxType="checkArrow"
             label="마케팅 수신 동의"
             text="선택"
+            color="gray"
             value={terms.marketing}
             checked={terms.marketing}
             onChange={onChangeMarketing}
@@ -111,6 +116,7 @@ const TermsContainer = styled.div`
 `;
 
 const Title = styled.div`
+  margin-left: 17px;
   ${(props) => props.theme.fonts.h1_bold};
 `;
 
