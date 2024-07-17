@@ -2,8 +2,10 @@
 import AuthAxios from "@/api/authAxios";
 import Tabbar from "@/components/common/Tabbar";
 import Topbar from "@/components/common/Topbar";
+import ScoreBar from "@/components/myCloset/ScoreBar";
 import { getLevelText } from "@/data/levelData";
 import { useRequireAuth } from "@/hooks/useAuth";
+import { getGenderLabel } from "@/interface/Gender";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -13,6 +15,7 @@ import styled from "styled-components";
 interface ProfileInfo {
   nickname: string;
   profileUrl: string;
+  gender: string;
   level: number;
   rentalCount: number;
   height: number;
@@ -51,110 +54,128 @@ const MyCloset = () => {
   return (
     <>
       <Layout>
-        <Image
-          src="/assets/images/logo_black.svg"
-          width={101}
-          height={18}
-          alt="logo"
-          onClick={() => router.push("/home")}
-          style={{ cursor: "pointer" }}
-        />
-        <Topbar text="내 옷장" align="left" />
-        <Profile>
-          {profileInfo?.profileUrl ? (
+        <Background />
+        {profileInfo && (
+          <>
             <Image
-              src={profileInfo.profileUrl}
-              width={70}
-              height={70}
-              alt="profile"
-              style={{ borderRadius: "100px", background: "white" }}
+              src="/assets/images/logo_black.svg"
+              width={101}
+              height={18}
+              alt="logo"
+              onClick={() => router.push("/home")}
+              style={{ cursor: "pointer" }}
             />
-          ) : (
-            <Image
-              src={"/assets/images/profile.svg"}
-              width={70}
-              height={70}
-              alt="profile"
-              style={{ borderRadius: "100px" }}
-            />
-          )}
-          <Text>
-            <Nickname>{profileInfo?.nickname}</Nickname>
-            <Level>
-              Lv {profileInfo?.level}.{" "}
-              {profileInfo?.level && getLevelText(profileInfo.level)}
-              <Span>{profileInfo?.rentalCount}개의 옷을 아꼈어요!</Span>
-            </Level>
-          </Text>
-          <Buttons>
-            <InfoButton onClick={() => router.push("/mycloset/userInfo")}>
-              회원 정보
-            </InfoButton>
-          </Buttons>
-        </Profile>
-        <User>
-          <Inner>
-            <Box>
-              <div>
-                <Title>스펙</Title>
-                <Content>
-                  <div>키</div>
+            <Topbar text="내 옷장" align="left" />
+            <Profile>
+              {profileInfo?.profileUrl && (
+                <Image
+                  src={
+                    `${profileInfo.profileUrl}` ||
+                    `/assets/images/basic_profile.svg`
+                  }
+                  width={70}
+                  height={70}
+                  alt="profile"
+                  style={{ borderRadius: "100px", background: "white" }}
+                />
+              )}
+              <Text>
+                <Top>
+                  <Nickname>
+                    {profileInfo?.nickname}
+
+                    <Gender>{getGenderLabel(profileInfo.gender)}</Gender>
+                  </Nickname>
+                  <ProfileButton
+                    onClick={() => router.push("/mycloset/profile")}
+                  >
+                    프로필 수정
+                  </ProfileButton>
+                </Top>
+                <Level>
+                  {profileInfo?.level &&
+                    `${getLevelText(profileInfo.level) + ""} (Lv. ${
+                      profileInfo?.level
+                    })`}
+                  <LevelText>
+                    {profileInfo?.rentalCount}개의 옷을 아꼈어요!
+                  </LevelText>
+                </Level>
+              </Text>
+            </Profile>
+          </>
+        )}
+        <Slider>
+          <InfoBox>
+            <InfoTop>
+              <Title>옷장점수</Title>
+              <Comment>당신은 멀끔한 옷장을 가졌군요!</Comment>
+              <Score>10점</Score>
+            </InfoTop>
+            <ScoreBar recentScore={10} />
+            <MoreReview>거래 후기 확인하기</MoreReview>
+          </InfoBox>
+
+          {/* <div>
+                  <Title>스펙</Title>
                   <div>
-                    {profileInfo?.height ? `${profileInfo.height}cm` : "미공개"}
+                    <div>키</div>
+                    <div>
+                      {profileInfo?.height
+                        ? `${profileInfo.height}cm`
+                        : "미공개"}
+                    </div>
+                    <div>몸무게</div>
+                    <div>
+                      {profileInfo?.weight
+                        ? `${profileInfo.weight}kg`
+                        : "미공개"}
+                    </div>
+                    <div>발 크기</div>
+                    <div>
+                      {profileInfo?.shoeSize
+                        ? `${profileInfo.shoeSize}mm`
+                        : "미공개"}
+                    </div>
                   </div>
-                  <div>몸무게</div>
-                  <div>
-                    {profileInfo?.weight ? `${profileInfo.weight}kg` : "미공개"}
-                  </div>
-                  <div>발 크기</div>
-                  <div>
-                    {profileInfo?.shoeSize
-                      ? `${profileInfo.shoeSize}mm`
-                      : "미공개"}
-                  </div>
-                </Content>
-              </div>
-              <Keywords>
-                {profileInfo?.bodyShapes[0] ? (
-                  <>
-                    {profileInfo?.bodyShapes.map((data, index) => (
-                      <Keyword key={index}>{data}</Keyword>
+                </div>
+                <Keywords>
+                  {profileInfo?.bodyShapes[0] ? (
+                    <>
+                      {profileInfo?.bodyShapes.map((data, index) => (
+                        <Keyword key={index}>{data}</Keyword>
+                      ))}
+                    </>
+                  ) : (
+                    <Keyword>체형정보 미기입</Keyword>
+                  )}
+                </Keywords>
+              </Box>
+              <Box>
+                <div>
+                  <Title>취향</Title>
+                  <Style>
+                    {profileInfo?.categories.map((data, index) => (
+                      <span key={index}>
+                        {data}
+                        {`  `}
+                      </span>
                     ))}
-                  </>
-                ) : (
-                  <Keyword>체형정보 미기입</Keyword>
-                )}
-              </Keywords>
-            </Box>
-            <Box>
-              <div>
-                <Title>취향</Title>
-                <Style>
-                  {profileInfo?.categories.map((data, index) => (
-                    <span key={index}>
-                      {data}
-                      {`  `}
-                    </span>
-                  ))}
-                </Style>
-              </div>
-              <Keywords>
-                {profileInfo?.styles[0] ? (
-                  <>
-                    {profileInfo?.styles.map((data, index) => (
-                      <Keyword key={index}>{data}</Keyword>
-                    ))}
-                  </>
-                ) : (
-                  <Keyword>스타일 미기입</Keyword>
-                )}
-              </Keywords>
-            </Box>
-          </Inner>
-        </User>
-        <Setting onClick={handleLogout}>
-          <div>로그아웃</div>
-        </Setting>
+                  </Style>
+                </div>
+                <Keywords>
+                  {profileInfo?.styles[0] ? (
+                    <>
+                      {profileInfo?.styles.map((data, index) => (
+                        <Keyword key={index}>{data}</Keyword>
+                      ))}
+                    </>
+                  ) : (
+                    <Keyword>스타일 미기입</Keyword>
+                  )}
+                </Keywords>
+              </Box> */}
+        </Slider>
       </Layout>
       <Tabbar />
     </>
@@ -171,15 +192,32 @@ const Layout = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow-x: none;
+  background: ${theme.colors.ivory};
+  z-index: -100;
+  overflow: hidden;
 `;
 
+const Background = styled.div`
+  width: 100%;
+  max-width: 480px;
+  height: 500px;
+  flex-shrink: 0;
+  border-radius: 0 0 200px 200px;
+  background: linear-gradient(180deg, #d8d1ff 0%, #f3f1ff 100%);
+  position: fixed;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -10;
+  overflow: hidden;
+`;
+
+/* 프로필 */
 const Profile = styled.div`
   width: 100%;
-  height: 127px;
-  padding: 30px;
-  border-radius: 20px;
-  background: ${theme.colors.purple50};
-  box-shadow: 0px 4px 20px 0px rgba(215, 215, 215, 0.25);
+  height: 120px;
+  padding: 10px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,126 +225,106 @@ const Profile = styled.div`
 `;
 
 const Text = styled.div`
-  width: 120px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 13px;
   margin-left: 30px;
-  margin-right: 30px;
+`;
+
+const Top = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Nickname = styled.div`
-  ${(props) => props.theme.fonts.b2_medium};
-`;
-
-const Level = styled.div`
   display: flex;
-  flex-direction: column;
-  ${(props) => props.theme.fonts.c1_regular};
+  align-items: flex-start;
+  gap: 10px;
+  ${(props) => props.theme.fonts.h2_bold};
 `;
 
-const Span = styled.div`
-  color: ${theme.colors.gray900};
-  ${(props) => props.theme.fonts.c3_regular};
+const Gender = styled.span`
+  color: ${theme.colors.purple500};
+  ${(props) => props.theme.fonts.c3_medium};
+  margin-top: 5px;
 `;
 
-const Buttons = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 13px;
-`;
-
-const InfoButton = styled.button`
-  width: 70px;
-  height: 28px;
-  background: ${theme.colors.purple200};
-  color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.c3_bold};
+const ProfileButton = styled.button`
+  width: 74px;
+  height: 30px;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
+  background: ${theme.colors.purple50};
+  color: ${theme.colors.b200};
+  ${(props) => props.theme.fonts.c2_medium};
+  white-space: nowrap;
   cursor: pointer;
 `;
 
-const User = styled.div`
+const Level = styled.div`
+  height: 21px;
+  display: flex;
+  flex-direction: column;
+  color: ${theme.colors.b500};
+  ${(props) => props.theme.fonts.b3_medium};
+`;
+
+const LevelText = styled.div`
+  color: ${theme.colors.b200};
+  ${(props) => props.theme.fonts.c3_medium};
+`;
+
+/* 옷장점수 & 스펙, 취향 */
+const Slider = styled.div`
   width: 100%;
-  height: 200px;
-  padding: 40px 30px;
+  overflow-x: scroll;
+  display: flex;
+  gap: 30px;
+`;
+
+const InfoBox = styled.div`
+  width: 100%;
+  height: 138px;
+  padding: 13px 20px;
   border-radius: 20px;
   background: ${theme.colors.white};
   box-shadow: 0px 4px 20px 0px rgba(215, 215, 215, 0.25);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-bottom: 30px;
 `;
 
-const Inner = styled.div`
-  height: 100%;
+const InfoTop = styled.div`
+  width: 100%;
   display: flex;
-  align-items: flex-start;
-  gap: 30px;
-`;
-
-const Box = styled.div`
-  width: 130px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  align-items: center;
+  margin-bottom: 28px;
 `;
 
 const Title = styled.div`
-  ${(props) => props.theme.fonts.b2_bold};
-  margin-bottom: 10px;
+  ${(props) => props.theme.fonts.b3_bold};
 `;
 
-const Content = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  text-align: left;
-  color: ${theme.colors.b100};
-  ${(props) => props.theme.fonts.c2_regular};
+const Comment = styled.div`
+  color: ${theme.colors.purple300};
+  ${(props) => props.theme.fonts.c3_medium};
 `;
 
-const Style = styled.div`
-  color: ${theme.colors.b100};
-  ${(props) => props.theme.fonts.c2_regular};
-`;
-
-const Keywords = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  gap: 6px;
-`;
-
-const Keyword = styled.div`
-  height: 23px;
-  padding: 6px 10px;
-  border-radius: 15px;
-  background: linear-gradient(180deg, #f69e9e 0%, #ffbcc8 100%);
-  color: ${theme.colors.white};
+const Score = styled.div`
+  color: ${theme.colors.purple500};
   ${(props) => props.theme.fonts.c3_bold};
-  white-space: nowrap;
 `;
 
-const Setting = styled.div`
-  width: 100%;
-  height: auto;
-  padding: 20px 40px;
-  border-radius: 20px;
-  background: ${theme.colors.gray100};
-  box-shadow: 0px 4px 20px 0px rgba(215, 215, 215, 0.25);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  color: ${theme.colors.gray900};
-  &:hover {
-    color: ${theme.colors.b100};
-  }
-  cursor: pointer;
+const MoreReview = styled.button`
+  color: ${theme.colors.b100};
+  ${(props) => props.theme.fonts.b3_medium};
+  text-decoration-line: underline;
+  margin-top: auto;
+  border: none;
+  background: none;
 `;

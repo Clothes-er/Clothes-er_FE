@@ -47,7 +47,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   padding: 1.2rem 0;
-  background: ${theme.colors.white};
 
   img {
     cursor: pointer;
