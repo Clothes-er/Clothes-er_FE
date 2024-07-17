@@ -102,6 +102,7 @@ const Layout = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  background: ${theme.colors.ivory};
 `;
 
 const Top = styled.div`

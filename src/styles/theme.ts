@@ -41,6 +41,7 @@ const colors = {
   delete: "#FF6C63",
 
   white: "#FFFFFF",
+  ivory: "#F9F8FF",
   black: "#000000",
 } as const;
 
