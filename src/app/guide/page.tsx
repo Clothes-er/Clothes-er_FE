@@ -5,7 +5,6 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
 import RadioButton from "@/components/common/RadioButton";
-import Post from "@/components/home/Post";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -69,12 +68,12 @@ const Guide = () => {
         <h2>Radio Choice</h2>
         <RadioButton options={gender} onChange={handleChange} />
         <h2>Dropdown</h2>
-        <Dropdown
+        {/* <Dropdown
           value={selectedSizeOption}
           placeholder="발 사이즈"
           options={sizeOptions}
           setValue={setSelectedSizeOption}
-        />
+        /> */}
       </Layout>
     </>
   );
