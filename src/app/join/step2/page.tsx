@@ -173,18 +173,23 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  gap: 5px;
 `;
 
 const Hello = styled.div`
   text-align: left;
   color: ${theme.colors.b500};
   ${(props) => props.theme.fonts.h2_bold};
+  margin-bottom: 29px;
 `;
 
 const ButtonRow = styled.div`
+  width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 22px;
+  margin-top: auto;
   gap: 14px;
+  position: sticky;
+  bottom: 25px;
+  left: 0;
 `;

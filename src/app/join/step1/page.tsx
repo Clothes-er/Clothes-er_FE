@@ -307,6 +307,7 @@ const InputBox = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
+  margin-bottom: 50px;
 `;
 
 const Row = styled.div`
@@ -322,8 +323,12 @@ const CheckButton = styled.div`
 `;
 
 const ButtonRow = styled.div`
+  width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 22px;
+  margin-top: auto;
   gap: 14px;
+  position: sticky;
+  bottom: 25px;
+  left: 0;
 `;
