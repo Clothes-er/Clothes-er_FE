@@ -43,7 +43,6 @@ const Setting = () => {
           <Div onClick={handleWithdrawal}>탈퇴하기</Div>
         </Content>
       </Layout>
-      <Tabbar />
     </>
   );
 };

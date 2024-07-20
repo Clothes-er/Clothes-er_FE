@@ -97,7 +97,6 @@ const UserInfo = () => {
           </Info>
         </Content>
       </Layout>
-      <Tabbar />
     </>
   );
 };
