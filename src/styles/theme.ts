@@ -41,6 +41,7 @@ const colors = {
   delete: "#FF6C63",
 
   white: "#FFFFFF",
+  ivory: "#F9F8FF",
   black: "#000000",
 } as const;
 
@@ -154,6 +155,10 @@ const fonts = {
 
   c3_bold: FONT({
     weight: 700,
+    size: 10,
+  }),
+  c3_semiBold: FONT({
+    weight: 600,
     size: 10,
   }),
   c3_medium: FONT({

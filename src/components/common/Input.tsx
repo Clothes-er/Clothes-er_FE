@@ -78,7 +78,7 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
           <StyledDatePicker
             format="YYYY-MM-DD"
             value={date}
-            onChange={(date) => date && handleDateChange}
+            onChange={handleDateChange}
             showDaysOutsideCurrentMonth
             shouldDisableDate={(day) => {
               return dayjs(dayjs(day as Dayjs).format(`YYYY-MM-DD`)).isAfter(

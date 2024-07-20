@@ -47,7 +47,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   padding: 1.2rem 0;
-  background: ${theme.colors.white};
 
   img {
     cursor: pointer;
@@ -57,5 +56,6 @@ const Container = styled.div`
 `;
 
 const Text = styled.div<{ $align: string }>`
+  width: 100%;
   text-align: ${(props) => props.$align};
 `;
