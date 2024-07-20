@@ -1,18 +1,42 @@
 "use client";
 
+import AuthAxios from "@/api/authAxios";
 import Tabbar from "@/components/common/Tabbar";
 import Topbar from "@/components/common/Topbar";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+
+interface UserInfo {
+  name: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+  birthday: string;
+}
 
 const UserPage = () => {
   const router = useRouter();
+  const [userInfo, setUserInfo] = useState<UserInfo>();
 
   const text = "비밀번호텍스트";
   const length = text.length;
   const dots = Array(length).fill("●");
+
+  useEffect(() => {
+    AuthAxios.get("/api/v1/users/info")
+      .then((response) => {
+        const data = response.data.result;
+        setUserInfo(data);
+        console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
@@ -50,19 +74,18 @@ const UserPage = () => {
             <Div>생년월일</Div>
           </Label>
           <Label>
-            <Text>유진주</Text>
-            <Text>jinori123@gmail.com</Text>
+            <Text>{userInfo?.name}</Text>
+            <Text>{userInfo?.email}</Text>
             <Text>
               {dots.map((dot, index) => (
                 <Dot key={index}>{dot}</Dot>
               ))}
             </Text>
-            <Text>010-1234-5678</Text>
-            <Text>2002-06-29</Text>
+            <Text>{userInfo?.phoneNumber}</Text>
+            <Text>{userInfo?.birthday}</Text>
           </Label>
         </Content>
       </Layout>
-      <Tabbar />
     </>
   );
 };
