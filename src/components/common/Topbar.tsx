@@ -56,5 +56,6 @@ const Container = styled.div`
 `;
 
 const Text = styled.div<{ $align: string }>`
+  width: 100%;
   text-align: ${(props) => props.$align};
 `;
