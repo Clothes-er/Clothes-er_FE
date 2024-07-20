@@ -157,6 +157,10 @@ const fonts = {
     weight: 700,
     size: 10,
   }),
+  c3_semiBold: FONT({
+    weight: 600,
+    size: 10,
+  }),
   c3_medium: FONT({
     weight: 500,
     size: 10,
