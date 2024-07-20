@@ -5,7 +5,14 @@ import signInReducer from "./slices/signInSlice";
 import firstLoginReducer from "./slices/firstLoginSlice";
 import categoryReducer from "./slices/categorySlice";
 import { useDispatch } from "react-redux";
-
+import {
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+  } from 'redux-persist'
 
 const rootReducer = combineReducers({
     signIn: signInReducer,
@@ -21,11 +28,13 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer);
   
 export const store = configureStore({
-    reducer: {
-    signIn: signInReducer,
-    firstLogin: firstLoginReducer,
-    category: categoryReducer,
-    },
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
 });
 
 export const persistor = persistStore(store);
