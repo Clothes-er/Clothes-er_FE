@@ -50,12 +50,6 @@ const MyCloset = () => {
       });
   }, []);
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("isFirstLogin");
-  //   router.push("/");
-  // };
-
   const goToSlide = (slideIndex: number) => {
     if (sliderRef.current) {
       const slideWidth = sliderRef.current.clientWidth;
@@ -82,7 +76,17 @@ const MyCloset = () => {
               onClick={() => router.push("/home")}
               style={{ cursor: "pointer" }}
             />
-            <Topbar text="내 옷장" align="left" />
+            <TopRow>
+              <Topbar text="내 옷장" align="left" />
+              <Image
+                src="/assets/icons/ic_setting.svg"
+                width={24}
+                height={24}
+                alt="setting"
+                onClick={() => router.push("/mycloset/setting")}
+                style={{ cursor: "pointer" }}
+              />
+            </TopRow>
             <Profile>
               {profileInfo?.profileUrl && (
                 <Image
@@ -247,6 +251,12 @@ const Background = styled.div`
   transform: translateX(-50%);
   z-index: -10;
   overflow: hidden;
+`;
+
+const TopRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 /* 프로필 */
