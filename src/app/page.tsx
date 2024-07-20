@@ -120,7 +120,7 @@ export default function Home() {
               placeholder="비밀번호"
             />
           </InputBox>
-          <Save save={save} onClick={handleSave}>
+          <Save $save={save} onClick={handleSave}>
             {save ? (
               <Image
                 src="/assets/icons/ic_save.svg"
@@ -231,14 +231,14 @@ const InputBox = styled.div`
   flex-direction: column;
 `;
 
-const Save = styled.div<SaveProps>`
+const Save = styled.div<{ $save: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 7px;
   justify-content: flex-start;
   align-items: center;
-  color: ${({ save, theme }) =>
-    save ? "rgba(90, 66, 238, 0.7)" : theme.colors.gray900};
+  color: ${({ $save, theme }) =>
+    $save ? "rgba(90, 66, 238, 0.7)" : theme.colors.gray900};
   cursor: pointer;
   margin-bottom: 8px;
 `;
