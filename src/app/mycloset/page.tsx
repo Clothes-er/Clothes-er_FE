@@ -1,5 +1,6 @@
 "use client";
 import AuthAxios from "@/api/authAxios";
+import ListTab from "@/components/common/ListTab";
 import Tabbar from "@/components/common/Tabbar";
 import Topbar from "@/components/common/Topbar";
 import ScoreBar from "@/components/myCloset/ScoreBar";
@@ -212,6 +213,7 @@ const MyCloset = () => {
             </Indicator>
           </IndicatorContainer>
         </SliderContainer>
+        <ListTab />
       </Layout>
       <Tabbar />
     </>
@@ -315,6 +317,7 @@ const LevelText = styled.div`
 const SliderContainer = styled.div`
   width: 100%;
   position: relative;
+  margin-bottom: 35px;
 `;
 
 const Slider = styled.div`
