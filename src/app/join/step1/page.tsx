@@ -35,7 +35,7 @@ const Step1 = () => {
   });
 
   /* 성공 메세지 */
-  const [success, setSeccess] = useState({
+  const [success, setSuccess] = useState({
     name: "",
     nickname: "",
     email: "",
@@ -59,11 +59,11 @@ const Step1 = () => {
       Axios.get(`/api/v1/users/check-nickname/${inputs.nickname}`)
         .then((response) => {
           console.log("닉네임 중복확인 성공", response.data);
-          setSeccess({ ...success, nickname: "사용가능한 닉네임입니다." });
+          setSuccess({ ...success, nickname: "사용가능한 닉네임입니다." });
         })
         .catch((error) => {
           if (error.response && error.response.status === 409) {
-            setSeccess({ ...success, nickname: "" });
+            setSuccess({ ...success, nickname: "" });
             setErrors({ ...errors, nickname: error.response.data.message });
           } else {
             console.log("닉네임 중복확인 실패", error);
@@ -116,11 +116,11 @@ const Step1 = () => {
         setEmailSent(true);
         setInputs({ ...inputs, emailAuth: "" });
         setErrors({ ...errors, emailAuth: "" });
-        setSeccess({ ...success, email: "인증번호가 전송되었습니다." });
+        setSuccess({ ...success, email: "인증번호가 전송되었습니다." });
       })
       .catch((error) => {
         console.log("이메일 전송 실패", error);
-        setSeccess({ ...success, email: "" });
+        setSuccess({ ...success, email: "" });
         setErrors({ ...errors, email: error.response.data.message });
       });
   };
@@ -134,18 +134,18 @@ const Step1 = () => {
       .then((response) => {
         console.log("이메일 인증 성공", response.data);
         setCorrectCode(true);
-        setSeccess({ ...success, emailAuth: "이메일이 인증되었습니다." });
+        setSuccess({ ...success, emailAuth: "이메일이 인증되었습니다." });
       })
       .catch((error) => {
         console.log("이메일 인증 실패", error);
-        setSeccess({ ...success, emailAuth: "" });
+        setSuccess({ ...success, emailAuth: "" });
         setErrors({ ...errors, emailAuth: error.response.data.message });
       });
   };
 
   /* inputs.email 변경 시 correctSendEmail 초기화 */
   useEffect(() => {
-    setSeccess({ ...success, email: "" });
+    setSuccess({ ...success, email: "" });
   }, [inputs.email]);
 
   /* 다음 단계 이동 */

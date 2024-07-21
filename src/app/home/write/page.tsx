@@ -111,7 +111,8 @@ const Write = () => {
       console.log(`${key}: ${value}`);
     });
     axios
-      .post(`http://13.209.137.34:8080/api/v1/rentals`, formData, {
+      .post(`/api/v1/rentals`, formData, {
+        baseURL: process.env.NEXT_PUBLIC_BASE_URL,
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -175,7 +176,7 @@ const Write = () => {
                 src="/assets/icons/ic_camera.svg"
                 width={24}
                 height={24}
-                alt="add phote"
+                alt="add photo"
               />
             </AddPhoto>
             <PhotoList>
