@@ -32,6 +32,7 @@ interface ProfileInfo {
 const MyCloset = () => {
   useRequireAuth();
   const router = useRouter();
+
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>();
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -302,7 +303,6 @@ const ProfileButton = styled.button`
   height: 30px;
   border: none;
   border-radius: 5px;
-  /* background: ${theme.colors.purple500}; */
   background: ${theme.colors.purple50};
   color: ${theme.colors.b200};
   ${(props) => props.theme.fonts.c2_medium};
@@ -338,7 +338,7 @@ const Slider = styled.div`
 `;
 
 const Slide = styled.div`
-  width: 100%; /* Ensure each slide takes full width */
+  width: 100%;
   flex-shrink: 0;
   display: flex;
   justify-content: center;

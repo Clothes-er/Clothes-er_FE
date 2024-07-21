@@ -117,6 +117,10 @@ const fonts = {
     weight: 700,
     size: 14,
   }),
+  b3_semiBold: FONT({
+    weight: 600,
+    size: 14,
+  }),
   b3_medium: FONT({
     weight: 500,
     size: 14,
