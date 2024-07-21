@@ -81,7 +81,7 @@ const UserInfo = () => {
     const formData = new FormData();
 
     formData.append(
-      "patch",
+      "nickname",
       new Blob(
         [
           JSON.stringify({
