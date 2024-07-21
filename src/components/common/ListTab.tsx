@@ -1,83 +1,109 @@
 import { myClosetTabs } from "@/data/tabsData";
 import { theme } from "@/styles/theme";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
+import StorageContent from "../myCloset/StorageContent";
+import { useCurrentTab } from "@/hooks/useCurrentTab";
+import MyClosetContent from "../myCloset/MyClosetContent";
+import MyShareContent from "../myCloset/MyShareContent";
+import TransShareContent from "../myCloset/TransShareContent";
+import TransRentContent from "../myCloset/TransRentContent";
 
 const ListTab = () => {
-  const router = useRouter();
-  const [selectedTab, setSelectedTab] = useState(0);
-  const [selectedSubTab, setSelectedSubTab] = useState(0);
+  // const router = useRouter();
+  const { currentTab, setCurrentTab, currentSubTab, setCurrentSubTab } =
+    useCurrentTab();
+
+  const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [selectedSubTab, setSelectedSubTab] = useState<number>(0);
 
   const handleTabClick = (tabIndex: number) => {
     setSelectedTab(tabIndex);
     setSelectedSubTab(0);
-    const newPath = getTabPath(tabIndex, 0);
-    router.push(newPath);
+    const newTab = myClosetTabs[tabIndex].key;
+    setCurrentTab(newTab);
+    setCurrentSubTab(myClosetTabs[tabIndex].sub?.[0]?.key || "");
+    // router.push(`/mycloset/${newTab}/${myClosetTabs[tabIndex].sub?.[0]?.key || ''}`);
   };
 
   const handleSubTabClick = (subIndex: number) => {
     setSelectedSubTab(subIndex);
-    const newPath = getTabPath(selectedTab, subIndex);
-    router.push(newPath);
-  };
-
-  const getTabPath = (tabIndex: number, subIndex: number) => {
-    const basePath = "/mycloset"; // 기본 경로
-
-    const tab = myClosetTabs[tabIndex];
-    const tabPath = tab.path; // 주요 탭의 경로
-
-    // 하위 탭이 있는 경우
-    if (tab.sub && subIndex < tab.sub.length) {
-      const subTabPath = tab.sub[subIndex].path; // 선택된 하위 탭의 경로
-      return `${basePath}${tabPath}${subTabPath}`;
-    }
-
-    // 하위 탭이 없는 경우
-    return `${basePath}${tabPath}`;
+    const newSubTab = myClosetTabs[selectedTab].sub?.[subIndex]?.key || "";
+    setCurrentSubTab(newSubTab);
+    // router.push(`/mycloset/${myClosetTabs[selectedTab].key}/${newSubTab}`);
   };
 
   return (
     <Container>
-      {myClosetTabs.map((item, index) => (
-        <Tab
-          key={index}
-          selected={selectedTab === index}
-          onClick={() => handleTabClick(index)}
-        >
-          {item.tab}
-          {selectedTab === index && (
-            <SubTabs>
-              {item.sub?.map((list, subIndex) => (
-                <SubTab
-                  key={index}
-                  selected={selectedSubTab === subIndex}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSubTabClick(subIndex);
-                  }}
-                >
-                  {list.subTab}
-                </SubTab>
-              ))}
-            </SubTabs>
-          )}
-        </Tab>
-      ))}
+      <ListContainer>
+        {myClosetTabs.map((item, index) => (
+          <Tab
+            key={index}
+            selected={selectedTab === index}
+            onClick={() => handleTabClick(index)}
+          >
+            {item.tab}
+            {selectedTab === index && item.sub && (
+              <SubTabs>
+                {item.sub.map((list, subIndex) => (
+                  <SubTab
+                    key={subIndex}
+                    selected={selectedSubTab === subIndex}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSubTabClick(subIndex);
+                    }}
+                  >
+                    {list.subTab}
+                  </SubTab>
+                ))}
+              </SubTabs>
+            )}
+          </Tab>
+        ))}
+      </ListContainer>
+      <ContentArea currentTab={currentTab} currentSubTab={currentSubTab} />
     </Container>
   );
 };
 
+function ContentArea({
+  currentTab,
+  currentSubTab,
+}: {
+  currentTab: string;
+  currentSubTab: string;
+}) {
+  if (currentTab === "my" && currentSubTab === "closet") {
+    return <MyClosetContent />;
+  } else if (currentTab === "my" && currentSubTab === "share") {
+    return <MyShareContent />;
+  } else if (currentTab === "transaction" && currentSubTab === "sharing") {
+    return <TransShareContent />;
+  } else if (currentTab === "transaction" && currentSubTab === "rental") {
+    return <TransRentContent />;
+  } else if (currentTab === "storage") {
+    return <StorageContent />;
+  }
+  return null;
+}
+
 export default ListTab;
 
 const Container = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ListContainer = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   place-items: center;
   padding: 0px 40px;
   border-bottom: 1px solid ${theme.colors.gray200};
+  margin-bottom: 30px;
 `;
 
 const Tab = styled.div<{ selected: boolean }>`

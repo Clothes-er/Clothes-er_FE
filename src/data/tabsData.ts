@@ -6,7 +6,24 @@ export const tabs = [
 ];
 
 export const myClosetTabs = [
-  { tab: "보유", path: "/my", sub : [{subTab: "옷장", path: "/closet"}, {subTab:"공유 등록", path: "/share"}]},
-  { tab: "거래 현황", path: "/transaction", sub : [{subTab: "공유", path: "/sharing"}, {subTab:"대여", path: "/rental"}]},
-  { tab: "찜", path: "/storage"},
+  { 
+    tab: "보유", 
+    key: "my", 
+    sub: [
+      { subTab: "옷장", key: "closet" },
+      { subTab: "공유 등록", key: "share" }
+    ]
+  },
+  { 
+    tab: "거래 현황", 
+    key: "transaction", 
+    sub: [
+      { subTab: "공유", key: "sharing" },
+      { subTab: "대여", key: "rental" }
+    ]
+  },
+  { 
+    tab: "찜", 
+    key: "storage"
+  }
 ];
