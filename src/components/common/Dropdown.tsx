@@ -9,7 +9,7 @@ interface DropdownProps {
   dropdownType: dropdownType;
   placeholder: string;
   options: string[];
-  size?: "large" | "medium" | "small";
+  size?: "large" | "medium" | "small" | "xsmall";
   setValue: (value: any) => void;
 }
 
@@ -49,6 +49,15 @@ const Dropdown: React.FC<DropdownProps> = ({
     };
   }, [dropdown]);
 
+  const renderValue = () => {
+    if (dropdownType === "multi") {
+      return Array.isArray(value) && value.length > 0
+        ? value.join(", ")
+        : placeholder;
+    }
+    return value || placeholder;
+  };
+
   return (
     <Box className={size} ref={dropdownRef}>
       <DropdownButton
@@ -62,6 +71,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             ? value.join(", ")
             : placeholder
           : value || placeholder}
+        {/* {renderValue()} */}
       </DropdownButton>
       <MoreIcon
         src="/assets/icons/ic_dropdown_more.svg"
@@ -103,7 +113,7 @@ const DropdownButton = styled.button<{ errorMsg: string; hasValue: boolean }>`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  border-radius: 15px;
+  border-radius: 5px;
   border: 1px solid
     ${({ errorMsg, theme }) =>
       errorMsg && errorMsg.length > 0
@@ -147,6 +157,7 @@ const DropBox = styled.div`
   max-height: 180px;
   overflow-y: auto;
   background-color: ${theme.colors.white};
+  z-index: 1000;
 `;
 
 const Option = styled.div`
