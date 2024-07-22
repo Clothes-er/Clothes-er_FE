@@ -140,19 +140,17 @@ const UserInfo = () => {
         </Top>
         <Content>
           <Profile>
-            {userInfo?.profileUrl && (
-              <Image
-                src={
-                  image
-                    ? URL.createObjectURL(image)
-                    : userInfo?.profileUrl || "/assets/images/profile.svg"
-                }
-                width={147}
-                height={147}
-                alt="profile"
-                style={{ borderRadius: "100px", background: "white" }}
-              />
-            )}
+            <Image
+              src={
+                image
+                  ? URL.createObjectURL(image)
+                  : userInfo?.profileUrl || "/assets/images/basic_profile.svg"
+              }
+              width={147}
+              height={147}
+              alt="profile"
+              style={{ borderRadius: "100px", background: "white" }}
+            />
             <ModifyPhoto>
               <input
                 type="file"
