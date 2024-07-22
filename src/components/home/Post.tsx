@@ -7,11 +7,14 @@ import styled, { css } from "styled-components";
 
 const Post: React.FC<PostList> = ({
   id,
+  postType = "share",
   imgUrl,
   nickname,
   title,
   minPrice,
   createdAt,
+  startDate,
+  endDate,
   size = "nomal",
 }) => {
   const router = useRouter();
@@ -31,7 +34,7 @@ const Post: React.FC<PostList> = ({
         <Title>{title}</Title>
         <Price>{minPrice}원~</Price>
         <Sub>
-          {createdAt}{" "}
+          {postType === "share" ? createdAt : `${startDate}~${endDate}`}{" "}
           {nickname && (
             <>
               | <Span>{nickname}</Span> 님
@@ -53,7 +56,7 @@ const Container = styled.div<{ size: string }>`
   justify-content: flex-start;
   align-items: center;
   gap: 19px;
-  border-top: 0.5px solid rgba(219, 219, 219, 0.7);
+  /* border-top: 0.5px solid rgba(219, 219, 219, 0.7); */
   ${(props) =>
     props.size === "small" &&
     css`

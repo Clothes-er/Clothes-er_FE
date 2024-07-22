@@ -4,6 +4,7 @@ import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
+import { styleOptions } from "@/constants/options";
 import { setStep3 } from "@/redux/slices/firstLoginSlice";
 import { useAppDispatch } from "@/redux/store";
 import { postFirstLoginData } from "@/redux/thunks/postFirstLogin";
@@ -18,7 +19,6 @@ const Step3 = () => {
   const dispatch = useAppDispatch();
 
   const [category, setCategory] = useState<string[]>([""]);
-  const styleOptions = ["러블리", "빈티지", "시크", "힙합"];
   const [style, setStyle] = useState<string[]>([]);
   const [modal, setModal] = useState(false);
 

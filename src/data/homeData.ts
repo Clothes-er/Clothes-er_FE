@@ -1,10 +1,15 @@
+export type postType = "share" | "rental";
+
 export interface PostList {
     id?: number;
+    postType?: postType;
     imgUrl?: string | null;
     nickname?: string;
     title: string;
     minPrice: number;
     createdAt?: string;
+    startDate?: string;
+    endDate?: string;
     size?: "nomal" | "small";
 }
 

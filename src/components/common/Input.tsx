@@ -17,7 +17,7 @@ type inputType =
 export interface InputProps {
   label?: string;
   value: any;
-  size?: "large" | "medium" | "small";
+  size?: "large" | "medium" | "small" | "xsmall";
   onChange: (value: any) => void;
   onClick?: () => void;
   placeholder?: string;
@@ -176,6 +176,10 @@ const StyledDatePicker = styled(MobileDatePicker)`
 
     &.small {
       height: 44px;
+    }
+
+    &.xsmall {
+      height: 40px;
     }
 
     /* etc */

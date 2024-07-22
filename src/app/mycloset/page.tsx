@@ -1,9 +1,13 @@
 "use client";
 import AuthAxios from "@/api/authAxios";
+import Dropdown from "@/components/common/Dropdown";
+import Input from "@/components/common/Input";
 import ListTab from "@/components/common/ListTab";
+import Modal from "@/components/common/Modal";
 import Tabbar from "@/components/common/Tabbar";
 import Topbar from "@/components/common/Topbar";
 import ScoreBar from "@/components/myCloset/ScoreBar";
+import { sizeOptions, styleOptions } from "@/constants/options";
 import { getLevelText } from "@/data/levelData";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { getGenderLabel } from "@/interface/Gender";
@@ -32,16 +36,32 @@ interface ProfileInfo {
 const MyCloset = () => {
   useRequireAuth();
   const router = useRouter();
+
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>();
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  const [stylePopup, setStylePopup] = useState<boolean>(false);
+
+  const [height, setHeight] = useState<number | null>(null);
+  const [weight, setWeight] = useState<number | null>(null);
+  const [shoeSize, setShoeSize] = useState<number | null>(null);
+  const [body, setBody] = useState<string[]>([]);
+  const [category, setCategory] = useState<string[]>([]);
+  const [style, setStyle] = useState<string[]>([]);
 
   useEffect(() => {
     AuthAxios.get("/api/v1/users/profile")
       .then((response) => {
         const data = response.data.result;
         setProfileInfo(data);
+        setHeight(data.height);
+        setWeight(data.weight);
+        setShoeSize(data.shoeSize);
+        setBody(data.bodyShapes);
+        setCategory(data.categories);
+        setStyle(data.styles);
         console.log(data);
         console.log(response.data.message);
       })
@@ -60,6 +80,35 @@ const MyCloset = () => {
       });
       setCurrentSlide(slideIndex);
     }
+  };
+
+  const handleModifyStyle = () => {
+    AuthAxios.patch("/api/v1/users/style", {
+      height,
+      weight,
+      shoeSize,
+      bodyShapes: body,
+      categories: category,
+      styles: style,
+    })
+      .then((response) => {
+        const data = response.data.result;
+        setProfileInfo(data);
+        setStylePopup(false);
+        console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleStyleChange = (selectedStyle: string) => {
+    setStyle((prevStyles) =>
+      prevStyles.includes(selectedStyle)
+        ? prevStyles.filter((style) => style !== selectedStyle)
+        : [...prevStyles, selectedStyle]
+    );
   };
 
   return (
@@ -88,23 +137,20 @@ const MyCloset = () => {
               />
             </TopRow>
             <Profile>
-              {profileInfo?.profileUrl && (
+              <ProfileImage>
                 <Image
                   src={
-                    `${profileInfo.profileUrl}` ||
-                    `/assets/images/basic_profile.svg`
+                    profileInfo.profileUrl || "/assets/images/basic_profile.svg"
                   }
-                  width={70}
-                  height={70}
+                  layout="fill"
+                  objectFit="cover"
                   alt="profile"
-                  style={{ borderRadius: "100px", background: "white" }}
                 />
-              )}
+              </ProfileImage>
               <Text>
                 <Top>
                   <Nickname>
                     {profileInfo?.nickname}
-
                     <Gender>{getGenderLabel(profileInfo.gender)}</Gender>
                   </Nickname>
                   <ProfileButton
@@ -141,6 +187,19 @@ const MyCloset = () => {
             </Slide>
             <Slide>
               <StyleBox>
+                <Edit
+                  onClick={() => {
+                    setStylePopup(!stylePopup);
+                  }}
+                >
+                  수정
+                  <Image
+                    src="/assets/icons/ic_modify.svg"
+                    width={16}
+                    height={16}
+                    alt="edit"
+                  />
+                </Edit>
                 <StyleBoxDiv>
                   <div>
                     <Title>스펙</Title>
@@ -175,7 +234,7 @@ const MyCloset = () => {
                         ))}
                       </>
                     ) : (
-                      <Keyword type={1}>체형정보 미기입</Keyword>
+                      <Keyword type={0}>체형정보 미기입</Keyword>
                     )}
                   </Keywords>
                 </StyleBoxDiv>
@@ -195,7 +254,7 @@ const MyCloset = () => {
                     {profileInfo?.styles[0] ? (
                       <>
                         {profileInfo?.styles.map((data, index) => (
-                          <Keyword key={index} type={0}>
+                          <Keyword key={index} type={2}>
                             {data}
                           </Keyword>
                         ))}
@@ -219,6 +278,88 @@ const MyCloset = () => {
         </SliderContainer>
         <ListTab />
       </Layout>
+      {stylePopup && (
+        <Modal
+          title={`스펙 & 취향 변경하기`}
+          onClose={() => {
+            setStylePopup(false);
+          }}
+          onCheck={handleModifyStyle}
+          no="취소하기"
+          yes="수정하기"
+          width="300px"
+          height="575px"
+          content={
+            <>
+              <div>
+                <Label>기본 정보</Label>
+                <Gap>
+                  <Row>
+                    <Input
+                      value={height !== null ? height : ""}
+                      placeholder="키"
+                      size="xsmall"
+                      onChange={(value: number) => setHeight(value)}
+                    />
+                    <Input
+                      value={weight !== null ? weight : ""}
+                      placeholder="몸무게"
+                      size="xsmall"
+                      onChange={(value: number) => setWeight(value)}
+                    />
+                  </Row>
+                  <Dropdown
+                    value={shoeSize !== null ? shoeSize : ""}
+                    dropdownType="single"
+                    placeholder="발 사이즈"
+                    size="xsmall"
+                    options={sizeOptions}
+                    setValue={(value: number) => setShoeSize(value)}
+                  />
+                </Gap>
+              </div>
+              <div>
+                <Label>
+                  체형
+                  <Span>(,로 복수입력)</Span>
+                </Label>
+                <Input
+                  inputType="array"
+                  value={body}
+                  placeholder="어깨가 넓어요, 허리가 길어요"
+                  size="xsmall"
+                  onChange={(value: string[]) => setBody(value)}
+                />
+              </div>
+              <div>
+                <Label>
+                  카테고리
+                  <Span>(,로 복수입력)</Span>
+                </Label>
+                <Input
+                  inputType="array"
+                  value={category}
+                  placeholder="가디건, 셔츠, 청바지 등"
+                  onChange={(value: string[]) => setCategory(value)}
+                />
+              </div>
+              <div>
+                <Label>
+                  스타일
+                  <Span>(복수선택)</Span>
+                </Label>
+                <Dropdown
+                  value={style}
+                  dropdownType="multi"
+                  placeholder="스타일"
+                  options={styleOptions}
+                  setValue={handleStyleChange}
+                />
+              </div>
+            </>
+          }
+        />
+      )}
       <Tabbar />
     </>
   );
@@ -270,8 +411,17 @@ const Profile = styled.div`
   margin-bottom: 30px;
 `;
 
+const ProfileImage = styled.div`
+  position: relative;
+  width: 70px;
+  height: 70px;
+  background: white;
+  border-radius: 50%;
+  overflow: hidden;
+`;
+
 const Text = styled.div`
-  width: 100%;
+  width: calc(100% - 70px);
   display: flex;
   flex-direction: column;
   gap: 13px;
@@ -302,7 +452,6 @@ const ProfileButton = styled.button`
   height: 30px;
   border: none;
   border-radius: 5px;
-  /* background: ${theme.colors.purple500}; */
   background: ${theme.colors.purple50};
   color: ${theme.colors.b200};
   ${(props) => props.theme.fonts.c2_medium};
@@ -338,7 +487,7 @@ const Slider = styled.div`
 `;
 
 const Slide = styled.div`
-  width: 100%; /* Ensure each slide takes full width */
+  width: 100%;
   flex-shrink: 0;
   display: flex;
   justify-content: center;
@@ -394,6 +543,20 @@ const StyleBox = styled(ScoreBox)`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: flex-start;
+  position: relative;
+`;
+
+const Edit = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: ${theme.colors.b100};
+  ${(props) => props.theme.fonts.c2_medium};
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
 `;
 
 const StyleBoxDiv = styled.div`
@@ -420,18 +583,29 @@ const Keywords = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  gap: 5px;
 `;
 
 const Keyword = styled.div<{ type: number }>`
-  color: ${({ type, theme }) =>
-    type === 1 ? "#e071d5" : theme.colors.purple500};
+  color: ${({ type, theme }) => {
+    if (type === 1) return "#e071d5";
+    if (type === 2) return theme.colors.purple500;
+    return theme.colors.gray800;
+  }};
   ${(props) => props.theme.fonts.c3_semiBold};
   padding: 3px 6px;
   border: 1px solid
-    ${({ type, theme }) => (type === 1 ? "#e071d5" : theme.colors.purple500)};
+    ${({ type, theme }) => {
+      if (type === 1) return "#e071d5";
+      if (type === 2) return theme.colors.purple500;
+      return theme.colors.gray800;
+    }};
   border-radius: 10px;
-  background: ${({ type, theme }) =>
-    type === 1 ? "#f8e4ff" : theme.colors.purple150};
+  background: ${({ type, theme }) => {
+    if (type === 1) return "#f8e4ff";
+    if (type === 2) return theme.colors.purple150;
+    return theme.colors.gray100;
+  }};
 `;
 
 /* 인디케이터 */
@@ -452,4 +626,32 @@ const Indicator = styled.div<{ active: boolean }>`
   border-radius: 3px;
   cursor: pointer;
   ${(props) => props.theme.fonts.b3_medium};
+`;
+
+/* 스펙 & 취향 모달 */
+const Gap = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+`;
+
+const Label = styled.div`
+  text-align: left;
+  color: ${theme.colors.black};
+  ${(props) => props.theme.fonts.b2_bold};
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+`;
+
+const Span = styled.span`
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b3_regular};
 `;

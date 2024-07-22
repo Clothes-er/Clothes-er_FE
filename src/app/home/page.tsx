@@ -101,16 +101,19 @@ const Home = () => {
             ></SearchBox>
             {/* <Filter /> */}
             <Posts>
-              {postList?.map((data) => (
-                <Post
-                  key={data.id}
-                  id={data.id}
-                  imgUrl={data.imgUrl}
-                  title={data.title}
-                  minPrice={data.minPrice}
-                  createdAt={data.createdAt}
-                  nickname={data.nickname}
-                />
+              {postList?.map((data, index) => (
+                <PostContainer key={data.id}>
+                  <Post
+                    key={data.id}
+                    id={data.id}
+                    imgUrl={data.imgUrl}
+                    title={data.title}
+                    minPrice={data.minPrice}
+                    createdAt={data.createdAt}
+                    nickname={data.nickname}
+                  />
+                  {index < postList.length - 1 && <Divider />}
+                </PostContainer>
               ))}
             </Posts>
           </Content>
@@ -186,7 +189,16 @@ const SearchBox = styled.input`
 
 const Posts = styled.div`
   width: 100%;
-  margin-top: 16px;
+`;
+
+const PostContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Divider = styled.div`
+  height: 0.5px;
+  background-color: rgba(219, 219, 219, 0.7);
 `;
 
 const Edit = styled.div`
