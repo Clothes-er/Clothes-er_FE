@@ -4,6 +4,7 @@ import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import RadioButton from "@/components/common/RadioButton";
+import { genderOptions, sizeOptions } from "@/constants/options";
 import { Gender } from "@/interface/Gender";
 import { setStep2 } from "@/redux/slices/firstLoginSlice";
 import { theme } from "@/styles/theme";
@@ -22,28 +23,7 @@ const Step2 = () => {
   const [foot, setFoot] = useState("");
   const [body, setBody] = useState([""]);
 
-  const genderOptions = ["남자", "여자"];
   const [gender, setGender] = useState<Gender | undefined>();
-
-  const sizeOptions = [
-    "210",
-    "215",
-    "220",
-    "225",
-    "230",
-    "235",
-    "240",
-    "245",
-    "250",
-    "255",
-    "260",
-    "265",
-    "270",
-    "275",
-    "280",
-    "285",
-    "290",
-  ];
 
   const handleChange = (selectedOption: string) => {
     setGender(selectedOption === "남자" ? Gender.MALE : Gender.FEMALE);
