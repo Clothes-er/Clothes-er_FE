@@ -23,18 +23,20 @@ const TransShareContent = () => {
 
   return (
     <ListContainer>
-      {postList?.map((data) => (
-        <Post
-          key={data.id}
-          id={data.id}
-          postType="rental"
-          imgUrl={data.imgUrl}
-          title={data.title}
-          minPrice={data.minPrice}
-          startDate={data.startDate}
-          endDate={data.endDate}
-          nickname={data.nickname}
-        />
+      {postList?.map((data, index) => (
+        <PostContainer key={data.id}>
+          <Post
+            id={data.id}
+            postType="rental"
+            imgUrl={data.imgUrl}
+            title={data.title}
+            minPrice={data.minPrice}
+            startDate={data.startDate}
+            endDate={data.endDate}
+            nickname={data.nickname}
+          />
+          {index < postList.length - 1 && <Divider />}
+        </PostContainer>
       ))}
     </ListContainer>
   );
@@ -46,4 +48,14 @@ const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+const PostContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Divider = styled.div`
+  height: 0.5px;
+  background-color: rgba(219, 219, 219, 0.7);
 `;

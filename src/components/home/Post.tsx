@@ -56,7 +56,7 @@ const Container = styled.div<{ size: string }>`
   justify-content: flex-start;
   align-items: center;
   gap: 19px;
-  border-top: 0.5px solid rgba(219, 219, 219, 0.7);
+  /* border-top: 0.5px solid rgba(219, 219, 219, 0.7); */
   ${(props) =>
     props.size === "small" &&
     css`
