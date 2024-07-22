@@ -9,12 +9,10 @@ const SquarePost = () => {
   return (
     <Container>
       <ImageBox>
-        <Image
+        <StyledImage
           src={`/assets/images/post_image.svg`}
-          width={140}
-          height={140}
+          layout="fill"
           alt="image"
-          style={{ borderRadius: "10px" }}
         />
         <HeartImage
           src={`/assets/icons/ic_heart${heart ? "_fill" : ""}.svg`}
@@ -42,9 +40,16 @@ const Container = styled.div`
 `;
 
 const ImageBox = styled.div`
-  width: 140px;
+  width: 100%;
   height: 140px;
   position: relative;
+`;
+
+const StyledImage = styled(Image)`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
 `;
 
 const HeartImage = styled(Image)`
