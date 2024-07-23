@@ -24,6 +24,7 @@ interface Price {
 
 interface PostInfo {
   id: number;
+  userSid: string;
   profileUrl: string;
   nickname: string;
   isWriter: boolean;
@@ -137,6 +138,7 @@ const Page = () => {
         <Profile
           nickname={postInfo?.nickname ? postInfo.nickname : ""}
           profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
+          onClick={() => router.push(`/user/${postInfo?.userSid}`)}
         />
         <Body>
           <Title>{postInfo?.title}</Title>

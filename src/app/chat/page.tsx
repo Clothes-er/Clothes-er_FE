@@ -11,6 +11,7 @@ import styled from "styled-components";
 
 interface ChatList {
   id: number;
+  userSid: string;
   nickname: string;
   profileImgUrl: string;
   recentMessage: string;
@@ -64,6 +65,7 @@ const Chat = () => {
             <ChatPreview
               key={data.id}
               id={data.id}
+              userSid={data.userSid}
               nickname={data.nickname}
               recentMessage={data.recentMessage}
               title={data.title}
