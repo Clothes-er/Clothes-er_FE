@@ -276,7 +276,7 @@ const MyCloset = () => {
             </Indicator>
           </IndicatorContainer>
         </SliderContainer>
-        <ListTab />
+        <ListTab listType="me" />
       </Layout>
       {stylePopup && (
         <Modal
