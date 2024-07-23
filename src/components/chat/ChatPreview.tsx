@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 interface ChatPreviewProps {
   id: number;
+  userSid: string;
   nickname: string;
   recentMessage: string;
   title: string;
@@ -16,6 +17,7 @@ interface ChatPreviewProps {
 
 const ChatPreview: React.FC<ChatPreviewProps> = ({
   id,
+  userSid,
   nickname,
   recentMessage,
   title,
@@ -25,30 +27,30 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
   recentMessageTime,
 }) => {
   const router = useRouter();
+
   const handleChatDetail = () => {
     router.push(`/chat/${id}`);
+  };
+
+  const handleUserClick = (
+    e: React.MouseEvent<HTMLDivElement | HTMLImageElement>,
+    route: string
+  ) => {
+    e.stopPropagation(); // 부모 요소로의 클릭 전파 방지
+    router.push(route);
   };
 
   return (
     <Container onClick={handleChatDetail}>
       <Left>
-        {profileImgUrl ? (
-          <ProfileImage
-            src={profileImgUrl}
-            width={56}
-            height={56}
-            alt="profile"
-            style={{ borderRadius: "100px", background: "white" }}
-          />
-        ) : (
-          <ProfileImage
-            src={"/assets/images/profile.svg"}
-            width={56}
-            height={56}
-            alt="profile"
-            style={{ borderRadius: "100px" }}
-          />
-        )}
+        <ProfileImage
+          src={profileImgUrl || `/assets/images/basic_profile.svg`}
+          width={56}
+          height={56}
+          alt="profile"
+          style={{ borderRadius: "100px", background: "white" }}
+          onClick={(e) => handleUserClick(e, `/user/${userSid}`)}
+        />
         {rentalImgUrl ? (
           <ProductImage
             src={rentalImgUrl}
@@ -70,7 +72,9 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
       <Right>
         <Top>
           <Name>
-            <NickName>{nickname}</NickName>
+            <NickName onClick={(e) => handleUserClick(e, `/user/${userSid}`)}>
+              {nickname}
+            </NickName>
             {rentalState === "RENTED" && (
               <StateBox check={true}>대여중</StateBox>
             )}
@@ -106,6 +110,7 @@ const Container = styled.div`
   display: flex;
   justify-content: flex-start;
   gap: 20px;
+  z-index: 0;
 `;
 
 const Left = styled.div`
@@ -119,6 +124,7 @@ const ProfileImage = styled(Image)`
   top: 10px;
   left: 0;
   z-index: 100;
+  cursor: pointer;
 `;
 
 const ProductImage = styled(Image)`
@@ -159,6 +165,7 @@ const Chat = styled.div`
 
 const NickName = styled.div`
   ${(props) => props.theme.fonts.b2_medium};
+  cursor: pointer;
 `;
 const Preview = styled.div`
   ${(props) => props.theme.fonts.b3_regular};

@@ -1,19 +1,14 @@
 "use client";
 import AuthAxios from "@/api/authAxios";
-import Dropdown from "@/components/common/Dropdown";
-import Input from "@/components/common/Input";
 import ListTab from "@/components/common/ListTab";
-import Modal from "@/components/common/Modal";
-import Tabbar from "@/components/common/Tabbar";
 import Topbar from "@/components/common/Topbar";
 import ScoreBar from "@/components/myCloset/ScoreBar";
-import { sizeOptions, styleOptions } from "@/constants/options";
 import { getLevelText } from "@/data/levelData";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { getGenderLabel } from "@/interface/Gender";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -36,32 +31,18 @@ interface ProfileInfo {
 const MyCloset = () => {
   useRequireAuth();
   const router = useRouter();
+  const { userSid } = useParams();
 
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>();
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  const [stylePopup, setStylePopup] = useState<boolean>(false);
-
-  const [height, setHeight] = useState<number | null>(null);
-  const [weight, setWeight] = useState<number | null>(null);
-  const [shoeSize, setShoeSize] = useState<number | null>(null);
-  const [body, setBody] = useState<string[]>([]);
-  const [category, setCategory] = useState<string[]>([]);
-  const [style, setStyle] = useState<string[]>([]);
-
   useEffect(() => {
-    AuthAxios.get("/api/v1/users/profile")
+    AuthAxios.get(`/api/v1/users/profile/${userSid}`)
       .then((response) => {
         const data = response.data.result;
         setProfileInfo(data);
-        setHeight(data.height);
-        setWeight(data.weight);
-        setShoeSize(data.shoeSize);
-        setBody(data.bodyShapes);
-        setCategory(data.categories);
-        setStyle(data.styles);
         console.log(data);
         console.log(response.data.message);
       })
@@ -82,35 +63,6 @@ const MyCloset = () => {
     }
   };
 
-  const handleModifyStyle = () => {
-    AuthAxios.patch("/api/v1/users/style", {
-      height,
-      weight,
-      shoeSize,
-      bodyShapes: body,
-      categories: category,
-      styles: style,
-    })
-      .then((response) => {
-        const data = response.data.result;
-        setProfileInfo(data);
-        setStylePopup(false);
-        console.log(data);
-        console.log(response.data.message);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const handleStyleChange = (selectedStyle: string) => {
-    setStyle((prevStyles) =>
-      prevStyles.includes(selectedStyle)
-        ? prevStyles.filter((style) => style !== selectedStyle)
-        : [...prevStyles, selectedStyle]
-    );
-  };
-
   return (
     <>
       <Layout>
@@ -126,14 +78,10 @@ const MyCloset = () => {
               style={{ cursor: "pointer" }}
             />
             <TopRow>
-              <Topbar text="내 옷장" align="left" />
-              <Image
-                src="/assets/icons/ic_setting.svg"
-                width={24}
-                height={24}
-                alt="setting"
-                onClick={() => router.push("/mycloset/setting")}
-                style={{ cursor: "pointer" }}
+              <Topbar
+                text={`${profileInfo.nickname} 님의 옷장`}
+                icon={true}
+                align="left"
               />
             </TopRow>
             <Profile>
@@ -153,11 +101,6 @@ const MyCloset = () => {
                     {profileInfo?.nickname}
                     <Gender>{getGenderLabel(profileInfo.gender)}</Gender>
                   </Nickname>
-                  <ProfileButton
-                    onClick={() => router.push("/mycloset/profile")}
-                  >
-                    프로필 수정
-                  </ProfileButton>
                 </Top>
                 <Level>
                   {profileInfo?.level &&
@@ -181,25 +124,12 @@ const MyCloset = () => {
                   <Comment>당신은 멀끔한 옷장을 가졌군요!</Comment>
                   <Score>10점</Score>
                 </InfoTop>
-                <ScoreBar recentScore={10} />
+                <ScoreBar recentScore={10} nickname={profileInfo?.nickname} />
                 <MoreReview>거래 후기 확인하기</MoreReview>
               </ScoreBox>
             </Slide>
             <Slide>
               <StyleBox>
-                <Edit
-                  onClick={() => {
-                    setStylePopup(!stylePopup);
-                  }}
-                >
-                  수정
-                  <Image
-                    src="/assets/icons/ic_modify.svg"
-                    width={16}
-                    height={16}
-                    alt="edit"
-                  />
-                </Edit>
                 <StyleBoxDiv>
                   <div>
                     <Title>스펙</Title>
@@ -276,91 +206,8 @@ const MyCloset = () => {
             </Indicator>
           </IndicatorContainer>
         </SliderContainer>
-        <ListTab listType="me" />
+        <ListTab listType="other" userSid={String(userSid)} />
       </Layout>
-      {stylePopup && (
-        <Modal
-          title={`스펙 & 취향 변경하기`}
-          onClose={() => {
-            setStylePopup(false);
-          }}
-          onCheck={handleModifyStyle}
-          no="취소하기"
-          yes="수정하기"
-          width="300px"
-          height="575px"
-          content={
-            <>
-              <div>
-                <Label>기본 정보</Label>
-                <Gap>
-                  <Row>
-                    <Input
-                      value={height !== null ? height : ""}
-                      placeholder="키"
-                      size="xsmall"
-                      onChange={(value: number) => setHeight(value)}
-                    />
-                    <Input
-                      value={weight !== null ? weight : ""}
-                      placeholder="몸무게"
-                      size="xsmall"
-                      onChange={(value: number) => setWeight(value)}
-                    />
-                  </Row>
-                  <Dropdown
-                    value={shoeSize !== null ? shoeSize : ""}
-                    dropdownType="single"
-                    placeholder="발 사이즈"
-                    size="xsmall"
-                    options={sizeOptions}
-                    setValue={(value: number) => setShoeSize(value)}
-                  />
-                </Gap>
-              </div>
-              <div>
-                <Label>
-                  체형
-                  <Span>(,로 복수입력)</Span>
-                </Label>
-                <Input
-                  inputType="array"
-                  value={body}
-                  placeholder="어깨가 넓어요, 허리가 길어요"
-                  size="xsmall"
-                  onChange={(value: string[]) => setBody(value)}
-                />
-              </div>
-              <div>
-                <Label>
-                  카테고리
-                  <Span>(,로 복수입력)</Span>
-                </Label>
-                <Input
-                  inputType="array"
-                  value={category}
-                  placeholder="가디건, 셔츠, 청바지 등"
-                  onChange={(value: string[]) => setCategory(value)}
-                />
-              </div>
-              <div>
-                <Label>
-                  스타일
-                  <Span>(복수선택)</Span>
-                </Label>
-                <Dropdown
-                  value={style}
-                  dropdownType="multi"
-                  placeholder="스타일"
-                  options={styleOptions}
-                  setValue={handleStyleChange}
-                />
-              </div>
-            </>
-          }
-        />
-      )}
-      <Tabbar />
     </>
   );
 };
@@ -626,32 +473,4 @@ const Indicator = styled.div<{ active: boolean }>`
   border-radius: 3px;
   cursor: pointer;
   ${(props) => props.theme.fonts.b3_medium};
-`;
-
-/* 스펙 & 취향 모달 */
-const Gap = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
-`;
-
-const Label = styled.div`
-  text-align: left;
-  color: ${theme.colors.black};
-  ${(props) => props.theme.fonts.b2_bold};
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-`;
-
-const Span = styled.span`
-  color: ${theme.colors.gray800};
-  ${(props) => props.theme.fonts.b3_regular};
 `;

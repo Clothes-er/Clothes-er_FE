@@ -9,11 +9,18 @@ export interface TopbarProps {
   text: string;
   icon?: boolean;
   link?: string;
+  fontSize?: keyof typeof theme.fonts;
   align: "left" | "center";
 }
 
 const Topbar = (props: TopbarProps) => {
-  const { text, icon = false, link, align = "left" } = props;
+  const {
+    text,
+    icon = false,
+    link,
+    fontSize = "h2_bold",
+    align = "left",
+  } = props;
   const router = useRouter();
 
   const handleBackButtonClick = () => {
@@ -35,7 +42,9 @@ const Topbar = (props: TopbarProps) => {
           onClick={handleBackButtonClick}
         />
       )}
-      <Text $align={align}>{text}</Text>
+      <Text $align={align} $fontSize={fontSize}>
+        {text}
+      </Text>
     </Container>
   );
 };
@@ -51,11 +60,14 @@ const Container = styled.div`
   img {
     cursor: pointer;
   }
-  ${({ theme }) => theme.fonts.h2_bold};
   color: ${({ theme }) => theme.colors.b500};
 `;
 
-const Text = styled.div<{ $align: string }>`
+const Text = styled.div<{
+  $align: string;
+  $fontSize: keyof typeof theme.fonts;
+}>`
   width: 100%;
   text-align: ${(props) => props.$align};
+  ${({ $fontSize, theme }) => theme.fonts[$fontSize]};
 `;

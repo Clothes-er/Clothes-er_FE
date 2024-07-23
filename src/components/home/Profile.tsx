@@ -4,11 +4,12 @@ import styled from "styled-components";
 interface Profile {
   nickname: string;
   profileUrl: string;
+  onClick: () => void;
 }
 
-const Profile: React.FC<Profile> = ({ nickname, profileUrl }) => {
+const Profile: React.FC<Profile> = ({ nickname, profileUrl, onClick }) => {
   return (
-    <Div>
+    <Div onClick={onClick}>
       {profileUrl ? (
         <Image
           src={profileUrl}
@@ -33,7 +34,7 @@ const Profile: React.FC<Profile> = ({ nickname, profileUrl }) => {
 
 export default Profile;
 
-const Div = styled.div`
+const Div = styled.button`
   width: 100%;
   height: 73px;
   padding: 14px 48px;
@@ -44,4 +45,6 @@ const Div = styled.div`
   align-items: center;
   gap: 29px;
   ${(props) => props.theme.fonts.b2_regular};
+  border: none;
+  cursor: pointer;
 `;

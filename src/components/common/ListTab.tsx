@@ -8,14 +8,37 @@ import MyClosetContent from "../myCloset/MyClosetContent";
 import MyShareContent from "../myCloset/MyShareContent";
 import TransShareContent from "../myCloset/TransShareContent";
 import TransRentContent from "../myCloset/TransRentContent";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
 
-const ListTab = () => {
+type listType = "me" | "other";
+
+interface ListTabProps {
+  listType: listType;
+  userSid?: string;
+}
+
+// 각 탭의 데이터 타입 정의
+interface TabItem {
+  tab: string;
+  key: string;
+  sub?: {
+    subTab: string;
+    key: string;
+  }[];
+}
+
+const ListTab: React.FC<ListTabProps> = ({ listType, userSid }) => {
   // const router = useRouter();
   const { currentTab, setCurrentTab, currentSubTab, setCurrentSubTab } =
     useCurrentTab();
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [selectedSubTab, setSelectedSubTab] = useState<number>(0);
+
+  // 탭 정보
+  const tabsToDisplay: TabItem[] =
+    listType === "other" ? [myClosetTabs[0]] : myClosetTabs;
 
   const handleTabClick = (tabIndex: number) => {
     setSelectedTab(tabIndex);
@@ -36,7 +59,7 @@ const ListTab = () => {
   return (
     <Container>
       <ListContainer>
-        {myClosetTabs.map((item, index) => (
+        {tabsToDisplay.map((item, index) => (
           <Tab
             key={index}
             selected={selectedTab === index}
@@ -62,7 +85,11 @@ const ListTab = () => {
           </Tab>
         ))}
       </ListContainer>
-      <ContentArea currentTab={currentTab} currentSubTab={currentSubTab} />
+      <ContentArea
+        currentTab={currentTab}
+        currentSubTab={currentSubTab}
+        userSid={userSid}
+      />
     </Container>
   );
 };
@@ -70,14 +97,16 @@ const ListTab = () => {
 function ContentArea({
   currentTab,
   currentSubTab,
+  userSid,
 }: {
   currentTab: string;
   currentSubTab: string;
+  userSid?: string;
 }) {
   if (currentTab === "my" && currentSubTab === "closet") {
-    return <MyClosetContent />;
+    return <MyClosetContent userSid={userSid || ""} />;
   } else if (currentTab === "my" && currentSubTab === "share") {
-    return <MyShareContent />;
+    return <MyShareContent userSid={userSid || ""} />;
   } else if (currentTab === "transaction" && currentSubTab === "sharing") {
     return <TransShareContent />;
   } else if (currentTab === "transaction" && currentSubTab === "rental") {
@@ -98,12 +127,13 @@ const Container = styled.div`
 
 const ListContainer = styled.div`
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  place-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 0px 40px;
   border-bottom: 1px solid ${theme.colors.gray200};
   margin-bottom: 30px;
+  gap: 20px;
 `;
 
 const Tab = styled.div<{ selected: boolean }>`
