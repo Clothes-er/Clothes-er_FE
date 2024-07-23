@@ -1,15 +1,22 @@
-import styled from "styled-components";
-import Post from "../home/Post";
 import { PostList } from "@/data/homeData";
 import { useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
+import Post from "../home/Post";
+import styled from "styled-components";
 
-const MyShareContent = () => {
+interface MyShareContentProps {
+  userSid?: string;
+}
+
+const MyShareContent: React.FC<MyShareContentProps> = ({ userSid }) => {
   const [postList, setPostList] = useState<PostList[]>();
 
   /* 보유 > 공유 등록 목록 조회 */
   useEffect(() => {
-    AuthAxios.get("/api/v1/closet/rentals")
+    const url = userSid
+      ? `/api/v1/closet/${userSid}/rentals`
+      : `/api/v1/closet/rentals`;
+    AuthAxios.get(url)
       .then((response) => {
         const data = response.data.result;
         setPostList(data);
