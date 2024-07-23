@@ -4,10 +4,11 @@ import styled from "styled-components";
 
 interface ScoreBarProps {
   recentScore: number;
+  nickname?: string;
 }
 
 const ScoreBar: React.FC<ScoreBarProps> = (props) => {
-  const { recentScore } = props;
+  const { recentScore, nickname } = props;
 
   return (
     <Bar>
@@ -19,7 +20,7 @@ const ScoreBar: React.FC<ScoreBarProps> = (props) => {
           </Column>
         ))}
       </Dots>
-      <Location recentScore={recentScore}>나의 옷장</Location>
+      <Location recentScore={recentScore}>{nickname || "나"}의 옷장</Location>
     </Bar>
   );
 };
@@ -74,8 +75,8 @@ const Score = styled.div`
 `;
 
 const Location = styled.div<{ recentScore: number }>`
-  width: 56px;
   height: 20px;
+  padding: 4px 8px;
   border-radius: 10px;
   background: ${theme.colors.purple100};
   display: inline-flex;
