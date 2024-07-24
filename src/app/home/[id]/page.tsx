@@ -205,6 +205,7 @@ const Page = () => {
       {postInfo && (
         <Bottom
           id={postInfo.id}
+          bottomType="share"
           prices={postInfo.prices}
           isWriter={postInfo.isWriter}
         />

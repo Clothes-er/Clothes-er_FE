@@ -1,9 +1,10 @@
 import AuthAxios from "@/api/authAxios";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
-import Modal from "../common/Modal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+type bottomType = "share" | "closet" | "closetShare";
 
 interface Price {
   days: number;
@@ -12,11 +13,17 @@ interface Price {
 
 interface BottomProps {
   id: number;
-  prices: Price[];
+  bottomType: bottomType;
+  prices?: Price[];
   isWriter: boolean;
 }
 
-const Bottom: React.FC<BottomProps> = ({ id, prices, isWriter }) => {
+const Bottom: React.FC<BottomProps> = ({
+  id,
+  bottomType,
+  prices,
+  isWriter,
+}) => {
   const router = useRouter();
   const [pricePop, setPricePop] = useState<boolean>(false);
   const handleShowPrice = () => {
@@ -44,29 +51,42 @@ const Bottom: React.FC<BottomProps> = ({ id, prices, isWriter }) => {
 
   return (
     <StyledBottom>
-      <div>
-        <Price>
-          {prices[0].price}원~
-          <Days>3days</Days>
-        </Price>
-        <MorePrice onClick={handleShowPrice}>가격표 보기</MorePrice>
-        {pricePop && (
-          <div>
-            <PricePopup>
-              가격표
-              <Table>
-                {prices.map((data, index) => (
-                  <Set key={index}>
-                    <DaysPopup>{data.days}일 :</DaysPopup>
-                    <PricesPopup>{data.price}원</PricesPopup>
-                  </Set>
-                ))}
-              </Table>
-            </PricePopup>
-            <Overlay onClick={onClose} />
-          </div>
-        )}
-      </div>
+      {bottomType === "share" && (
+        <div>
+          <Price>
+            {prices ? prices[0].price : "N/A"}원~
+            <Days>3days</Days>
+          </Price>
+          <MorePrice onClick={handleShowPrice}>가격표 보기</MorePrice>
+          {pricePop && (
+            <div>
+              <PricePopup>
+                가격표
+                <Table>
+                  {prices?.map((data, index) => (
+                    <Set key={index}>
+                      <DaysPopup>{data.days}일 :</DaysPopup>
+                      <PricesPopup>{data.price}원</PricesPopup>
+                    </Set>
+                  ))}
+                </Table>
+              </PricePopup>
+              <Overlay onClick={onClose} />
+            </div>
+          )}
+        </div>
+      )}
+      {bottomType === "closet" && (
+        <div>
+          현재 <Span>대여글</Span>이 올라와있어요! <br />
+          <Move onClick={() => router.push(`/home/${id}`)}>대여글로 이동</Move>
+        </div>
+      )}
+      {bottomType === "closetShare" && (
+        <div>
+          <Span>궁금한 정보</Span>를 <Span>문의</Span>해보세요!
+        </div>
+      )}
       {!isWriter && <Chat onClick={handleNewChat}>문의하기</Chat>}
     </StyledBottom>
   );
@@ -173,4 +193,15 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: flex-end;
   z-index: 100;
+`;
+
+const Span = styled.span`
+  color: ${theme.colors.purple500};
+`;
+
+const Move = styled.div`
+  margin-top: 4px;
+  color: ${theme.colors.purple500};
+  text-decoration: underline;
+  cursor: pointer;
 `;
