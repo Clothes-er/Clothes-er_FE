@@ -16,6 +16,8 @@ import "../../../styles/slick-theme.css";
 import NextArrow from "@/components/common/NextArrow";
 import PrevArrow from "@/components/common/PrevArrow";
 import { useRequireAuth } from "@/hooks/useAuth";
+import MoreBox from "@/components/common/MoreBox";
+import Modal from "@/components/common/Modal";
 
 interface Price {
   days: number;
@@ -50,6 +52,7 @@ const Page = () => {
   const { id } = useParams();
   const [menu, setMenu] = useState(false);
   const [postInfo, setPostInfo] = useState<PostInfo>();
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
   const handleBackButtonClick = () => {
     router.back();
@@ -72,6 +75,28 @@ const Page = () => {
       });
   }, []);
 
+  const handleModifyClick = () => {
+    router.push(`/home/${id}/modify`);
+  };
+
+  const handleDeleteClick = () => {
+    setDeleteModal(true);
+  };
+
+  const handleSubmitDelete = () => {
+    AuthAxios.delete(`/api/v1/rentals/${id}`)
+      .then((response) => {
+        const data = response.data.result;
+        setDeleteModal(true);
+        router.push("/home");
+        console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <>
       <Layout>
@@ -87,17 +112,26 @@ const Page = () => {
               style={{ cursor: "pointer" }}
             />
             공유 옷장
-            <Menu>
-              {/* <Image
-                src="/assets/icons/ic_more_vertical.svg"
-                width={24}
-                height={24}
-                alt="more"
-                onClick={handleMoreMenu}
-                style={{ cursor: "pointer" }}
-              />
-              {menu && <ModifyMenu />} */}
-            </Menu>
+            {postInfo?.isWriter ? (
+              <Menu>
+                <Image
+                  src="/assets/icons/ic_more_vertical.svg"
+                  width={24}
+                  height={24}
+                  alt="more"
+                  onClick={handleMoreMenu}
+                  style={{ cursor: "pointer" }}
+                />
+                {menu && (
+                  <MoreBox
+                    firstOnClick={handleModifyClick}
+                    secondOnClick={handleDeleteClick}
+                  />
+                )}
+              </Menu>
+            ) : (
+              <Menu />
+            )}
           </Top>
         </Head>
         {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (
@@ -173,6 +207,19 @@ const Page = () => {
           id={postInfo.id}
           prices={postInfo.prices}
           isWriter={postInfo.isWriter}
+        />
+      )}
+      {/* 삭제하기 모달 */}
+      {deleteModal && (
+        <Modal
+          title="정말 삭제하시겠습니까?"
+          text="채팅 중인 글의 경우, 삭제를 주의해주세요."
+          no="취소"
+          yes="삭제"
+          onClose={() => setDeleteModal(false)}
+          onCheck={handleSubmitDelete}
+          width="305px"
+          height="170px"
         />
       )}
     </>
