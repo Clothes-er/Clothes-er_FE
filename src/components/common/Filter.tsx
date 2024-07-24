@@ -18,6 +18,6 @@ export default Filter;
 const Layout = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   gap: 5px;
 `;
