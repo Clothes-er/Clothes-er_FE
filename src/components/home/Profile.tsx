@@ -10,23 +10,13 @@ interface Profile {
 const Profile: React.FC<Profile> = ({ nickname, profileUrl, onClick }) => {
   return (
     <Div onClick={onClick}>
-      {profileUrl ? (
-        <Image
-          src={profileUrl}
-          width={45}
-          height={45}
-          alt="profile"
-          style={{ borderRadius: "100px", background: "white" }}
-        />
-      ) : (
-        <Image
-          src="/assets/images/profile.svg"
-          width={45}
-          height={45}
-          alt="profile"
-          style={{ borderRadius: "100px", background: "white" }}
-        />
-      )}
+      <Image
+        src={profileUrl || "/assets/images/basic_profile.svg"}
+        width={45}
+        height={45}
+        alt="profile"
+        style={{ borderRadius: "100px", background: "white" }}
+      />
       {nickname}
     </Div>
   );
