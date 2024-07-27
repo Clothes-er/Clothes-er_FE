@@ -64,8 +64,12 @@ const fonts = {
     weight: 700,
     size: 24,
   }),
-  h1_medium: FONT({
+  h1_semiBold: FONT({
     weight: 600,
+    size: 24,
+  }),
+  h1_medium: FONT({
+    weight: 500,
     size: 24,
   }),
   h1_regular: FONT({
@@ -77,8 +81,12 @@ const fonts = {
     weight: 700,
     size: 20,
   }),
-  h2_medium: FONT({
+  h2_semiBold: FONT({
     weight: 600,
+    size: 20,
+  }),
+  h2_medium: FONT({
+    weight: 500,
     size: 20,
   }),
   h2_regular: FONT({
@@ -91,8 +99,12 @@ const fonts = {
     weight: 700,
     size: 18,
   }),
-  b1_medium: FONT({
+  b1_semiBold: FONT({
     weight: 600,
+    size: 18,
+  }),
+  b1_medium: FONT({
+    weight: 500,
     size: 18,
   }),
   b1_regular: FONT({
@@ -104,8 +116,12 @@ const fonts = {
     weight: 700,
     size: 16,
   }),
-  b2_medium: FONT({
+  b2_semiBold: FONT({
     weight: 600,
+    size: 16,
+  }),
+  b2_medium: FONT({
+    weight: 500,
     size: 16,
   }),
   b2_regular: FONT({
@@ -135,6 +151,10 @@ const fonts = {
     weight: 700,
     size: 12,
   }),
+  c1_semiBold: FONT({
+    weight: 600,
+    size: 12,
+  }),
   c1_medium: FONT({
     weight: 500,
     size: 12,
@@ -146,6 +166,10 @@ const fonts = {
   
   c2_bold: FONT({
     weight: 700,
+    size: 11,
+  }),
+  c2_semiBold: FONT({
+    weight: 600,
     size: 11,
   }),
   c2_medium: FONT({
