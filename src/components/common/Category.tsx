@@ -59,17 +59,17 @@ const Category = () => {
     <Layout>
       <Chip
         label="성별"
-        value={getGenderLabel(selectedGender) || "성별"}
+        value={getGenderLabel(selectedGender)}
         onClick={handleChipClick}
       />
       <Chip
         label="카테고리"
-        value={selectedCategory || "카테고리"}
+        value={selectedCategory || ""}
         onClick={handleChipClick}
       />
       <Chip
         label="스타일"
-        value={selectedStyle || "스타일"}
+        value={selectedStyle || ""}
         onClick={handleChipClick}
       />
       {isPopupOpen && (
@@ -99,7 +99,12 @@ const Category = () => {
                           selectedGender === "FEMALE" ? null : "FEMALE"
                         )
                       }
-                      color="black"
+                      labelFontSize={
+                        selectedGender === "FEMALE"
+                          ? "c1_semiBold"
+                          : "c1_medium"
+                      }
+                      color={selectedGender === "FEMALE" ? "purple" : "black"}
                     />
                     <Checkbox
                       text="남자"
@@ -109,7 +114,10 @@ const Category = () => {
                           selectedGender === "MALE" ? null : "MALE"
                         )
                       }
-                      color="black"
+                      labelFontSize={
+                        selectedGender === "MALE" ? "c1_semiBold" : "c1_medium"
+                      }
+                      color={selectedGender === "MALE" ? "purple" : "black"}
                     />
                   </GenderCheckbox>
                 </div>
@@ -185,7 +193,7 @@ const PopupBackground = styled.div`
 
 const PopupContent = styled.div`
   width: 400px;
-  height: 700px;
+  height: 830px;
   padding: 20px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -224,7 +232,11 @@ const GenderCheckbox = styled.div`
 `;
 
 const CategoryGrid = styled.div`
-  display: flex;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 30px;
+  margin: 0 auto;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;

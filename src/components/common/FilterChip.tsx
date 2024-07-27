@@ -23,21 +23,6 @@ const FilterChip: React.FC<FilterChipProps> = ({
   return (
     <StyledChip selected={selected} hasValue={!!value} onClick={handleClick}>
       {value || label}
-      {/* {value ? (
-        <Image
-          src="/assets/icons/ic_chevron_down.svg"
-          width={10}
-          height={14}
-          alt="more"
-        />
-      ) : (
-        <Image
-          src="/assets/icons/ic_chevron_down_gray.svg"
-          width={10}
-          height={14}
-          alt="more"
-        />
-      )} */}
     </StyledChip>
   );
 };
@@ -66,9 +51,3 @@ const StyledChip = styled.div<StyledChipProps>`
   cursor: pointer;
   white-space: nowrap;
 `;
-
-/* border: 1px solid
-  ${({ hasValue }) =>
-  hasValue ? theme.colors.purple500 : theme.colors.gray400};
-color: ${({ hasValue }) =>
-  hasValue ? theme.colors.purple500 : "#2E2E44"}; */

@@ -98,12 +98,6 @@ const CheckboxContainer = styled.label<CheckBoxProps>`
   align-items: center;
   flex-grow: 1;
   color: ${theme.colors.b700};
-  ${({ theme, labelFontSize }) =>
-    labelFontSize &&
-    theme.fonts[labelFontSize] &&
-    `
-    ${theme.fonts[labelFontSize]};
-  `}
   cursor: pointer;
 
   span {
@@ -113,16 +107,22 @@ const CheckboxContainer = styled.label<CheckBoxProps>`
     ${({ theme }) => theme.fonts.c1_medium};
     color: ${(props) =>
       props.essential ? theme.colors.primary500 : theme.colors.b100};
+    ${({ theme, labelFontSize }) =>
+      labelFontSize &&
+      theme.fonts[labelFontSize] &&
+      `
+        ${theme.fonts[labelFontSize]};
+      `}
 
     /* color */
     &.purple {
-      color: ${theme.colors.purple250};
+      color: ${theme.colors.purple500};
     }
     &.gray {
       color: ${theme.colors.b400};
     }
     &.black {
-      color: ${theme.colors.basic};
+      color: ${theme.colors.black};
     }
   }
 `;
