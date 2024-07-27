@@ -32,7 +32,7 @@ const ClosetPage = () => {
           <Topbar text="옷장 구경" align="left" />
 
           <Content>
-            <Filter />
+            <Filter onClick={() => router.push("/closet/filter")} />
             {/* <Posts>
               {postList?.map((data, index) => (
                 <PostContainer key={data.id}>
@@ -83,14 +83,6 @@ const Layout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-`;
-
-const Location = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  ${(props) => props.theme.fonts.b2_medium};
-  cursor: pointer;
 `;
 
 const Content = styled.div`
