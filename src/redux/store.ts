@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import signInReducer from "./slices/signInSlice";
 import firstLoginReducer from "./slices/firstLoginSlice";
 import categoryReducer from "./slices/categorySlice";
+import filterReducer from "./slices/filterSlice";
 import { useDispatch } from "react-redux";
 import {
     FLUSH,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
     signIn: signInReducer,
     firstLogin: firstLoginReducer,
     category: categoryReducer,
+    filter: filterReducer,
 });
   
 const persistConfig = {
