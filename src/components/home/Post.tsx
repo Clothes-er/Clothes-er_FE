@@ -13,7 +13,8 @@ const Post: React.FC<PostList> = ({
   title,
   minPrice,
   isDeleted = false,
-  isReviewed = false, // 후기 보내기 버튼 유무
+  isReviewed = false, // 후기 작성 여부 (후기 보내기, 작성 완료)
+  showReviewed = false, // 후기 버튼 유무
   onClickReview,
   createdAt,
   startDate,
@@ -41,8 +42,8 @@ const Post: React.FC<PostList> = ({
         <Title>{title}</Title>
         <Row>
           <Price>{isDeleted ? "삭제된 게시물입니다" : `${minPrice}원~`}</Price>
-          {isReviewed && (
-            <ReviewButton onClick={onClickReview}>
+          {showReviewed && (
+            <ReviewButton onClick={onClickReview} disabled={isReviewed}>
               <Image
                 src="/assets/icons/ic_review.svg"
                 width={12}
@@ -50,7 +51,7 @@ const Post: React.FC<PostList> = ({
                 alt="review"
                 style={{ borderRadius: "10px" }}
               />
-              후기 작성하기
+              {isReviewed ? "후기 작성 완료" : "후기 작성하기"}
             </ReviewButton>
           )}
         </Row>
@@ -110,9 +111,8 @@ const Price = styled.div`
 `;
 
 const ReviewButton = styled.button`
-  width: 92px;
   height: 28px;
-  padding: 5px 0;
+  padding: 5px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
@@ -122,6 +122,10 @@ const ReviewButton = styled.button`
   background: ${theme.colors.white};
   color: ${theme.colors.b100};
   ${(props) => props.theme.fonts.c1_medium};
+
+  &:disabled {
+    background: ${theme.colors.gray100};
+  }
 `;
 
 const Sub = styled.div`

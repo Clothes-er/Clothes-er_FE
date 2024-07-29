@@ -337,7 +337,8 @@ const ChatDetail = () => {
             imgUrl={chatMsg.rentalImgUrl}
             id={chatMsg.rentalId}
             isDeleted={true}
-            isReviewed={!chatMsg.isReviewed}
+            isReviewed={chatMsg.isReviewed}
+            showReviewed={Boolean(chatMsg.rentalState)}
             onClickReview={handleWriteReview}
             size="small"
           />

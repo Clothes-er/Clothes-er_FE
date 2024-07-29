@@ -9,6 +9,7 @@ export interface PostList {
     minPrice?: number;
     isDeleted?: boolean;
     isReviewed?: boolean;
+    showReviewed?: boolean;
     onClickReview?: () => void;
     createdAt?: string;
     startDate?: string;
