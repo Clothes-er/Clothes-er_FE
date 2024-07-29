@@ -84,17 +84,17 @@ const Page = () => {
   };
 
   const handleSubmitDelete = () => {
-    AuthAxios.delete(`/api/v1/rentals/${id}`)
-      .then((response) => {
-        const data = response.data.result;
-        setDeleteModal(true);
-        router.push("/home");
-        console.log(data);
-        console.log(response.data.message);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // AuthAxios.delete(`/api/v1/rentals/${id}`)
+    //   .then((response) => {
+    //     const data = response.data.result;
+    //     setDeleteModal(true);
+    //     router.push("/home");
+    //     console.log(data);
+    //     console.log(response.data.message);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   return (
@@ -111,7 +111,7 @@ const Page = () => {
               onClick={handleBackButtonClick}
               style={{ cursor: "pointer" }}
             />
-            공유 옷장
+            옷장 구경
             {postInfo?.isWriter ? (
               <Menu>
                 <Image
@@ -187,26 +187,41 @@ const Page = () => {
           </Category>
           <Info>
             <Row>
-              <div>브랜드</div>
-              <div>{postInfo?.brand ? postInfo.brand : "없음"}</div>
+              <Label>옷 정보</Label>
+              <div>
+                <a
+                  href="https://ably.com/ifeiwrroewpriwe"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  https://ably.com/ifeiwrroewpriwe
+                </a>
+              </div>
+              {/* <div>{postInfo?.brand ? postInfo.brand : "없음"}</div> */}
             </Row>
             <Row>
-              <div>사이즈</div>
-              <div>{postInfo?.size ? postInfo.size : "없음"}</div>
+              <Label>구매처</Label>
+              <div>에이블리</div>
+              {/* <div>{postInfo?.size ? postInfo.size : "없음"}</div> */}
             </Row>
             <Row>
-              <div>핏</div>
-              <div>{postInfo?.fit ? postInfo.fit : "없음"}</div>
+              <Label>구매 가격</Label>
+              <div>25,000원</div>
+              {/* <div>{postInfo?.fit ? postInfo.fit : "없음"}</div> */}
             </Row>
           </Info>
-          <Box>{postInfo?.description}</Box>
+          <div>옷 후기</div>
+          <Box>
+            봄, 여름 제 교복템입니다! 날 좋을 때 입기 넘 좋았고, 허리라인에
+            밴딩이 있어 활동성이 좋아요! 추천합니다~~
+          </Box>
+          {/* <Box>{postInfo?.description}</Box> */}
         </Body>
       </Layout>
       {postInfo && (
         <Bottom
           id={postInfo.id}
-          bottomType="share"
-          prices={postInfo.prices}
+          bottomType="closet"
           isWriter={postInfo.isWriter}
         />
       )}
@@ -329,15 +344,21 @@ const Category = styled.div`
 `;
 
 const Info = styled.div`
+  width: 100%;
   color: ${theme.colors.b100};
   ${(props) => props.theme.fonts.b2_regular};
   text-align: left;
 `;
 
 const Row = styled.div`
-  width: 160px;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+`;
+
+const Label = styled.div`
+  width: 105px;
+  white-space: nowrap;
 `;
 
 const Box = styled.div`

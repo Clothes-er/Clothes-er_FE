@@ -4,8 +4,8 @@ import React from "react";
 import styled from "styled-components";
 
 interface ChipProps {
-  label: string;
-  value?: string;
+  label: string | string[];
+  value?: string | string[];
   onClick?: (value: any) => void;
 }
 
@@ -54,4 +54,5 @@ const StyledChip = styled.div<StyledChipProps>`
     hasValue ? theme.colors.white : theme.colors.gray900};
   ${(props) => props.theme.fonts.c1_medium};
   cursor: pointer;
+  white-space: nowrap;
 `;

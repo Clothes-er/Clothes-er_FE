@@ -193,7 +193,7 @@ const PopupBackground = styled.div`
 
 const PopupContent = styled.div`
   width: 400px;
-  height: 700px;
+  height: 830px;
   padding: 20px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -232,7 +232,11 @@ const GenderCheckbox = styled.div`
 `;
 
 const CategoryGrid = styled.div`
-  display: flex;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 30px;
+  margin: 0 auto;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
