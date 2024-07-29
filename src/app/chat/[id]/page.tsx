@@ -360,7 +360,7 @@ const ChatDetail = () => {
             minPrice={chatMsg.minPrice}
             imgUrl={chatMsg.rentalImgUrl}
             id={chatMsg.rentalId}
-            isDeleted={true}
+            isDeleted={chatMsg.isDeleted}
             isReviewed={chatMsg.isReviewed}
             showReviewed={Boolean(chatMsg.rentalState)}
             onClickReview={handleWriteReview}
