@@ -150,7 +150,7 @@ const Modify = () => {
     });
 
     axios
-      .put(`/api/v1/rentals`, formData, {
+      .put(`/api/v1/rentals/${id}`, formData, {
         baseURL: process.env.NEXT_PUBLIC_BASE_URL,
         headers: {
           Authorization: `Bearer ${getToken()}`,
@@ -385,7 +385,7 @@ const Photo = styled.div`
   gap: 11px;
 `;
 
-const AddPhoto = styled.div`
+const AddPhoto = styled.label`
   width: 65px;
   height: 65px;
   border-radius: 10px;
