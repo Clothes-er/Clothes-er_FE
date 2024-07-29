@@ -110,8 +110,8 @@ const ReviewPage = () => {
                 onChange={() => handleKeywordSelect(item.keyword)}
                 labelFontSize={
                   selectedCheckList?.includes(item.keyword)
-                    ? "c1_semiBold"
-                    : "c1_medium"
+                    ? "b3_semiBold"
+                    : "b3_medium"
                 }
                 color={
                   selectedCheckList?.includes(item.keyword) ? "purple" : "black"
