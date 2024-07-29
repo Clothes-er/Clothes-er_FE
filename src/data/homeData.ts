@@ -6,7 +6,11 @@ export interface PostList {
     imgUrl?: string | null;
     nickname?: string;
     title: string;
-    minPrice: number;
+    minPrice?: number;
+    isDeleted?: boolean;
+    isReviewed?: boolean;
+    showReviewed?: boolean;
+    onClickReview?: () => void;
     createdAt?: string;
     startDate?: string;
     endDate?: string;

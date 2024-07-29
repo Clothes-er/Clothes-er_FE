@@ -211,10 +211,6 @@ const Row = styled.div`
   gap: 16px;
 `;
 
-const Small = styled.div`
-  margin-bottom: 21px;
-`;
-
 const ButtonRow = styled.div`
   width: 100%;
   display: flex;

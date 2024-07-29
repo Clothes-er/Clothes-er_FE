@@ -13,6 +13,9 @@ import { Client } from "@stomp/stompjs";
 import { getToken } from "@/hooks/getToken";
 import Input from "@/components/common/Input";
 import { useRequireAuth } from "@/hooks/useAuth";
+import BottomModal from "@/components/common/BottomModal";
+import { setChatPost } from "@/redux/slices/chatPostSlice";
+import { useDispatch } from "react-redux";
 
 interface Message {
   nickname: string;
@@ -25,6 +28,7 @@ interface ChatMsg {
   buyerNickname: string;
   lenderNickname: string;
   opponentNickname: string;
+  opponentSid: string;
   rentalId: number;
   rentalImgUrl: string;
   title: string;
@@ -32,6 +36,8 @@ interface ChatMsg {
   rentalState: string;
   messages: Message[];
   isChecked: boolean;
+  isDeleted: boolean;
+  isReviewed: boolean;
 }
 
 interface CheckList {
@@ -43,6 +49,8 @@ interface CheckList {
 const ChatDetail = () => {
   useRequireAuth();
   const router = useRouter();
+  const dispatch = useDispatch();
+
   /* roomId */
   const { id } = useParams();
   /* get 메소드에서 받아오는 데이터 상태 저장*/
@@ -59,11 +67,18 @@ const ChatDetail = () => {
   const [chatMsgList, setChatMsgList] = useState<Message[]>([]);
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
-  /* 대여중, 반납완료 Popup */
+  /* 대여중, 반납완료 Modal */
   const [rentaling, setRentaling] = useState<boolean>();
   const [rentaled, setRentaled] = useState<boolean>();
   const [checked, setChecked] = useState<boolean>();
   const [lookChecked, setLookChecked] = useState<boolean>();
+
+  /* 거래 후기 Modal */
+  const [review, setReview] = useState<boolean>();
+  const [reviewType, setReviewType] = useState<string>();
+
+  /* 후기 작성 버튼 인식 변수 */
+  const [reviewButton, setReviewButton] = useState<boolean>();
 
   /* 에러 msg */
   const [rentalingError, setRentalingError] = useState<string>("");
@@ -74,6 +89,21 @@ const ChatDetail = () => {
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+
+  const handleWriteReview = () => {
+    // 대여 중 상태 (대여 완료 모달)
+    if (chatMsg?.rentalState === "RENTED") {
+      setRentaled(true);
+      /* 후기 작성 버튼을 통한 반납 완료 모달임을 확인 */
+      setReviewButton(true);
+    }
+    // 대여 완료 상태 (거래 후기 작성)
+    else if (chatMsg?.rentalState === "RETURNED") {
+      setReview(true);
+    }
+  };
+
+  useEffect(() => {}, [reviewButton]);
 
   useEffect(() => {
     fetchChatMessages();
@@ -93,6 +123,26 @@ const ChatDetail = () => {
         console.log(error.response.data.message);
       });
   };
+
+  /* chatPost 정보 리덕스 업데이트 */
+  useEffect(() => {
+    if (chatMsg) {
+      dispatch(
+        setChatPost({
+          title: chatMsg.title,
+          minPrice: chatMsg.minPrice,
+          imgUrl: chatMsg.rentalImgUrl,
+          id: chatMsg.rentalId,
+          isDeleted: true,
+          isReviewed: chatMsg.isReviewed,
+          showReviewed: Boolean(chatMsg.rentalState),
+          buyerNickname: chatMsg.buyerNickname,
+          lenderNickname: chatMsg.lenderNickname,
+          opponentNickname: chatMsg.opponentNickname,
+        })
+      );
+    }
+  }, [chatMsg, dispatch]);
 
   useEffect(() => {
     // 표준 WebSocket 객체 생성
@@ -201,6 +251,10 @@ const ChatDetail = () => {
         setRentalState(data.rentalState);
         console.log(response.data.message);
         setRentaled(false);
+        if (reviewButton) {
+          setReview(true);
+          setReviewButton(undefined);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -264,7 +318,7 @@ const ChatDetail = () => {
         <div>
           <ol>
             {checkGet.checkList.map(
-              (data, index) => data && <List key={index}>{data}</List>
+              (data, index) => data && <CheckList key={index}>{data}</CheckList>
             )}
           </ol>
         </div>
@@ -292,14 +346,24 @@ const ChatDetail = () => {
             onClick={() => router.back()}
             style={{ cursor: "pointer" }}
           />
-          {chatMsg?.opponentNickname}
+          <Nickname
+            onClick={() => {
+              router.push(`/user/${chatMsg?.opponentSid}`);
+            }}
+          >
+            {chatMsg?.opponentNickname}
+          </Nickname>
         </Top>
-        {chatMsg?.title && chatMsg?.minPrice && (
+        {chatMsg && (
           <Post
             title={chatMsg.title}
             minPrice={chatMsg.minPrice}
             imgUrl={chatMsg.rentalImgUrl}
             id={chatMsg.rentalId}
+            isDeleted={chatMsg.isDeleted}
+            isReviewed={chatMsg.isReviewed}
+            showReviewed={Boolean(chatMsg.rentalState)}
+            onClickReview={handleWriteReview}
             size="small"
           />
         )}
@@ -476,6 +540,60 @@ const ChatDetail = () => {
             content={<div>{getContent()}</div>}
           />
         )}
+        {/* 후기 작성 타입 선택 Modal*/}
+        {review && (
+          <BottomModal
+            title={`${chatMsg?.opponentNickname} 님과의\n거래는 어떠셨나요?`}
+            buttonText="거래 키워드 선택하기"
+            onClose={() => {
+              setReview(false);
+              router.push(`/chat/${id}/review?reviewType=${reviewType}`);
+            }}
+            disable={!reviewType}
+          >
+            <ChoiceType>
+              <Element
+                onClick={() => {
+                  setReviewType("good");
+                }}
+              >
+                <Image
+                  src={`/assets/images/ic_review_good${
+                    reviewType === "good" ? "_purple" : ""
+                  }.svg`}
+                  width={56}
+                  height={56}
+                  alt="good"
+                />
+                <ReviewType $selected={reviewType === "good"}>
+                  좋아요
+                </ReviewType>
+              </Element>
+              <Element
+                onClick={() => {
+                  setReviewType("bad");
+                }}
+              >
+                <Image
+                  src={`/assets/images/ic_review_bad${
+                    reviewType === "bad" ? "_purple" : ""
+                  }.svg`}
+                  width={56}
+                  height={56}
+                  alt="bad"
+                />
+                <ReviewType $selected={reviewType === "bad"}>
+                  별로예요
+                </ReviewType>
+              </Element>
+            </ChoiceType>
+            <Em>소중한 거래 후기를 작성해주세요!</Em>
+            <List>
+              <li>선택된 거래평을 바탕으로 키워드를 선택할 수 있어요.</li>
+              <li>본 내용은 옷장 점수에 반영돼요.</li>
+            </List>
+          </BottomModal>
+        )}
         <InputMsgBox>
           <InputMessage
             value={msg}
@@ -518,6 +636,10 @@ const Top = styled.div`
   align-items: center;
   margin-top: 18px;
   ${(props) => props.theme.fonts.h2_bold};
+`;
+
+const Nickname = styled.div`
+  cursor: pointer;
 `;
 
 const ChatList = styled.div`
@@ -588,7 +710,7 @@ const Row = styled.div`
   gap: 10px;
 `;
 
-const List = styled.li`
+const CheckList = styled.li`
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.b2_regular};
   margin-bottom: 30px;
@@ -620,4 +742,59 @@ const Error = styled.div<{ error: string }>`
 const NoData = styled.div`
   color: ${(props) => props.theme.colors.gray900};
   ${(props) => props.theme.fonts.b2_regular};
+`;
+
+/* 거래 후기 모달 */
+const ChoiceType = styled.div`
+  display: flex;
+  padding: 25px 0;
+  justify-content: center;
+  align-items: center;
+  gap: 57px;
+`;
+
+const Element = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+`;
+
+// const ReviewTypeImage = styled(Image)<{ $selected: boolean }>`
+//   fill: ${({ $selected }) =>
+//     $selected ? theme.colors.purple500 : theme.colors.gray700};
+//   stroke: ${({ $selected }) =>
+//     $selected ? theme.colors.purple500 : theme.colors.gray700};
+//   .svg-icon {
+//     stroke: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
+//   }
+
+//   .svg-icon circle,
+//   .svg-icon path {
+//     fill: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
+//     stroke: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
+//   }
+// `;
+
+const ReviewType = styled.div<{ $selected: boolean }>`
+  color: ${({ theme, $selected }) =>
+    $selected ? theme.colors.purple500 : theme.colors.gray900};
+  ${(props) => props.theme.fonts.b2_semiBold};
+`;
+
+const Em = styled.div`
+  color: ${theme.colors.purple600};
+  ${(props) => props.theme.fonts.b2_medium};
+  margin-bottom: 12px;
+`;
+
+const List = styled.ul`
+  color: ${theme.colors.b100};
+  ${(props) => props.theme.fonts.b3_medium};
+
+  li {
+    margin-left: 15px;
+    margin-bottom: 6px;
+  }
 `;
