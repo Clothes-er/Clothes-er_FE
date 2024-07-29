@@ -515,6 +515,7 @@ const ChatDetail = () => {
             content={<div>{getContent()}</div>}
           />
         )}
+        {/* 후기 작성 타입 선택 Modal*/}
         {review && (
           <BottomModal
             title={`${chatMsg?.opponentNickname} 님과의\n거래는 어떠셨나요?`}
@@ -526,13 +527,15 @@ const ChatDetail = () => {
             disable={!reviewType}
           >
             <ChoiceType>
-              <div
+              <Element
                 onClick={() => {
                   setReviewType("good");
                 }}
               >
                 <Image
-                  src="/assets/images/ic_review_good.svg"
+                  src={`/assets/images/ic_review_good${
+                    reviewType === "good" ? "_purple" : ""
+                  }.svg`}
                   width={56}
                   height={56}
                   alt="good"
@@ -540,14 +543,16 @@ const ChatDetail = () => {
                 <ReviewType $selected={reviewType === "good"}>
                   좋아요
                 </ReviewType>
-              </div>
-              <div
+              </Element>
+              <Element
                 onClick={() => {
                   setReviewType("bad");
                 }}
               >
                 <Image
-                  src="/assets/images/ic_review_bad.svg"
+                  src={`/assets/images/ic_review_bad${
+                    reviewType === "bad" ? "_purple" : ""
+                  }.svg`}
                   width={56}
                   height={56}
                   alt="bad"
@@ -555,7 +560,7 @@ const ChatDetail = () => {
                 <ReviewType $selected={reviewType === "bad"}>
                   별로예요
                 </ReviewType>
-              </div>
+              </Element>
             </ChoiceType>
             <Em>소중한 거래 후기를 작성해주세요!</Em>
             <List>
@@ -723,10 +728,34 @@ const ChoiceType = styled.div`
   gap: 57px;
 `;
 
+const Element = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+`;
+
+// const ReviewTypeImage = styled(Image)<{ $selected: boolean }>`
+//   fill: ${({ $selected }) =>
+//     $selected ? theme.colors.purple500 : theme.colors.gray700};
+//   stroke: ${({ $selected }) =>
+//     $selected ? theme.colors.purple500 : theme.colors.gray700};
+//   .svg-icon {
+//     stroke: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
+//   }
+
+//   .svg-icon circle,
+//   .svg-icon path {
+//     fill: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
+//     stroke: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
+//   }
+// `;
+
 const ReviewType = styled.div<{ $selected: boolean }>`
   color: ${({ theme, $selected }) =>
     $selected ? theme.colors.purple500 : theme.colors.gray900};
-  ${(props) => props.theme.fonts.b2_regular};
+  ${(props) => props.theme.fonts.b2_semiBold};
 `;
 
 const Em = styled.div`
