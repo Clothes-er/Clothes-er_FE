@@ -27,7 +27,7 @@ const Post: React.FC<PostList> = ({
         src={`${imgUrl ? imgUrl : "/assets/images/noImage.svg"}`}
         width={size === "small" ? 60 : 76}
         height={size === "small" ? 60 : 76}
-        alt="profile"
+        alt="image"
         style={{ borderRadius: "10px" }}
       />
       <Box>

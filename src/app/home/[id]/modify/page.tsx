@@ -7,7 +7,12 @@ import Input from "@/components/common/Input";
 import { getToken } from "@/hooks/getToken";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
-import { clearCategory } from "@/redux/slices/categorySlice";
+import {
+  clearCategory,
+  setSelectedCategory,
+  setSelectedGender,
+  setSelectedStyle,
+} from "@/redux/slices/categorySlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import axios from "axios";
@@ -87,6 +92,9 @@ const Modify = () => {
       .then(async (response) => {
         const data = response.data.result;
         setInputs(data);
+        dispatch(setSelectedGender(data.gender));
+        dispatch(setSelectedCategory(data.category));
+        dispatch(setSelectedStyle(data.style));
 
         // 이미지 URL을 File 객체로 변환
         const filePromises = data.imgUrls.map((image: string) =>
@@ -150,7 +158,7 @@ const Modify = () => {
     });
 
     axios
-      .put(`/api/v1/rentals`, formData, {
+      .put(`/api/v1/rentals/${id}`, formData, {
         baseURL: process.env.NEXT_PUBLIC_BASE_URL,
         headers: {
           Authorization: `Bearer ${getToken()}`,
@@ -385,7 +393,7 @@ const Photo = styled.div`
   gap: 11px;
 `;
 
-const AddPhoto = styled.div`
+const AddPhoto = styled.label`
   width: 65px;
   height: 65px;
   border-radius: 10px;
