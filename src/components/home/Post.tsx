@@ -14,6 +14,7 @@ const Post: React.FC<PostList> = ({
   minPrice,
   isDeleted = false,
   isReviewed = false, // 후기 보내기 버튼 유무
+  onClickReview,
   createdAt,
   startDate,
   endDate,
@@ -25,11 +26,6 @@ const Post: React.FC<PostList> = ({
     if (!isDeleted) {
       router.push(`/home/${id}`);
     }
-  };
-
-  const handleWriteReview = () => {
-    // 대여 완료가 아닐 때 (대여중일 때)
-    // 대여 완료 상태일 때
   };
 
   return (
@@ -46,7 +42,7 @@ const Post: React.FC<PostList> = ({
         <Row>
           <Price>{isDeleted ? "삭제된 게시물입니다" : `${minPrice}원~`}</Price>
           {isReviewed && (
-            <ReviewButton onClick={handleWriteReview}>
+            <ReviewButton onClick={onClickReview}>
               <Image
                 src="/assets/icons/ic_review.svg"
                 width={12}

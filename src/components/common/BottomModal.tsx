@@ -11,11 +11,19 @@ interface BottomModalProps {
   buttonText: string;
   onClose: () => void;
   autoClose?: boolean;
+  disable?: boolean;
 }
 
 const BottomModal: React.FC<BottomModalProps> = (props) => {
   const router = useRouter();
-  const { title, children, buttonText, onClose, autoClose = false } = props;
+  const {
+    title,
+    children,
+    buttonText,
+    onClose,
+    autoClose = false,
+    disable = false,
+  } = props;
   const [isClosing, setIsClosing] = useState(false);
 
   /* 3초 뒤 자동 닫힘 */
@@ -59,6 +67,7 @@ const BottomModal: React.FC<BottomModalProps> = (props) => {
               text={buttonText}
               onClick={onClose}
               blink={true}
+              disabled={disable}
             />
           </MotionModal>
         )}
