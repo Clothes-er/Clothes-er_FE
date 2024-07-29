@@ -5,11 +5,14 @@ import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Modal from "@/components/common/Modal";
 import Topbar from "@/components/common/Topbar";
+import Post from "@/components/home/Post";
 import { bad_review_keywords, good_review_keywords } from "@/data/reviewData";
+import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const ReviewPage = () => {
@@ -22,6 +25,9 @@ const ReviewPage = () => {
   const [checkListData, setCheckListData] = useState(good_review_keywords);
   const [selectedCheckList, setSelectedCheckList] = useState<string[]>();
   const [description, setDescription] = useState<string>();
+
+  /* chatPost 리덕스에서 꺼내오기 */
+  const chatPost = useSelector((state: RootState) => state.chatPost);
 
   /* 후기 작성 확인 Modal */
   const [reviewCaution, setReviewCaution] = useState<boolean>();
@@ -82,18 +88,16 @@ const ReviewPage = () => {
         />
         <Topbar text="거래 후기 작성" icon={true} align="center" />
         <Content>
-          {/* {chatMsg && (
+          {chatPost && (
             <Post
-              title={chatMsg.title}
-              minPrice={chatMsg.minPrice}
-              imgUrl={chatMsg.rentalImgUrl}
-              id={chatMsg.rentalId}
-              isDeleted={true}
-              isReviewed={!chatMsg.isReviewed}
-              onClickReview={handleWriteReview}
+              title={chatPost.title || ""}
+              minPrice={chatPost.minPrice || undefined}
+              imgUrl={chatPost.imgUrl}
+              id={chatPost.id || undefined}
+              isDeleted={chatPost.isDeleted}
               size="small"
             />
-          )} */}
+          )}
           <Box>
             <Label>
               키워드로 옷장 평가를 해주세요!<Span>(필수)</Span>

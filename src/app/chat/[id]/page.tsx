@@ -14,6 +14,8 @@ import { getToken } from "@/hooks/getToken";
 import Input from "@/components/common/Input";
 import { useRequireAuth } from "@/hooks/useAuth";
 import BottomModal from "@/components/common/BottomModal";
+import { setChatPost } from "@/redux/slices/chatPostSlice";
+import { useDispatch } from "react-redux";
 
 interface Message {
   nickname: string;
@@ -47,6 +49,8 @@ interface CheckList {
 const ChatDetail = () => {
   useRequireAuth();
   const router = useRouter();
+  const dispatch = useDispatch();
+
   /* roomId */
   const { id } = useParams();
   /* get 메소드에서 받아오는 데이터 상태 저장*/
@@ -119,6 +123,23 @@ const ChatDetail = () => {
         console.log(error.response.data.message);
       });
   };
+
+  /* chatPost 정보 리덕스 업데이트 */
+  useEffect(() => {
+    if (chatMsg) {
+      dispatch(
+        setChatPost({
+          title: chatMsg.title,
+          minPrice: chatMsg.minPrice,
+          imgUrl: chatMsg.rentalImgUrl,
+          id: chatMsg.rentalId,
+          isDeleted: true,
+          isReviewed: chatMsg.isReviewed,
+          showReviewed: Boolean(chatMsg.rentalState),
+        })
+      );
+    }
+  }, [chatMsg, dispatch]);
 
   useEffect(() => {
     // 표준 WebSocket 객체 생성

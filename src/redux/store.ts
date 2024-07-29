@@ -5,6 +5,7 @@ import signInReducer from "./slices/signInSlice";
 import firstLoginReducer from "./slices/firstLoginSlice";
 import categoryReducer from "./slices/categorySlice";
 import filterReducer from "./slices/filterSlice";
+import chatPostReducer from "./slices/chatPostSlice";
 import { useDispatch } from "react-redux";
 import {
     FLUSH,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
     firstLogin: firstLoginReducer,
     category: categoryReducer,
     filter: filterReducer,
+    chatPost: chatPostReducer
 });
   
 const persistConfig = {
