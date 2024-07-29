@@ -73,6 +73,9 @@ const ChatDetail = () => {
   const [review, setReview] = useState<boolean>();
   const [reviewType, setReviewType] = useState<string>();
 
+  /* 후기 작성 버튼 인식 변수 */
+  const [reviewButton, setReviewButton] = useState<boolean>();
+
   /* 에러 msg */
   const [rentalingError, setRentalingError] = useState<string>("");
   const [rentaledError, setRentaledError] = useState<string>("");
@@ -84,16 +87,19 @@ const ChatDetail = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   const handleWriteReview = () => {
-    alert(chatMsg?.rentalState);
     // 대여 중 상태 (대여 완료 모달)
     if (chatMsg?.rentalState === "RENTED") {
       setRentaled(true);
+      /* 후기 작성 버튼을 통한 반납 완료 모달임을 확인 */
+      setReviewButton(true);
     }
     // 대여 완료 상태 (거래 후기 작성)
     else if (chatMsg?.rentalState === "RETURNED") {
       setReview(true);
     }
   };
+
+  useEffect(() => {}, [reviewButton]);
 
   useEffect(() => {
     fetchChatMessages();
@@ -221,6 +227,10 @@ const ChatDetail = () => {
         setRentalState(data.rentalState);
         console.log(response.data.message);
         setRentaled(false);
+        if (reviewButton) {
+          setReview(true);
+          setReviewButton(undefined);
+        }
       })
       .catch((error) => {
         console.log(error);
