@@ -16,7 +16,7 @@ export const bad_review_keywords = [
     {id: 11, keyword: "SLOW_RESPONSE", description: "연락을 잘 받지 않아요", target: "COMMON"},
     {id: 12, keyword: "BAD_CLOTHES_STATE", description: "옷 상태가 좋지 않아요", target: "SELLER"},
     {id: 13, keyword: "EXPENSIVE_PRICE", description: "대여 가격이 비싸요", target: "SELLER"},
-    {id: 14, keyword: "MISMATCHED_DESCRIPTION", description: "상품 설명과 실제 상품이 달라요", target: "LENDER"},
+    {id: 14, keyword: "MISMATCHED_DESCRIPTION", description: "상품 설명과 실제 상품이 달라요", target: "SELLER"},
     {id: 15, keyword: "DIRTY_RETURN", description: "반납할 때 옷 상태가 좋지 않아요", target: "LENDER"},
     {id: 16, keyword: "NOT_ON_RETURN_DATE", description: "반납일을 어겼어요", target: "LENDER"},
 ];

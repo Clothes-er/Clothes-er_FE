@@ -8,6 +8,9 @@ interface ChatPostState {
   isDeleted: boolean;
   isReviewed: boolean;
   showReviewed: boolean;
+  buyerNickname: string | null;
+  lenderNickname: string | null;
+  opponentNickname: string | null;
 }
 
 const initialState: ChatPostState = {
@@ -18,6 +21,9 @@ const initialState: ChatPostState = {
   isDeleted: false,
   isReviewed: false,
   showReviewed: false,
+  buyerNickname: null,
+  lenderNickname: null,
+  opponentNickname: null,
 };
 
 const chatPostSlice = createSlice({

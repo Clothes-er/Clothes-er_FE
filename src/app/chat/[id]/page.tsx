@@ -136,6 +136,9 @@ const ChatDetail = () => {
           isDeleted: true,
           isReviewed: chatMsg.isReviewed,
           showReviewed: Boolean(chatMsg.rentalState),
+          buyerNickname: chatMsg.buyerNickname,
+          lenderNickname: chatMsg.lenderNickname,
+          opponentNickname: chatMsg.opponentNickname,
         })
       );
     }

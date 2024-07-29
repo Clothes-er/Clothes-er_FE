@@ -32,11 +32,25 @@ const ReviewPage = () => {
   /* 후기 작성 확인 Modal */
   const [reviewCaution, setReviewCaution] = useState<boolean>();
 
+  const isLender = chatPost.opponentNickname === chatPost.lenderNickname;
+
   useEffect(() => {
     if (params === "good") {
-      setCheckListData(good_review_keywords);
+      setCheckListData(
+        good_review_keywords.filter(
+          (item) =>
+            item.target === "COMMON" ||
+            (isLender ? item.target === "LENDER" : item.target === "SELLER")
+        )
+      );
     } else {
-      setCheckListData(bad_review_keywords);
+      setCheckListData(
+        bad_review_keywords.filter(
+          (item) =>
+            item.target === "COMMON" ||
+            (isLender ? item.target === "LENDER" : item.target === "SELLER")
+        )
+      );
     }
   }, []);
 
