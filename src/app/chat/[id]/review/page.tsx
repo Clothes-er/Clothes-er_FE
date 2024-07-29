@@ -82,7 +82,7 @@ const ReviewPage = () => {
     })
       .then((response) => {
         console.log("거래 후기 작성 성공", response.data);
-        router.push("/closet");
+        router.push(`/chat/${id}`);
       })
       .catch((error) => {
         console.log("거래 후기 작성 실패", error);
