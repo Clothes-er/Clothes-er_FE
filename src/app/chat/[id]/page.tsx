@@ -25,6 +25,7 @@ interface ChatMsg {
   buyerNickname: string;
   lenderNickname: string;
   opponentNickname: string;
+  opponentSid: string;
   rentalId: number;
   rentalImgUrl: string;
   title: string;
@@ -32,6 +33,8 @@ interface ChatMsg {
   rentalState: string;
   messages: Message[];
   isChecked: boolean;
+  isDeleted: boolean;
+  isReviewed: boolean;
 }
 
 interface CheckList {
@@ -292,17 +295,36 @@ const ChatDetail = () => {
             onClick={() => router.back()}
             style={{ cursor: "pointer" }}
           />
-          {chatMsg?.opponentNickname}
+          <Nickname
+            onClick={() => {
+              router.push(`/user/${chatMsg?.opponentSid}`);
+            }}
+          >
+            {chatMsg?.opponentNickname}
+          </Nickname>
         </Top>
-        {chatMsg?.title && chatMsg?.minPrice && (
-          <Post
-            title={chatMsg.title}
-            minPrice={chatMsg.minPrice}
-            imgUrl={chatMsg.rentalImgUrl}
-            id={chatMsg.rentalId}
-            size="small"
-          />
-        )}
+        {chatMsg &&
+          (chatMsg?.isDeleted ? (
+            <Post
+              title={chatMsg.title}
+              imgUrl={chatMsg.rentalImgUrl}
+              id={chatMsg.rentalId}
+              isDeleted={true}
+              isReviewed={
+                chatMsg.rentalState === "RETURNED" &&
+                chatMsg.isReviewed === false
+              }
+              size="small"
+            />
+          ) : (
+            <Post
+              title={chatMsg.title}
+              minPrice={chatMsg.minPrice}
+              imgUrl={chatMsg.rentalImgUrl}
+              id={chatMsg.rentalId}
+              size="small"
+            />
+          ))}
         {chatMsg && (
           <ChatList>
             {chatMsg.messages.map((data, index) => (
@@ -518,6 +540,10 @@ const Top = styled.div`
   align-items: center;
   margin-top: 18px;
   ${(props) => props.theme.fonts.h2_bold};
+`;
+
+const Nickname = styled.div`
+  cursor: pointer;
 `;
 
 const ChatList = styled.div`
