@@ -29,6 +29,15 @@ const Post: React.FC<PostList> = ({
     }
   };
 
+  const handleReviewButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.stopPropagation();
+    if (onClickReview) {
+      onClickReview();
+    }
+  };
+
   return (
     <Container onClick={handleDetail} size={size}>
       <Image
@@ -43,7 +52,10 @@ const Post: React.FC<PostList> = ({
         <Row>
           <Price>{isDeleted ? "삭제된 게시물입니다" : `${minPrice}원~`}</Price>
           {showReviewed && (
-            <ReviewButton onClick={onClickReview} disabled={isReviewed}>
+            <ReviewButton
+              onClick={handleReviewButtonClick}
+              disabled={isReviewed}
+            >
               <Image
                 src="/assets/icons/ic_review.svg"
                 width={12}
