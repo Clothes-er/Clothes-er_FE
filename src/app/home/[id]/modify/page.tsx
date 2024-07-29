@@ -7,7 +7,12 @@ import Input from "@/components/common/Input";
 import { getToken } from "@/hooks/getToken";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
-import { clearCategory } from "@/redux/slices/categorySlice";
+import {
+  clearCategory,
+  setSelectedCategory,
+  setSelectedGender,
+  setSelectedStyle,
+} from "@/redux/slices/categorySlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import axios from "axios";
@@ -87,6 +92,9 @@ const Modify = () => {
       .then(async (response) => {
         const data = response.data.result;
         setInputs(data);
+        dispatch(setSelectedGender(data.gender));
+        dispatch(setSelectedCategory(data.category));
+        dispatch(setSelectedStyle(data.style));
 
         // 이미지 URL을 File 객체로 변환
         const filePromises = data.imgUrls.map((image: string) =>

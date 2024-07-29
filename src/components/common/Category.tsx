@@ -59,17 +59,17 @@ const Category = () => {
     <Layout>
       <Chip
         label="성별"
-        value={getGenderLabel(selectedGender) || "성별"}
+        value={getGenderLabel(selectedGender)}
         onClick={handleChipClick}
       />
       <Chip
         label="카테고리"
-        value={selectedCategory || "카테고리"}
+        value={selectedCategory || ""}
         onClick={handleChipClick}
       />
       <Chip
         label="스타일"
-        value={selectedStyle || "스타일"}
+        value={selectedStyle || ""}
         onClick={handleChipClick}
       />
       {isPopupOpen && (
@@ -99,7 +99,12 @@ const Category = () => {
                           selectedGender === "FEMALE" ? null : "FEMALE"
                         )
                       }
-                      color="black"
+                      labelFontSize={
+                        selectedGender === "FEMALE"
+                          ? "c1_semiBold"
+                          : "c1_medium"
+                      }
+                      color={selectedGender === "FEMALE" ? "purple" : "black"}
                     />
                     <Checkbox
                       text="남자"
@@ -109,7 +114,10 @@ const Category = () => {
                           selectedGender === "MALE" ? null : "MALE"
                         )
                       }
-                      color="black"
+                      labelFontSize={
+                        selectedGender === "MALE" ? "c1_semiBold" : "c1_medium"
+                      }
+                      color={selectedGender === "MALE" ? "purple" : "black"}
                     />
                   </GenderCheckbox>
                 </div>
