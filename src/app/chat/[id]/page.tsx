@@ -148,7 +148,7 @@ const ChatDetail = () => {
     // 표준 WebSocket 객체 생성
     // const socket = new WebSocket("ws://13.209.137.34:8080/ws");
 
-    const socketUrl = `ws://13.209.137.34:8080/ws`;
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET || "";
     const socket = new WebSocket(socketUrl);
 
     const client = new Client({
