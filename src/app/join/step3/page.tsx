@@ -1,5 +1,6 @@
 "use client";
 
+import Axios from "@/api/axios";
 import BottomModal from "@/components/common/BottomModal";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
@@ -26,10 +27,23 @@ const Step3 = () => {
     phoneAuth: "",
   });
 
+  /* 에러 메세지 */
   const [errors, setErrors] = useState({
     phone: "",
     phoneAuth: "",
   });
+
+  /* 성공 메세지 */
+  const [success, setSuccess] = useState({
+    phone: "",
+    phoneAuth: "",
+  });
+
+  /* 휴대폰 문자 발송 여부 */
+  const [phoneSent, setPhoneSent] = useState(false);
+
+  /* 휴대폰 인증 코드 확인 여부 */
+  const [correctCode, setCorrectCode] = useState(false);
 
   const [nickname, setNickname] = useState("");
 
@@ -60,7 +74,7 @@ const Step3 = () => {
         ...inputs,
         phone: inputs.phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"),
       });
-    } else if (inputs.phone.length === 13) {
+    } else if (inputs.phone.length === 12 || 13) {
       setInputs({
         ...inputs,
         phone: inputs.phone
@@ -76,6 +90,41 @@ const Step3 = () => {
       })
     );
   }, [inputs.phone]);
+
+  /* 휴대폰 인증번호 전송 */
+  const handleSendPhone = () => {
+    Axios.post("/api/v1/users/send-phone", { phoneNumber: inputs.phone })
+      .then((response) => {
+        console.log("휴대폰 인증번호 전송 성공", response.data);
+        setPhoneSent(true);
+        setInputs({ ...inputs, phoneAuth: "" });
+        setErrors({ ...errors, phoneAuth: "" });
+        setSuccess({ ...success, phone: "인증번호가 전송되었습니다." });
+      })
+      .catch((error) => {
+        console.log("휴대폰 인증 실패", error);
+        setSuccess({ ...success, phone: "" });
+        setErrors({ ...errors, phone: error.response.data.message });
+      });
+  };
+
+  /* 휴대폰 인증번호 확인 */
+  const handleValidateCode = () => {
+    Axios.post("/api/v1/users/check-phone", {
+      phoneNumber: inputs.phone,
+      authCode: inputs.phoneAuth,
+    })
+      .then((response) => {
+        console.log("휴대폰  인증 성공", response.data);
+        setCorrectCode(true);
+        setSuccess({ ...success, phoneAuth: "휴대폰이 인증되었습니다." });
+      })
+      .catch((error) => {
+        console.log("휴대폰 인증 실패", error);
+        setSuccess({ ...success, phoneAuth: "" });
+        setErrors({ ...errors, phoneAuth: error.response.data.message });
+      });
+  };
 
   /* 회원가입 */
   const handleSignUp = () => {
@@ -103,56 +152,66 @@ const Step3 = () => {
         Clothes:er에 오신 것을
         <br /> 환영합니다!
       </Hello>
-      <Row>
-        <Input
-          label="전화번호"
-          value={inputs.phone}
-          errorMsg={errors.phone}
-          placeholder="010-0000-0000"
-          onChange={(value: string) => {
-            validatePhone(value);
-            setInputs({ ...inputs, phone: value });
-            dispatch(
-              setStep3({
-                ...inputs,
-                phone: value,
-              })
-            );
-          }}
-        />
-        {/* <Small>
-          <Button
-            buttonType="primaryLight"
-            text="인증"
+      <InputBox>
+        <Row>
+          <Input
+            label="전화번호"
+            value={inputs.phone}
             size="small"
-            onClick={() => {}}
+            placeholder="010-0000-0000"
+            successMsg={success.phone}
+            errorMsg={errors.phone}
+            onChange={(value: string) => {
+              validatePhone(value);
+              setInputs({ ...inputs, phone: value });
+              dispatch(
+                setStep3({
+                  ...inputs,
+                  phone: value,
+                })
+              );
+            }}
           />
-        </Small> */}
-      </Row>
-      {/* <Row>
-        <Input
-          label="전화번호 인증"
-          value={inputs.phoneAuth}
-          placeholder="인증번호"
-          onChange={(value: string) => {
-            setInputs({ ...inputs, phoneAuth: value });
-            dispatch(
-              setStep3({
-                ...inputs,
-                phoneAuth: value,
-              })
-            );
-          }}
-        />
-        <Small>
-          <Button
-            buttonType="primaryLight"
-            text="인증"
-            size="small"
-            onClick={() => {}}
+          <CheckButton>
+            <Button
+              buttonType="primaryLight"
+              size="small"
+              text="인증"
+              onClick={handleSendPhone}
+            />
+          </CheckButton>
+        </Row>
+        <Row>
+          <Input
+            label="전화번호 인증"
+            value={inputs.phoneAuth}
+            placeholder="인증번호"
+            successMsg={success.phoneAuth}
+            errorMsg={errors.phoneAuth}
+            onChange={(value: string) => {
+              setInputs({ ...inputs, phoneAuth: value });
+              dispatch(
+                setStep3({
+                  ...inputs,
+                  phoneAuth: value,
+                })
+              );
+            }}
+            disabled={!phoneSent}
           />
-        </Small>
-      </Row> */}
+          <CheckButton>
+            <Button
+              buttonType="primaryLight"
+              size="small"
+              text="확인"
+              onClick={handleValidateCode}
+              disabled={
+                !phoneSent || !!errors.phoneAuth || inputs.phoneAuth === ""
+              }
+            />
+          </CheckButton>
+        </Row>
+      </InputBox>
       <ButtonRow>
         <Button
           text="이전 단계"
@@ -204,11 +263,24 @@ const Hello = styled.div`
   margin-bottom: 29px;
 `;
 
+const InputBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 50px;
+`;
+
 const Row = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: 16px;
+`;
+
+const CheckButton = styled.div`
+  margin-bottom: 20px;
 `;
 
 const ButtonRow = styled.div`
