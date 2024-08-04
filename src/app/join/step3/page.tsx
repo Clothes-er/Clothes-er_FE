@@ -56,13 +56,21 @@ const Step3 = () => {
 
   const validatePhone = (phone: string) => {
     const regex = /^010-\d{4}-\d{4}$/;
-    if (!regex.test(phone)) {
+    if (!regex.test(phone) && !(phone.length === 0)) {
       setErrors({
         ...errors,
         phone: "전화번호 형식이 올바르지 않습니다.",
       });
     } else {
       setErrors({ ...errors, phone: "" });
+    }
+  };
+
+  const validatePhoneAuth = (phoneAuth: string) => {
+    if (phoneAuth.length !== 6) {
+      setErrors({ ...errors, phoneAuth: "인증번호 6자리를 입력해주세요." });
+    } else {
+      setErrors({ ...errors, phoneAuth: "" });
     }
   };
 
@@ -97,6 +105,7 @@ const Step3 = () => {
       .then((response) => {
         console.log("휴대폰 인증번호 전송 성공", response.data);
         setPhoneSent(true);
+        setCorrectCode(false);
         setInputs({ ...inputs, phoneAuth: "" });
         setErrors({ ...errors, phoneAuth: "" });
         setSuccess({ ...success, phone: "인증번호가 전송되었습니다." });
@@ -121,6 +130,7 @@ const Step3 = () => {
       })
       .catch((error) => {
         console.log("휴대폰 인증 실패", error);
+        setCorrectCode(false);
         setSuccess({ ...success, phoneAuth: "" });
         setErrors({ ...errors, phoneAuth: error.response.data.message });
       });
@@ -185,10 +195,12 @@ const Step3 = () => {
           <Input
             label="전화번호 인증"
             value={inputs.phoneAuth}
+            size="small"
             placeholder="인증번호"
             successMsg={success.phoneAuth}
             errorMsg={errors.phoneAuth}
             onChange={(value: string) => {
+              validatePhoneAuth(value);
               setInputs({ ...inputs, phoneAuth: value });
               dispatch(
                 setStep3({
@@ -218,7 +230,12 @@ const Step3 = () => {
           size="medium"
           onClick={() => router.push("/join/step2")}
         />
-        <Button text="회원가입" size="medium" onClick={handleSignUp} />
+        <Button
+          text="회원가입"
+          size="medium"
+          onClick={handleSignUp}
+          disabled={!correctCode}
+        />
       </ButtonRow>
 
       {/* 회원가입 축하 모달 */}
