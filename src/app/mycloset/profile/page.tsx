@@ -4,6 +4,7 @@ import Axios from "@/api/axios";
 import Input from "@/components/common/Input";
 import { getToken } from "@/hooks/getToken";
 import { useRequireAuth } from "@/hooks/useAuth";
+import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import { theme } from "@/styles/theme";
 import axios from "axios";
 import Image from "next/image";
@@ -35,17 +36,25 @@ const UserInfo = () => {
   const isModify = (image || userInfo?.nickname !== nickname) && !errorMsg;
 
   useEffect(() => {
-    AuthAxios.get("/api/v1/users/info")
-      .then((response) => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await AuthAxios.get("/api/v1/users/info");
         const data = response.data.result;
+
         setUserInfo(data);
         setNickname(data.nickname);
+
+        const file = await convertURLtoFile(data.profileUrl);
+        setImage(file);
+
         console.log(data);
         console.log(response.data.message);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log(error);
-      });
+      }
+    };
+
+    fetchUserInfo();
   }, []);
 
   /* 닉네임 중복확인 */
