@@ -4,12 +4,14 @@ import Axios from "@/api/axios";
 import Input from "@/components/common/Input";
 import { getToken } from "@/hooks/getToken";
 import { useRequireAuth } from "@/hooks/useAuth";
+import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import { theme } from "@/styles/theme";
 import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface UserInfo {
   profileUrl: string;
@@ -27,26 +29,49 @@ const UserInfo = () => {
   const [userInfo, setUserInfo] = useState<UserInfo>();
 
   const [image, setImage] = useState<File | null>(null);
+  const [initialImage, setInitialImage] = useState<File | null>(null);
+
   /* 닉네임 */
   const [nickname, setNickname] = useState<string>("");
   const [successMsg, setSuccessMsg] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const isModify = (image || userInfo?.nickname !== nickname) && !errorMsg;
+  /* 변경 값 확인 */
+  const isImageModified =
+    initialImage !== image ||
+    image?.name !== initialImage?.name ||
+    image?.size !== initialImage?.size;
+  const isNicknameModified = userInfo?.nickname !== nickname;
+  const isModify = (isImageModified || isNicknameModified) && !errorMsg;
+
+  const [photoModal, setPhotoModal] = useState<boolean>(false);
 
   useEffect(() => {
-    AuthAxios.get("/api/v1/users/info")
-      .then((response) => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await AuthAxios.get("/api/v1/users/info");
         const data = response.data.result;
+
         setUserInfo(data);
         setNickname(data.nickname);
+
+        const file = await convertURLtoFile(data.profileUrl);
+        setImage(file);
+        setInitialImage(file);
+
         console.log(data);
         console.log(response.data.message);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log(error);
-      });
+      }
+    };
+
+    fetchUserInfo();
   }, []);
+
+  useEffect(() => {
+    console.log("image", image);
+  }, [image]);
 
   /* 닉네임 중복확인 */
   useEffect(() => {
@@ -75,6 +100,7 @@ const UserInfo = () => {
     if (files && files.length > 0) {
       setImage(files[0]);
     }
+    setPhotoModal(false);
   };
 
   const handleModifyProfile = () => {
@@ -140,31 +166,26 @@ const UserInfo = () => {
         </Top>
         <Content>
           <Profile>
-            <Image
-              src={
-                image
-                  ? URL.createObjectURL(image)
-                  : userInfo?.profileUrl || "/assets/images/basic_profile.svg"
-              }
-              width={147}
-              height={147}
-              alt="profile"
-              style={{ borderRadius: "100px", background: "white" }}
-            />
-            <ModifyPhoto>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFileUpload}
-                style={{ display: "none" }}
+            <ProfileImage>
+              <Image
+                src={
+                  image
+                    ? URL.createObjectURL(image)
+                    : "/assets/images/basic_profile.svg"
+                }
+                layout="fill"
+                objectFit="cover"
+                alt="profile"
+                style={{ borderRadius: "100px", background: "white" }}
               />
+            </ProfileImage>
+            <ModifyPhoto>
               <Image
                 src={"/assets/icons/ic_camera_edit.svg"}
                 width={30}
                 height={30}
                 alt="edit"
-                onClick={() => document.getElementById("fileInput")?.click()}
+                onClick={() => setPhotoModal(true)}
               />
             </ModifyPhoto>
           </Profile>
@@ -183,6 +204,64 @@ const UserInfo = () => {
             />
           </Info>
         </Content>
+        {/* 하단 모달 */}
+        <AnimatePresence>
+          {photoModal && (
+            <MotionModalBack
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setPhotoModal(false)}
+            >
+              <MotionModal
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ duration: 0.2 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <List $type="choice" htmlFor="file-input">
+                  <input
+                    id="file-input"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFileUpload}
+                    style={{ display: "none" }}
+                  />
+                  <Image
+                    src={"/assets/icons/ic_gallery.svg"}
+                    width={30}
+                    height={30}
+                    alt="gallery"
+                  />
+                  라이브러리에서 사진 선택
+                </List>
+                <List
+                  $type="delete"
+                  onClick={() => {
+                    setImage(null);
+                    setPhotoModal(false);
+                  }}
+                  $disabled={image === null}
+                >
+                  <Image
+                    src={
+                      image !== null
+                        ? "/assets/icons/ic_delete.svg"
+                        : "/assets/icons/ic_delete_gray.svg"
+                    }
+                    width={30}
+                    height={30}
+                    alt="gallery"
+                  />
+                  현재 사진 삭제
+                </List>
+              </MotionModal>
+            </MotionModalBack>
+          )}
+        </AnimatePresence>
       </Layout>
     </>
   );
@@ -239,7 +318,16 @@ const Profile = styled.div`
   position: relative;
 `;
 
-const ModifyPhoto = styled.label`
+const ProfileImage = styled.div`
+  position: relative;
+  width: 147px;
+  height: 147px;
+  background: white;
+  border-radius: 50%;
+  overflow: hidden;
+`;
+
+const ModifyPhoto = styled.div`
   width: 30px;
   height: 30px;
   border-radius: 50px;
@@ -260,4 +348,60 @@ const Info = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
+`;
+
+/* 하단 모달 */
+const MotionModalBack = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(9, 9, 9, 0.8);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow-y: hidden;
+`;
+
+const MotionModal = styled(motion.div)`
+  width: 100%;
+  height: 150px;
+  padding: 40px 34px 30px 34px;
+  border-radius: 15px 15px 0px 0px;
+  background: ${theme.colors.white};
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+`;
+
+const List = styled.label<{ $type: string; $disabled?: boolean }>`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  ${(props) => props.theme.fonts.b2_medium};
+
+  &:hover {
+    color: ${({ $type, theme }) =>
+      $type === "choice" ? theme.colors.purple800 : theme.colors.red};
+  }
+
+  ${({ $type, $disabled }) =>
+    $type === "delete" &&
+    css`
+      color: ${$disabled ? theme.colors.gray800 : theme.colors.red};
+      pointer-events: ${$disabled ? "none" : "auto"};
+
+      img {
+        fill: ${theme.colors.gray700};
+      }
+    `}
 `;
