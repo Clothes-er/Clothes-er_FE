@@ -182,7 +182,9 @@ const MyCloset = () => {
                   <Score>10점</Score>
                 </InfoTop>
                 <ScoreBar recentScore={10} />
-                <MoreReview>거래 후기 확인하기</MoreReview>
+                <MoreReview onClick={() => router.push("/mycloset/review")}>
+                  거래 후기 확인하기
+                </MoreReview>
               </ScoreBox>
             </Slide>
             <Slide>

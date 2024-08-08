@@ -31,6 +31,7 @@ const colors = {
   gray700: "#C0C0C0",
   gray800: "#A9A9A9",
   gray900: "#8F8F8F",
+  gray950: "#626262",
   
   linear_purple: "linear-gradient(180deg, #796EF2 0%, #8677E1 100%)",
   linear_btn:"",

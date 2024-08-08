@@ -125,7 +125,11 @@ const MyCloset = () => {
                   <Score>10점</Score>
                 </InfoTop>
                 <ScoreBar recentScore={10} nickname={profileInfo?.nickname} />
-                <MoreReview>거래 후기 확인하기</MoreReview>
+                <MoreReview
+                  onClick={() => router.push(`/user/${userSid}/review`)}
+                >
+                  거래 후기 확인하기
+                </MoreReview>
               </ScoreBox>
             </Slide>
             <Slide>
@@ -268,7 +272,7 @@ const ProfileImage = styled.div`
 `;
 
 const Text = styled.div`
-  width: calc(100% - 70px);
+  width: calc(100% - 105px);
   display: flex;
   flex-direction: column;
   gap: 13px;
