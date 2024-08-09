@@ -26,6 +26,7 @@ interface Price {
 
 interface PostInfo {
   id: number;
+  clothesId: number;
   userSid: string;
   profileUrl: string;
   nickname: string;

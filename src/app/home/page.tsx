@@ -118,7 +118,7 @@ const Home = () => {
             </Posts>
           </Content>
         </Layout>
-        <Edit onClick={() => router.push("/home/write")}>
+        <Edit onClick={() => router.push("/home/write/choice")}>
           <Image
             src="/assets/icons/ic_edit.svg"
             width={48}

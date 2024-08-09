@@ -44,6 +44,7 @@ const Modify = () => {
     (state: RootState) => state.category.selectedStyle
   );
 
+  const [clothesId, setClothesId] = useState<number | null>(null);
   const [images, setImages] = useState<File[]>([]);
   const [inputs, setInputs] = useState<{
     title: string;
@@ -92,6 +93,9 @@ const Modify = () => {
       .then(async (response) => {
         const data = response.data.result;
         setInputs(data);
+        if (data.clothesId) {
+          setClothesId(data.clothesId);
+        }
         dispatch(setSelectedGender(data.gender));
         dispatch(setSelectedCategory(data.category));
         dispatch(setSelectedStyle(data.style));
@@ -141,6 +145,7 @@ const Modify = () => {
             brand: inputs.brand,
             size: inputs.size,
             fit: inputs.fit,
+            clothesId: clothesId || null,
           }),
         ],
         { type: "application/json" }

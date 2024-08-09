@@ -5,25 +5,34 @@ import Category from "@/components/common/Category";
 import Input from "@/components/common/Input";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import axios from "axios";
 import { getToken } from "@/hooks/getToken";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { clearCategory } from "@/redux/slices/categorySlice";
+import {
+  clearCategory,
+  setSelectedCategory,
+  setSelectedGender,
+  setSelectedStyle,
+} from "@/redux/slices/categorySlice";
 import { useRequireAuth } from "@/hooks/useAuth";
+import AuthAxios from "@/api/authAxios";
+import { convertURLtoFile } from "@/lib/convertURLtoFile";
 
 interface Price {
   days: number | null;
   price: number | null;
 }
-const Write = () => {
+const WritePost = () => {
   useRequireAuth();
   const router = useRouter();
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+  const clothesId = searchParams.get("clothesId");
 
   const selectedGender = useSelector(
     (state: RootState) => state.category.selectedGender
@@ -61,6 +70,43 @@ const Write = () => {
     fit: "",
   });
 
+  /* 보유글 조회 */
+  useEffect(() => {
+    if (clothesId) {
+      AuthAxios.get(`/api/v1/clothes/${clothesId}`)
+        .then(async (response) => {
+          const data = response.data.result;
+          setInputs({
+            ...inputs,
+            title: data.name,
+            gender: data.gender,
+            category: data.category,
+            style: data.style,
+            brand: data.brand,
+            size: data.size,
+          });
+
+          const filePromises = data.imgUrls.map((image: string) =>
+            convertURLtoFile(image)
+          );
+          const files = await Promise.all(filePromises);
+          setImages(files);
+
+          dispatch(setSelectedGender(data.gender));
+          dispatch(setSelectedCategory(data.category));
+          dispatch(setSelectedStyle(data.style));
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(inputs);
+  }, []);
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
@@ -94,6 +140,7 @@ const Write = () => {
             brand: inputs.brand,
             size: inputs.size,
             fit: inputs.fit,
+            clothesId: clothesId || null,
           }),
         ],
         { type: "application/json" }
@@ -322,7 +369,7 @@ const Write = () => {
   );
 };
 
-export default Write;
+export default WritePost;
 
 const Layout = styled.div`
   width: 100%;
