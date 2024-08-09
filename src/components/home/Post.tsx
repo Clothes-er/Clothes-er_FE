@@ -16,15 +16,19 @@ const Post: React.FC<PostList> = ({
   isReviewed = false, // 후기 작성 여부 (후기 보내기, 작성 완료)
   showReviewed = false, // 후기 버튼 유무
   onClickReview,
+  onClickChoice,
   createdAt,
   startDate,
   endDate,
   size = "nomal",
+  isSelected = false,
 }) => {
   const router = useRouter();
 
   const handleDetail = () => {
-    if (!isDeleted) {
+    if (onClickChoice && id !== undefined) {
+      onClickChoice(id);
+    } else if (!isDeleted) {
       router.push(`/home/${id}`);
     }
   };
@@ -39,7 +43,7 @@ const Post: React.FC<PostList> = ({
   };
 
   return (
-    <Container onClick={handleDetail} size={size}>
+    <Container onClick={handleDetail} size={size} isSelected={isSelected}>
       <Image
         src={`${imgUrl ? imgUrl : "/assets/images/noImage.svg"}`}
         width={size === "small" ? 60 : 76}
@@ -82,7 +86,7 @@ const Post: React.FC<PostList> = ({
 
 export default Post;
 
-const Container = styled.div<{ size: string }>`
+const Container = styled.div<{ size: string; isSelected: boolean }>`
   display: flex;
   width: 100%;
   height: 100px;
@@ -96,6 +100,11 @@ const Container = styled.div<{ size: string }>`
       border-bottom: 0.5px solid rgba(219, 219, 219, 0.7);
     `}
   cursor: pointer;
+  ${(props) =>
+    props.isSelected &&
+    css`
+      background-color: ${theme.colors.purple10};
+    `}
 `;
 
 const Box = styled.div`
