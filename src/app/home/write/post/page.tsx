@@ -105,7 +105,7 @@ const WritePost = () => {
 
   useEffect(() => {
     console.log(inputs);
-  }, [inputs]);
+  }, []);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -140,6 +140,7 @@ const WritePost = () => {
             brand: inputs.brand,
             size: inputs.size,
             fit: inputs.fit,
+            clothesId: clothesId || null,
           }),
         ],
         { type: "application/json" }
