@@ -18,8 +18,6 @@ const filterLabels = {
 };
 
 const Filter: React.FC<FilterProps> = ({ onClick }) => {
-  // const filter = ["정렬", "성별", "키·연령", "카테고리", "스타일"];
-
   const dispatch = useDispatch();
   const selectedFilter = useSelector((state: RootState) => state.filter);
 
@@ -51,7 +49,11 @@ const Filter: React.FC<FilterProps> = ({ onClick }) => {
               firstValue && (
                 <Chip
                   label={getSortLabel(String(firstValue[0])) || label}
-                  value={firstValue[0] || ""}
+                  value={
+                    (firstValue[0] === "createdAt" && "최신순") ||
+                    (firstValue[0] === "closetScore" && "옷장 점수순") ||
+                    ""
+                  }
                   onClick={onClick}
                 />
               )
