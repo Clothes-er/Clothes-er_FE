@@ -1,11 +1,12 @@
+export const ages: string[] = ["10대", "20대 초반", "20대 중반", "20대 후반", "30대"];
 
-export const ages = [
-  "10대",
-  "20대 초반",
-  "20대 중반",
-  "20대 후반",
-  "30대",
-];
+export const ageMapping: Record<string, string> = {
+  "10대": "TEENAGER",
+  "20대 초반": "EARLY_TWENTIES",
+  "20대 중반": "MID_TWENTIES",
+  "20대 후반": "LATE_TWENTIES",
+  "30대": "OTHER",
+};
 
 type Categories = {
     [key: string]: string[];

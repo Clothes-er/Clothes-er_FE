@@ -14,6 +14,8 @@ import { useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
 import { getCoordsAddress } from "@/hooks/getCoordsAddress";
 import { useRequireAuth } from "@/hooks/useAuth";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface PostList {
   id: number;
@@ -27,23 +29,42 @@ interface PostList {
 const Home = () => {
   useRequireAuth();
   const router = useRouter();
-  const [postList, setPostList] = useState<PostList[]>();
-  const [location, setLocation] = useState<number>();
-  const [search, setSearch] = useState<string>();
 
-  /* 대여글 목록 조회 */
-  useEffect(() => {
-    AuthAxios.get("/api/v1/rentals")
-      .then((response) => {
-        const data = response.data.result;
-        setPostList(data);
-        console.log(data);
-        console.log(response.data.message);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  /* 검색 및 필터링을 위한 상태 관리 */
+  const [postList, setPostList] = useState<PostList[]>([]);
+  const [location, setLocation] = useState<string | undefined>(undefined);
+  const [search, setSearch] = useState<string>("");
+
+  const sort = useSelector((state: RootState) => state.filter.selectedSort);
+
+  const gender = useSelector((state: RootState) => state.filter.selectedGender);
+  const age = useSelector((state: RootState) => state.filter.selectedAge);
+  const category = useSelector(
+    (state: RootState) => state.filter.selectedCategory
+  );
+  const style = useSelector((state: RootState) => state.filter.selectedStyle);
+
+  /* Query String 생성 함수 */
+  const buildQueryString = () => {
+    const params = new URLSearchParams();
+
+    if (search) params.append("search", search);
+    if (sort) params.append("sort", sort);
+    if (gender.length > 0) params.append("gender", gender.join(","));
+    // if (minHeight) params.append("minHeight", String(minHeight));
+    // if (maxHeight) params.append("maxHeight", String(maxHeight));
+    if (age.length > 0)
+      params.append("age", age.map((a) => a.replace(/\s+/g, "")).join(","));
+    if (category.length > 0)
+      params.append(
+        "category",
+        category.map((c) => c.replace(/\s+/g, "")).join(",")
+      );
+    if (style.length > 0)
+      params.append("style", style.map((s) => s.replace(/\s+/g, "")).join(","));
+
+    return params.toString();
+  };
 
   /* 위치 정보 받아오기 */
   useEffect(() => {
@@ -64,19 +85,20 @@ const Home = () => {
     fetchData();
   }, []);
 
-  /* 대여글 목록 검색 */
+  /* 대여글 목록 조회(검색, 필터링) */
   useEffect(() => {
-    AuthAxios.get(`/api/v1/rentals?search=${search}`)
+    const queryString = buildQueryString(); // Query String 생성
+    AuthAxios.get(`/api/v1/rentals?${queryString}`)
       .then((response) => {
         const data = response.data.result;
+        console.log("쿼리 응답 성공");
         setPostList(data);
-        console.log(data);
         console.log(response.data.message);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [search]);
+  }, [search, sort, gender, age, category, style]);
 
   return (
     <>
@@ -99,7 +121,7 @@ const Home = () => {
               onChange={(event) => setSearch(event.target.value)}
               placeholder="원하는 상품명을 검색하세요!"
             ></SearchBox>
-            {/* <Filter /> */}
+            <Filter onClick={() => router.push("/home/filter")} />
             <Posts>
               {postList?.map((data, index) => (
                 <PostContainer key={data.id}>
