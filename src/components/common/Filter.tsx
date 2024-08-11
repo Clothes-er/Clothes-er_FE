@@ -21,9 +21,9 @@ const Filter: React.FC<FilterProps> = ({ onClick }) => {
   const {
     selectedSort,
     selectedGender,
-    selectedAge,
     selectedMinHeight,
     selectedMaxHeight,
+    selectedAge,
     selectedCategory,
     selectedStyle,
   } = useSelector((state: RootState) => state.filter);
@@ -31,9 +31,10 @@ const Filter: React.FC<FilterProps> = ({ onClick }) => {
   const defaultMinHeight = 130;
   const defaultMaxHeight = 200;
 
-  const isHeightChanged =
+  const isHeightAgeChanged =
     selectedMinHeight !== defaultMinHeight ||
-    selectedMaxHeight !== defaultMaxHeight;
+    selectedMaxHeight !== defaultMaxHeight ||
+    (Array.isArray(selectedAge) && selectedAge.length > 0);
 
   return (
     <Layout>
@@ -67,7 +68,7 @@ const Filter: React.FC<FilterProps> = ({ onClick }) => {
                 label={`${label}`}
                 value={
                   label === "키·연령"
-                    ? isHeightChanged
+                    ? isHeightAgeChanged
                       ? label
                       : ""
                     : firstValue[0] && firstValue[0].length > 0
