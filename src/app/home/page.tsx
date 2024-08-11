@@ -32,7 +32,7 @@ const Home = () => {
 
   /* 검색 및 필터링을 위한 상태 관리 */
   const [postList, setPostList] = useState<PostList[]>([]);
-  const [location, setLocation] = useState<string | undefined>(undefined);
+  const [location, setLocation] = useState<number | undefined>(undefined);
   const [search, setSearch] = useState<string>("");
 
   const sort = useSelector((state: RootState) => state.filter.selectedSort);
