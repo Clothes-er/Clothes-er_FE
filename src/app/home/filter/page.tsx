@@ -19,15 +19,15 @@ import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 const FilterPage = () => {
   const router = useRouter();
-
   const dispatch = useDispatch();
 
+  /* Redux에서 상태 가져오기 */
   const selectedSort = useSelector(
     (state: RootState) => state.filter.selectedSort
   );
@@ -50,36 +50,86 @@ const FilterPage = () => {
     (state: RootState) => state.filter.selectedStyle
   );
 
-  /* 각각Redux로 dispatch 하는 함수들 */
+  /* 로컬 상태 관리 */
+  const [localSort, setLocalSort] = useState<string | null>(selectedSort);
+  const [localGender, setLocalGender] = useState<string[]>(selectedGender);
+  const [localHeightRange, setLocalHeightRange] = useState<number[]>([
+    selectedMinHeight,
+    selectedMaxHeight,
+  ]);
+  const [localAge, setLocalAge] = useState<string[]>(selectedAge);
+  const [localCategory, setLocalCategory] =
+    useState<string[]>(selectedCategory);
+  const [localStyle, setLocalStyle] = useState<string[]>(selectedStyle);
+
+  useEffect(() => {}, [
+    localSort,
+    localGender,
+    localHeightRange,
+    localAge,
+    localCategory,
+    localStyle,
+  ]);
+
+  /* 로컬 상태 업데이트 함수들 */
   const handleSortSelect = (sort: string | null) => {
-    dispatch(setSelectedSort(sort));
+    setLocalSort(sort);
   };
 
   const handleGenderSelect = (gender: string) => {
-    dispatch(setSelectedGender(gender));
+    setLocalGender((prev) =>
+      prev.includes(gender)
+        ? prev.filter((g) => g !== gender)
+        : [...prev, gender]
+    );
   };
 
   const handleHeightChange = (newHeightRange: number[]) => {
-    dispatch(setSelectedMinHeight(newHeightRange[0]));
-    dispatch(setSelectedMaxHeight(newHeightRange[1]));
+    setLocalHeightRange(newHeightRange);
   };
 
   const handleAgeSelect = (age: string) => {
-    const mappedAge = ageMapping[age]; // 표시용 값을 저장용 값으로 변환
+    const mappedAge = ageMapping[age];
     if (mappedAge) {
-      dispatch(setSelectedAge(mappedAge));
+      setLocalAge((prev) =>
+        prev.includes(mappedAge)
+          ? prev.filter((a) => a !== mappedAge)
+          : [...prev, mappedAge]
+      );
     }
   };
 
   const handleCategorySelect = (category: string) => {
-    dispatch(setSelectedCategory(category));
+    setLocalCategory((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
   };
 
   const handleStyleSelect = (style: string) => {
-    dispatch(setSelectedStyle(style));
+    setLocalStyle((prev) =>
+      prev.includes(style) ? prev.filter((s) => s !== style) : [...prev, style]
+    );
   };
 
+  const handleResetFilter = () => {
+    setLocalSort("");
+    setLocalGender([]);
+    setLocalHeightRange([130, 200]);
+    setLocalCategory([]);
+    setLocalStyle([]);
+  };
+
+  /* 선택 완료 버튼 클릭 시 dispatch */
   const handleComplete = () => {
+    dispatch(setSelectedSort(localSort));
+    dispatch(setSelectedGender(localGender));
+    dispatch(setSelectedMinHeight(localHeightRange[0]));
+    dispatch(setSelectedMaxHeight(localHeightRange[1]));
+    dispatch(setSelectedAge(localAge));
+    dispatch(setSelectedCategory(localCategory));
+    dispatch(setSelectedStyle(localStyle));
     router.push("/home");
   };
 
@@ -94,7 +144,7 @@ const FilterPage = () => {
           onClick={() => router.push("/home")}
           style={{ cursor: "pointer" }}
         />
-        <Topbar text="필터" icon={true} link="/closet" align="center" />
+        <Topbar text="필터" icon={true} link="/home" align="center" />
         <Content>
           <div>
             <OptionsList>
@@ -103,31 +153,29 @@ const FilterPage = () => {
                 <GenderCheckbox>
                   <Checkbox
                     text="최신순"
-                    checked={selectedSort === "createdAt"}
+                    checked={localSort === "createdAt"}
                     onChange={() =>
                       handleSortSelect(
-                        selectedSort === "createdAt" ? null : "createdAt"
+                        localSort === "createdAt" ? null : "createdAt"
                       )
                     }
                     labelFontSize={
-                      selectedSort === "createdAt" ? "c1_semiBold" : "c1_medium"
+                      localSort === "createdAt" ? "c1_semiBold" : "c1_medium"
                     }
-                    color={selectedSort === "createdAt" ? "purple" : "black"}
+                    color={localSort === "createdAt" ? "purple" : "black"}
                   />
                   <Checkbox
                     text="옷장 점수순"
-                    checked={selectedSort === "closetScore"}
+                    checked={localSort === "closetScore"}
                     onChange={() =>
                       handleSortSelect(
-                        selectedSort === "closetScore" ? null : "closetScore"
+                        localSort === "closetScore" ? null : "closetScore"
                       )
                     }
                     labelFontSize={
-                      selectedSort === "closetScore"
-                        ? "c1_semiBold"
-                        : "c1_medium"
+                      localSort === "closetScore" ? "c1_semiBold" : "c1_medium"
                     }
-                    color={selectedSort === "closetScore" ? "purple" : "black"}
+                    color={localSort === "closetScore" ? "purple" : "black"}
                   />
                 </GenderCheckbox>
               </div>
@@ -136,38 +184,34 @@ const FilterPage = () => {
                 <GenderCheckbox>
                   <Checkbox
                     text="여자"
-                    checked={selectedGender.includes("FEMALE")}
+                    checked={localGender.includes("FEMALE")}
                     onChange={() => handleGenderSelect("FEMALE")}
                     labelFontSize={
-                      selectedGender.includes("FEMALE")
+                      localGender.includes("FEMALE")
                         ? "c1_semiBold"
                         : "c1_medium"
                     }
-                    color={
-                      selectedGender.includes("FEMALE") ? "purple" : "black"
-                    }
+                    color={localGender.includes("FEMALE") ? "purple" : "black"}
                   />
                   <Checkbox
                     text="남자"
-                    checked={selectedGender.includes("MALE")}
+                    checked={localGender.includes("MALE")}
                     onChange={() => handleGenderSelect("MALE")}
                     labelFontSize={
-                      selectedGender.includes("MALE")
-                        ? "c1_semiBold"
-                        : "c1_medium"
+                      localGender.includes("MALE") ? "c1_semiBold" : "c1_medium"
                     }
-                    color={selectedGender.includes("MALE") ? "purple" : "black"}
+                    color={localGender.includes("MALE") ? "purple" : "black"}
                   />
                 </GenderCheckbox>
               </div>
               <div>
                 <Label>키</Label>
                 <HeightText>
-                  {selectedMinHeight}cm ~ {selectedMaxHeight}cm
+                  {localHeightRange[0]}cm ~ {localHeightRange[1]}cm
                 </HeightText>
                 <RangeSlider
-                  minHeight={selectedMinHeight}
-                  maxHeight={selectedMaxHeight}
+                  minHeight={localHeightRange[0]}
+                  maxHeight={localHeightRange[1]}
                   onChange={handleHeightChange}
                 />
               </div>
@@ -180,7 +224,7 @@ const FilterPage = () => {
                       label={data}
                       value={data}
                       onClick={handleAgeSelect}
-                      selected={selectedAge.includes(ageMapping[data])} // ageMapping에서 변환된 값 사용
+                      selected={localAge.includes(ageMapping[data])} // ageMapping에서 변환된 값 사용
                     />
                   ))}
                 </SameStyle>
@@ -197,7 +241,7 @@ const FilterPage = () => {
                           label={data}
                           value={data}
                           onClick={handleCategorySelect}
-                          selected={selectedCategory.includes(data)}
+                          selected={localCategory.includes(data)}
                         />
                       ))}
                     </SameCategory>
@@ -213,7 +257,7 @@ const FilterPage = () => {
                       label={data}
                       value={data}
                       onClick={handleStyleSelect}
-                      selected={selectedStyle.includes(data)}
+                      selected={localStyle.includes(data)}
                     />
                   ))}
                 </SameStyle>
@@ -222,6 +266,7 @@ const FilterPage = () => {
           </div>
         </Content>
         <SubmitButton>
+          <ResetButton onClick={handleResetFilter}>초기화</ResetButton>
           <Button
             buttonType="primary"
             size="large"
@@ -246,13 +291,6 @@ const Layout = styled.div`
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-`;
-
-const SubmitButton = styled.div`
-  width: 100%;
-  position: sticky;
-  bottom: 0px;
-  left: 50%;
 `;
 
 const Content = styled.div`
@@ -325,4 +363,30 @@ const SameStyle = styled.div`
   gap: 8px;
   justify-content: flex-start;
   align-items: center;
+`;
+
+const SubmitButton = styled.div`
+  width: 100%;
+  position: sticky;
+  bottom: 0px;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+`;
+
+const ResetButton = styled.button`
+  width: auto;
+  height: 37px;
+  padding: 6px 15px;
+  border-radius: 20px;
+  background: ${theme.colors.purple100};
+  color: ${theme.colors.purple300};
+  ${(props) => props.theme.fonts.b3_bold};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
 `;
