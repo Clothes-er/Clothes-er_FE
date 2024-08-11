@@ -117,6 +117,7 @@ const FilterPage = () => {
     setLocalSort("");
     setLocalGender([]);
     setLocalHeightRange([130, 200]);
+    setLocalAge([]);
     setLocalCategory([]);
     setLocalStyle([]);
   };
