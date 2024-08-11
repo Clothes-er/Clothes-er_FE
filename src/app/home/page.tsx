@@ -56,8 +56,10 @@ const Home = () => {
     if (search) params.append("search", search);
     if (sort) params.append("sort", sort);
     if (gender.length > 0) params.append("gender", gender.join(","));
-    if (minHeight) params.append("minHeight", String(minHeight));
-    if (maxHeight) params.append("maxHeight", String(maxHeight));
+    if (minHeight !== 130 || maxHeight !== 200) {
+      params.append("minHeight", String(minHeight));
+      params.append("maxHeight", String(maxHeight));
+    }
     if (age.length > 0)
       params.append("age", age.map((a) => a.replace(/\s+/g, "")).join(","));
     if (category.length > 0)
