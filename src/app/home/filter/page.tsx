@@ -3,12 +3,15 @@
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import FilterChip from "@/components/common/FilterChip";
+import RangeSlider from "@/components/common/RangeSlider";
 import Topbar from "@/components/common/Topbar";
 import { ageMapping, ages, categories, styles } from "@/data/filterData";
 import {
   setSelectedAge,
   setSelectedCategory,
   setSelectedGender,
+  setSelectedMaxHeight,
+  setSelectedMinHeight,
   setSelectedSort,
   setSelectedStyle,
 } from "@/redux/slices/filterSlice";
@@ -28,9 +31,14 @@ const FilterPage = () => {
   const selectedSort = useSelector(
     (state: RootState) => state.filter.selectedSort
   );
-
   const selectedGender = useSelector(
     (state: RootState) => state.filter.selectedGender
+  );
+  const selectedMinHeight = useSelector(
+    (state: RootState) => state.filter.selectedMinHeight
+  );
+  const selectedMaxHeight = useSelector(
+    (state: RootState) => state.filter.selectedMaxHeight
   );
   const selectedAge = useSelector(
     (state: RootState) => state.filter.selectedAge
@@ -49,6 +57,11 @@ const FilterPage = () => {
 
   const handleGenderSelect = (gender: string) => {
     dispatch(setSelectedGender(gender));
+  };
+
+  const handleHeightChange = (newHeightRange: number[]) => {
+    dispatch(setSelectedMinHeight(newHeightRange[0]));
+    dispatch(setSelectedMaxHeight(newHeightRange[1]));
   };
 
   const handleAgeSelect = (age: string) => {
@@ -148,6 +161,17 @@ const FilterPage = () => {
                 </GenderCheckbox>
               </div>
               <div>
+                <Label>키</Label>
+                <HeightText>
+                  {selectedMinHeight}cm ~ {selectedMaxHeight}cm
+                </HeightText>
+                <RangeSlider
+                  minHeight={selectedMinHeight}
+                  maxHeight={selectedMaxHeight}
+                  onChange={handleHeightChange}
+                />
+              </div>
+              <div>
                 <Label>연령대</Label>
                 <SameStyle>
                   {ages.map((data: string) => (
@@ -235,12 +259,13 @@ const Content = styled.div`
   width: 100%;
   height: 980px;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: ${theme.colors.white};
   border-radius: 8px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-bottom: 100px;
 
   @media screen and (max-width: 400px) {
     height: 1200px;
@@ -263,6 +288,11 @@ const Label = styled.div`
 const GenderCheckbox = styled.div`
   display: flex;
   gap: 50px;
+`;
+
+const HeightText = styled.div`
+  color: ${theme.colors.b500};
+  ${(props) => props.theme.fonts.b3_medium};
 `;
 
 const CategoryGrid = styled.div`

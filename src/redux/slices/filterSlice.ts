@@ -4,6 +4,8 @@ interface FilteryState {
   selectedSort: string | null;
   selectedGender: string[];
   selectedAge: string[];
+  selectedMinHeight: number;
+  selectedMaxHeight: number;
   selectedCategory: string[];
   selectedStyle: string[]; 
 }
@@ -12,6 +14,8 @@ const initialState: FilteryState = {
   selectedSort: null,
   selectedGender: [],
   selectedAge: [],
+  selectedMinHeight: 130,
+  selectedMaxHeight: 200,
   selectedCategory: [],
   selectedStyle: [],
 };
@@ -33,6 +37,15 @@ const filterSlice = createSlice({
         state.selectedGender.splice(index, 1);
       }
     },
+
+    setSelectedMinHeight(state, action: PayloadAction<number>) {
+      state.selectedMinHeight = action.payload;
+    },
+
+    setSelectedMaxHeight(state, action: PayloadAction<number>) {
+      state.selectedMaxHeight = action.payload;
+    },
+
     setSelectedAge(state, action: PayloadAction<string>) {
       const age = action.payload;
       if (!Array.isArray(state.selectedAge)) state.selectedAge = [];
@@ -73,5 +86,5 @@ const filterSlice = createSlice({
   }
 });
 
-export const { setSelectedSort, setSelectedGender, setSelectedAge, setSelectedCategory, setSelectedStyle, clearCategory } = filterSlice.actions;
+export const { setSelectedSort, setSelectedGender, setSelectedMinHeight, setSelectedMaxHeight, setSelectedAge, setSelectedCategory, setSelectedStyle, clearCategory } = filterSlice.actions;
 export default filterSlice.reducer;
