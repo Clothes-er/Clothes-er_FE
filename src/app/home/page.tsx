@@ -32,12 +32,17 @@ const Home = () => {
 
   /* 검색 및 필터링을 위한 상태 관리 */
   const [postList, setPostList] = useState<PostList[]>([]);
-  const [location, setLocation] = useState<string | undefined>(undefined);
+  const [location, setLocation] = useState<number | undefined>(undefined);
   const [search, setSearch] = useState<string>("");
 
   const sort = useSelector((state: RootState) => state.filter.selectedSort);
-
   const gender = useSelector((state: RootState) => state.filter.selectedGender);
+  const minHeight = useSelector(
+    (state: RootState) => state.filter.selectedMinHeight
+  );
+  const maxHeight = useSelector(
+    (state: RootState) => state.filter.selectedMaxHeight
+  );
   const age = useSelector((state: RootState) => state.filter.selectedAge);
   const category = useSelector(
     (state: RootState) => state.filter.selectedCategory
@@ -51,8 +56,10 @@ const Home = () => {
     if (search) params.append("search", search);
     if (sort) params.append("sort", sort);
     if (gender.length > 0) params.append("gender", gender.join(","));
-    // if (minHeight) params.append("minHeight", String(minHeight));
-    // if (maxHeight) params.append("maxHeight", String(maxHeight));
+    if (minHeight !== 130 || maxHeight !== 200) {
+      params.append("minHeight", String(minHeight));
+      params.append("maxHeight", String(maxHeight));
+    }
     if (age.length > 0)
       params.append("age", age.map((a) => a.replace(/\s+/g, "")).join(","));
     if (category.length > 0)
@@ -98,7 +105,7 @@ const Home = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [search, sort, gender, age, category, style]);
+  }, [search, sort, gender, minHeight, maxHeight, age, category, style]);
 
   return (
     <>

@@ -4,6 +4,8 @@ interface FilteryState {
   selectedSort: string | null;
   selectedGender: string[];
   selectedAge: string[];
+  selectedMinHeight: number;
+  selectedMaxHeight: number;
   selectedCategory: string[];
   selectedStyle: string[]; 
 }
@@ -12,6 +14,8 @@ const initialState: FilteryState = {
   selectedSort: null,
   selectedGender: [],
   selectedAge: [],
+  selectedMinHeight: 130,
+  selectedMaxHeight: 200,
   selectedCategory: [],
   selectedStyle: [],
 };
@@ -23,49 +27,36 @@ const filterSlice = createSlice({
     setSelectedSort(state, action: PayloadAction<string | null>) {
       state.selectedSort = action.payload;
     },
-    setSelectedGender(state, action: PayloadAction<string>) {
-      const gender = action.payload;
-      if (!Array.isArray(state.selectedGender)) state.selectedGender = [];
-      const index = state.selectedGender.indexOf(gender);
-      if (index === -1) {
-        state.selectedGender.push(gender);
-      } else {
-        state.selectedGender.splice(index, 1);
-      }
+    
+    setSelectedGender(state, action: PayloadAction<string[]>) {
+      state.selectedGender = action.payload;  // 이제 배열 자체를 업데이트
     },
-    setSelectedAge(state, action: PayloadAction<string>) {
-      const age = action.payload;
-      if (!Array.isArray(state.selectedAge)) state.selectedAge = [];
-      const index = state.selectedAge.indexOf(age);
-      if (index === -1) {
-        state.selectedAge.push(age);
-      } else {
-        state.selectedAge.splice(index, 1);
-      }
+
+    setSelectedMinHeight(state, action: PayloadAction<number>) {
+      state.selectedMinHeight = action.payload;
     },
-    setSelectedCategory(state, action: PayloadAction<string>) {
-      const category = action.payload;
-      if (!Array.isArray(state.selectedCategory)) state.selectedCategory = [];
-      const index = state.selectedCategory.indexOf(category);
-      if (index === -1) {
-        state.selectedCategory.push(category);
-      } else {
-        state.selectedCategory.splice(index, 1);
-      }
+
+    setSelectedMaxHeight(state, action: PayloadAction<number>) {
+      state.selectedMaxHeight = action.payload;
     },
-    setSelectedStyle(state, action: PayloadAction<string>) {
-      const style = action.payload;
-      if (!Array.isArray(state.selectedStyle)) state.selectedStyle = [];
-      const index = state.selectedStyle.indexOf(style);
-      if (index === -1) {
-        state.selectedStyle.push(style);
-      } else {
-        state.selectedStyle.splice(index, 1);
-      }
+
+    setSelectedAge(state, action: PayloadAction<string[]>) {
+      state.selectedAge = action.payload;  // 이제 배열 자체를 업데이트
     },
+
+    setSelectedCategory(state, action: PayloadAction<string[]>) {
+      state.selectedCategory = action.payload;  // 이제 배열 자체를 업데이트
+    },
+
+    setSelectedStyle(state, action: PayloadAction<string[]>) {
+      state.selectedStyle = action.payload;  // 이제 배열 자체를 업데이트
+    },
+
     clearCategory: (state) => {
       state.selectedSort = '';
       state.selectedGender = [];
+      state.selectedMinHeight= 130,
+      state.selectedMaxHeight= 200,
       state.selectedAge = [];
       state.selectedCategory = [];
       state.selectedStyle = [];
@@ -73,5 +64,5 @@ const filterSlice = createSlice({
   }
 });
 
-export const { setSelectedSort, setSelectedGender, setSelectedAge, setSelectedCategory, setSelectedStyle, clearCategory } = filterSlice.actions;
+export const { setSelectedSort, setSelectedGender, setSelectedMinHeight, setSelectedMaxHeight, setSelectedAge, setSelectedCategory, setSelectedStyle, clearCategory } = filterSlice.actions;
 export default filterSlice.reducer;
