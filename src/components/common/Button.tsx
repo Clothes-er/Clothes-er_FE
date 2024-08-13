@@ -14,6 +14,7 @@ export interface ButtonProps extends ButtonTypes {
   text: ReactNode;
   buttonType?: buttonType;
   size?: "large" | "medium" | "small";
+  width?: string;
   children?: React.ReactNode;
   onClick?: (e: React.MouseEvent) => void;
   style?: React.CSSProperties & { fontSize?: string };
@@ -26,6 +27,7 @@ const Button = (props: ButtonProps) => {
     text,
     buttonType = "primary",
     size,
+    width,
     onClick,
     style,
     disabled,
@@ -54,6 +56,7 @@ const Button = (props: ButtonProps) => {
       onClick={onClick}
       disabled={disabled}
       $isBlink={blink}
+      $width={width}
     >
       {text}
     </StyledButton>
@@ -62,9 +65,12 @@ const Button = (props: ButtonProps) => {
 
 export default Button;
 
-const StyledButton = styled.button<{ $isBlink: boolean }>`
+const StyledButton = styled.button<{
+  $isBlink: boolean;
+  $width: string | undefined;
+}>`
   display: flex;
-  width: 100%;
+  width: ${({ $width }) => ($width ? $width : "100%")};
   padding: 16px 28px;
   position: relative;
   justify-content: center;
