@@ -41,14 +41,15 @@ export default Postcode;
 const Div = styled.div`
   width: 100%;
   height: 50px;
-  position: relative;
   display: flex;
   flex-direction: column;
-  /* gap: 20px; */
+  gap: 20px;
 `;
 
 const StyledDaumPostcode = styled(DaumPostcode)`
-  position: absolute;
-  top: 80px;
   width: 100%;
+  position: absolute;
+  top: 70px;
+  left: 0;
+  z-index: 1;
 `;

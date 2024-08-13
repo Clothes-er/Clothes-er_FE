@@ -16,6 +16,13 @@ import { getCoordsAddress } from "@/hooks/getCoordsAddress";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import {
+  SkeletonPost,
+  SkeletonText,
+  SkeletonCircle,
+  SkeletonBox,
+  SkeletonDiv,
+} from "@/components/common/Skeleton";
 
 interface PostList {
   id: number;
@@ -34,6 +41,7 @@ const Home = () => {
   const [postList, setPostList] = useState<PostList[]>([]);
   const [location, setLocation] = useState<number | undefined>(undefined);
   const [search, setSearch] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   const sort = useSelector((state: RootState) => state.filter.selectedSort);
   const gender = useSelector((state: RootState) => state.filter.selectedGender);
@@ -76,6 +84,7 @@ const Home = () => {
   /* 위치 정보 받아오기 */
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // 로딩 시작
       try {
         const response = await AuthAxios.get(`/api/v1/users/address`);
         const latitude = response.data.result.latitude;
@@ -86,26 +95,48 @@ const Home = () => {
         setLocation(newLocation);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false); // 로딩 종료
       }
     };
 
     fetchData();
   }, []);
 
+  useEffect(() => {}, [location, postList]);
+
   /* 대여글 목록 조회(검색, 필터링) */
   useEffect(() => {
-    const queryString = buildQueryString(); // Query String 생성
-    AuthAxios.get(`/api/v1/rentals?${queryString}`)
-      .then((response) => {
+    const fetchPostList = async () => {
+      setLoading(true); // 로딩 시작
+      try {
+        const queryString = buildQueryString(); // Query String 생성
+        const response = await AuthAxios.get(`/api/v1/rentals?${queryString}`);
         const data = response.data.result;
         console.log("쿼리 응답 성공");
         setPostList(data);
         console.log(response.data.message);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log(error);
-      });
-  }, [search, sort, gender, minHeight, maxHeight, age, category, style]);
+      } finally {
+        setLoading(false); // 로딩 종료
+      }
+    };
+
+    if (location) {
+      fetchPostList();
+    }
+  }, [
+    location,
+    search,
+    sort,
+    gender,
+    minHeight,
+    maxHeight,
+    age,
+    category,
+    style,
+  ]);
 
   return (
     <>
@@ -120,7 +151,7 @@ const Home = () => {
               height={24}
               alt="pin"
             />
-            {location}
+            {loading ? "Loading..." : location || "위치를 설정해 주세요"}
           </Location>
           <Content>
             <SearchBox
@@ -129,22 +160,50 @@ const Home = () => {
               placeholder="원하는 상품명을 검색하세요!"
             ></SearchBox>
             <Filter onClick={() => router.push("/home/filter")} />
-            <Posts>
-              {postList?.map((data, index) => (
-                <PostContainer key={data.id}>
-                  <Post
-                    key={data.id}
-                    id={data.id}
-                    imgUrl={data.imgUrl}
-                    title={data.title}
-                    minPrice={data.minPrice}
-                    createdAt={data.createdAt}
-                    nickname={data.nickname}
-                  />
-                  {index < postList.length - 1 && <Divider />}
-                </PostContainer>
-              ))}
-            </Posts>
+            {loading ? (
+              // 로딩 중일 때 스켈레톤 UI 표시
+              <>
+                <SkeletonPost>
+                  <SkeletonCircle />
+                  <SkeletonDiv>
+                    <SkeletonText width="60%" />
+                    <SkeletonText width="40%" />
+                  </SkeletonDiv>
+                </SkeletonPost>
+                <SkeletonPost>
+                  <SkeletonCircle />
+                  <SkeletonDiv>
+                    <SkeletonText width="60%" />
+                    <SkeletonText width="40%" />
+                  </SkeletonDiv>
+                </SkeletonPost>
+                <SkeletonPost>
+                  <SkeletonCircle />
+                  <SkeletonDiv>
+                    <SkeletonText width="60%" />
+                    <SkeletonText width="40%" />
+                  </SkeletonDiv>
+                </SkeletonPost>
+              </>
+            ) : (
+              // 로딩 완료 후 실제 데이터 표시
+              <Posts>
+                {postList?.map((data, index) => (
+                  <PostContainer key={data.id}>
+                    <Post
+                      key={data.id}
+                      id={data.id}
+                      imgUrl={data.imgUrl}
+                      title={data.title}
+                      minPrice={data.minPrice}
+                      createdAt={data.createdAt}
+                      nickname={data.nickname}
+                    />
+                    {index < postList.length - 1 && <Divider />}
+                  </PostContainer>
+                ))}
+              </Posts>
+            )}
           </Content>
         </Layout>
         <Edit onClick={() => router.push("/home/write/choice")}>

@@ -18,6 +18,7 @@ const Location = () => {
   const [latitude, setLatitude] = useState<number>();
   const [longitude, setLongitude] = useState<number>();
   const [location, setLocation] = useState("");
+  const [finalLocation, setFinalLocation] = useState("");
 
   /* 위치 설정 변경 */
   const handleChangeAddress = async () => {
@@ -25,6 +26,7 @@ const Location = () => {
       console.log("location", location);
       const coords = await getAddressCoords(location);
       console.log("주소 변환에 성공하였습니다.", coords);
+      setFinalLocation(location);
 
       setLatitude(coords.y);
       setLongitude(coords.x);
@@ -44,7 +46,7 @@ const Location = () => {
 
   useEffect(() => {
     console.log("위도 경도 set");
-  }, [longitude, latitude]);
+  }, [longitude, latitude, location]);
 
   /* 위치 정보 받아오기 */
   useEffect(() => {
@@ -58,6 +60,7 @@ const Location = () => {
         console.log(response.data.message);
         const newLocation = await getCoordsAddress(longitude, latitude);
         setLocation(newLocation);
+        setFinalLocation(newLocation);
       } catch (error) {
         console.log(error);
       }
@@ -88,7 +91,7 @@ const Location = () => {
             height={24}
             alt="pin"
           />
-          {location}
+          {finalLocation}
         </Map>
         <InputBox>
           <InfoIcon
@@ -107,6 +110,7 @@ const Location = () => {
             buttonType="primaryLight"
             text="변경"
             size="small"
+            width="80px"
             onClick={handleChangeAddress}
           />
         </InputBox>
@@ -155,6 +159,7 @@ const InputBox = styled.div`
   align-items: center;
   justify-content: center;
   gap: 10px;
+  position: relative;
 `;
 
 const InfoIcon = styled(Image)`
