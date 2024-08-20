@@ -9,20 +9,60 @@ import Tabbar from "@/components/common/Tabbar";
 import { useRouter } from "next/navigation";
 import { useRequireAuth } from "@/hooks/useAuth";
 import SquarePost from "@/components/common/SquarePost";
-
-interface PostList {
-  id: number;
-  imgUrl: string;
-  nickname: string;
-  title: string;
-  minPrice: number;
-  createdAt: string;
-}
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import AuthAxios from "@/api/authAxios";
+import { ClosetPostList } from "@/type/post";
 
 const ClosetPage = () => {
   useRequireAuth();
   const router = useRouter();
-  // const [postList, setPostList] = useState<PostList[]>();
+  const [postList, setPostList] = useState<ClosetPostList[]>();
+  const [search, setSearch] = useState<string>("");
+
+  const sort = useSelector((state: RootState) => state.filter.selectedSort);
+  const gender = useSelector((state: RootState) => state.filter.selectedGender);
+  const age = useSelector((state: RootState) => state.filter.selectedAge);
+  const category = useSelector(
+    (state: RootState) => state.filter.selectedCategory
+  );
+  const style = useSelector((state: RootState) => state.filter.selectedStyle);
+
+  /* Query String 생성 함수 */
+  const buildQueryString = () => {
+    const params = new URLSearchParams();
+
+    if (search) params.append("search", search);
+    if (sort) params.append("sort", sort);
+    if (gender.length > 0) params.append("gender", gender.join(","));
+    if (age.length > 0)
+      params.append("age", age.map((a) => a.replace(/\s+/g, "")).join(","));
+    if (category.length > 0)
+      params.append(
+        "category",
+        category.map((c) => c.replace(/\s+/g, "")).join(",")
+      );
+    if (style.length > 0)
+      params.append("style", style.map((s) => s.replace(/\s+/g, "")).join(","));
+
+    return params.toString();
+  };
+
+  /* 보유글 목록 조회(검색, 필터링) */
+  useEffect(() => {
+    const queryString = buildQueryString(); // Query String 생성
+    AuthAxios.get(`/api/v1/clothes?${queryString}`)
+      .then((response) => {
+        const data = response.data.result;
+        console.log("보유글 목록 조회 성공");
+        setPostList(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [search, sort, gender, age, category, style]);
 
   return (
     <>
@@ -33,31 +73,18 @@ const ClosetPage = () => {
 
           <Content>
             <Filter onClick={() => router.push("/closet/filter")} />
-            {/* <Posts>
-              {postList?.map((data, index) => (
-                <PostContainer key={data.id}>
-                  <Post
-                    key={data.id}
-                    id={data.id}
-                    imgUrl={data.imgUrl}
-                    title={data.title}
-                    minPrice={data.minPrice}
-                    createdAt={data.createdAt}
-                    nickname={data.nickname}
-                  />
-                  {index < postList.length - 1 && <Divider />}
-                </PostContainer>
-              ))}
-            </Posts> */}
             <GridContainer>
-              <SquarePost />
-              <SquarePost />
-              <SquarePost />
-              <SquarePost />
-              <SquarePost />
-              <SquarePost />
-              <SquarePost />
-              <SquarePost />
+              {postList?.map((data) => (
+                <SquarePost
+                  key={data.id}
+                  id={data.id}
+                  userSid={data.userSid}
+                  nickname={data.nickname}
+                  imgUrl={data.imgUrl}
+                  name={data.name}
+                  createdAt={data.createdAt}
+                />
+              ))}
             </GridContainer>
           </Content>
         </Layout>
@@ -91,20 +118,6 @@ const Content = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
-// const Posts = styled.div`
-//   width: 100%;
-// `;
-
-// const PostContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-// `;
-
-// const Divider = styled.div`
-//   height: 0.5px;
-//   background-color: rgba(219, 219, 219, 0.7);
-// `;
 
 const GridContainer = styled.div`
   width: 100%;

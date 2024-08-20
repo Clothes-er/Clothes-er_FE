@@ -5,6 +5,7 @@ import typescript from "next-plugin-graphql";
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    domains: ["clotheser-s3-bucket.s3.ap-northeast-2.amazonaws.com"],
     remotePatterns: [
       {
         protocol: "https",
@@ -25,6 +26,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "clotheser-s3-bucket.s3.ap-northeast-2.amazonaws.com",
         pathname: "/chat/**",
+      },
+      {
+        protocol: "https",
+        hostname: "clotheser-s3-bucket.s3.ap-northeast-2.amazonaws.com",
+        pathname: "/closet/**",
       },
     ],
   },
