@@ -17,10 +17,6 @@ import { clearCategory } from "@/redux/slices/categorySlice";
 import { useRequireAuth } from "@/hooks/useAuth";
 import Toggle from "@/components/common/Toggle";
 
-interface Price {
-  days: number | null;
-  price: number | null;
-}
 const MyClosetWrite = () => {
   useRequireAuth();
   const router = useRouter();
@@ -40,27 +36,27 @@ const MyClosetWrite = () => {
 
   const [images, setImages] = useState<File[]>([]);
   const [inputs, setInputs] = useState<{
-    title: string;
+    name: string;
     description: string;
     gender: string;
     category: string;
     style: string;
     price: string;
-    public: boolean;
+    isPublic: boolean;
     brand: string;
     size: string;
-    link: string;
+    shoppingUrl: string;
   }>({
-    title: "",
+    name: "",
     description: "",
     gender: selectedGender || "",
     category: selectedCategory || "",
     style: selectedStyle || "",
-    public: true,
+    isPublic: true,
     price: "",
     brand: "",
     size: "",
-    link: "",
+    shoppingUrl: "",
   });
 
   useEffect(() => {
@@ -87,19 +83,21 @@ const MyClosetWrite = () => {
     const formData = new FormData();
 
     formData.append(
-      "post",
+      "clothes",
       new Blob(
         [
           JSON.stringify({
-            title: inputs.title,
+            name: inputs.name,
             description: inputs.description,
             gender: selectedGender,
             category: selectedCategory,
             style: selectedStyle,
+            isPublic: inputs.isPublic,
+            price: inputs.price,
             brand: inputs.brand,
             size: inputs.size,
-            link: inputs.link,
-            clothesId: clothesId || null,
+            shoppingUrl: inputs.shoppingUrl,
+            rentalId: null,
           }),
         ],
         { type: "application/json" }
@@ -117,7 +115,7 @@ const MyClosetWrite = () => {
       console.log(`${key}: ${value}`);
     });
     axios
-      .post(`/api/v1/rentals`, formData, {
+      .post(`/api/v1/clothes`, formData, {
         baseURL: process.env.NEXT_PUBLIC_BASE_URL,
         headers: {
           Authorization: `Bearer ${getToken()}`,
@@ -126,7 +124,7 @@ const MyClosetWrite = () => {
       .then((response) => {
         console.log(response.data.result);
         dispatch(clearCategory());
-        router.push(`/home`);
+        router.push(`/mycloset`);
       })
       .catch((error) => {
         console.log(error.response.data.message);
@@ -198,15 +196,15 @@ const MyClosetWrite = () => {
           </ColumnMargin>
           <Column>
             <Label>
-              제목<Span>*</Span>
+              상품명<Span>*</Span>
             </Label>
             <Input
               inputType="write"
               size="small"
-              value={inputs.title}
+              value={inputs.name}
               placeholder="제목"
               onChange={(value: string) => {
-                setInputs({ ...inputs, title: value });
+                setInputs({ ...inputs, name: value });
               }}
             />
           </Column>
@@ -217,7 +215,7 @@ const MyClosetWrite = () => {
                 inputType="write"
                 size="small"
                 value={inputs.price}
-                placeholder="없음"
+                placeholder="3,000 원"
                 onChange={(value: string) => {
                   setInputs({ ...inputs, price: value });
                 }}
@@ -228,9 +226,9 @@ const MyClosetWrite = () => {
                 공개 여부<Span>*</Span>
               </Label>
               <Toggle
-                isOn={inputs.public}
+                isOn={inputs.isPublic}
                 onToggle={() =>
-                  setInputs({ ...inputs, public: !inputs.public })
+                  setInputs({ ...inputs, isPublic: !inputs.isPublic })
                 }
               />
             </Column>
@@ -262,20 +260,20 @@ const MyClosetWrite = () => {
             </Column>
           </Row>
           <Column>
-            <Label>상세 링크</Label>
+            <Label>구매 링크</Label>
             <Input
               inputType="write"
               size="small"
-              value={inputs.link}
+              value={inputs.shoppingUrl}
               placeholder="url 입력"
               onChange={(value: string) => {
-                setInputs({ ...inputs, link: value });
+                setInputs({ ...inputs, shoppingUrl: value });
               }}
             />
           </Column>
           <Column>
             <Label>
-              상세 설명<Span>*</Span>
+              옷 후기<Span>*</Span>
             </Label>
             <TextAreaInput
               value={inputs.description}
