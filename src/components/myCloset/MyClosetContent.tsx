@@ -36,6 +36,7 @@ const MyClosetContent: React.FC<MyClosetContentProps> = ({ userSid }) => {
           id={data.id}
           userSid={data.userSid}
           nickname={data.nickname}
+          name={data.name}
           imgUrl={data.imgUrl}
           brand={data.brand}
           createdAt={data.createdAt}

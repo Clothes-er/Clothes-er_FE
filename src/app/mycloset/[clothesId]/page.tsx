@@ -44,7 +44,7 @@ interface PostInfo {
 const Page = () => {
   useRequireAuth();
   const router = useRouter();
-  const { id } = useParams();
+  const { clothesId } = useParams();
   const [menu, setMenu] = useState(false);
   const [postInfo, setPostInfo] = useState<PostInfo>();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
@@ -58,7 +58,7 @@ const Page = () => {
   };
 
   useEffect(() => {
-    AuthAxios.get(`/api/v1/clothes/${id}`)
+    AuthAxios.get(`/api/v1/clothes/${clothesId}`)
       .then((response) => {
         const data = response.data.result;
         setPostInfo(data);
@@ -71,8 +71,7 @@ const Page = () => {
   }, []);
 
   const handleModifyClick = () => {
-    router.push(`/closet/${id}/modify`);
-    /* closet > modify 페이지 현재 X */
+    router.push(`/mycloset/${clothesId}/modify`);
   };
 
   const handleDeleteClick = () => {
@@ -80,11 +79,11 @@ const Page = () => {
   };
 
   const handleSubmitDelete = () => {
-    AuthAxios.delete(`/api/v1/clothes/${id}`)
+    AuthAxios.delete(`/api/v1/clothes/${clothesId}`)
       .then((response) => {
         const data = response.data.result;
         setDeleteModal(true);
-        router.push("/closet");
+        router.push("/mycloset");
         console.log(data);
         console.log(response.data.message);
       })
@@ -107,7 +106,7 @@ const Page = () => {
               onClick={handleBackButtonClick}
               style={{ cursor: "pointer" }}
             />
-            옷장 구경
+            나의 옷장
             {postInfo?.isWriter ? (
               <Menu>
                 <Image
@@ -215,13 +214,6 @@ const Page = () => {
           <Box>{postInfo?.description}</Box>
         </Body>
       </Layout>
-      {postInfo && (
-        <Bottom
-          id={postInfo.id}
-          bottomType="closet"
-          isWriter={postInfo.isWriter}
-        />
-      )}
       {/* 삭제하기 모달 */}
       {deleteModal && (
         <Modal

@@ -11,7 +11,7 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
   const [heart, setHeart] = useState<boolean>(false);
 
   const handleMorePost = (id: number) => {
-    router.push(`/closet/${id}`);
+    router.push(nickname ? `/closet/${id}` : `mycloset/${id}`);
   };
 
   const handleMoreProfile = (userSid: string) => {
@@ -40,9 +40,8 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
       <Sub>
         {nickname ? (
           <>
-            {createdAt} |{" "}
             <Span onClick={() => handleMoreProfile(userSid)}>{nickname}</Span>{" "}
-            님
+            님 | {createdAt}
           </>
         ) : (
           <>
