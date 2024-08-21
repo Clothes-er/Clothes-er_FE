@@ -19,6 +19,7 @@ interface ChatList {
   rentalImgUrl: string;
   rentalState: string;
   title: string;
+  isDeleted: boolean;
 }
 const Chat = () => {
   useRequireAuth();
@@ -26,7 +27,7 @@ const Chat = () => {
   const [chatList, setChatList] = useState<ChatList[]>();
 
   useEffect(() => {
-    AuthAxios.get("/api/v1/chats/rooms")
+    AuthAxios.get("/api/v1/chats/rental-rooms")
       .then((response) => {
         const data = response.data.result;
         setChatList(data);
@@ -73,6 +74,7 @@ const Chat = () => {
               rentalImgUrl={data.rentalImgUrl}
               rentalState={data.rentalState}
               recentMessageTime={data.recentMessageTime}
+              isDeleted={data.isDeleted}
             />
           ))}
         </ChatList>

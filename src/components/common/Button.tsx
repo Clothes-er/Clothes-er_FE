@@ -75,11 +75,9 @@ const StyledButton = styled.button<{
   position: relative;
   justify-content: center;
   align-items: center;
-  border: none;
   border-radius: 8px;
   ${(props) => props.theme.fonts.b2_regular};
   white-space: nowrap;
-  cursor: pointer;
   gap: 10px;
   transition: color 200ms, background-color 200ms;
 

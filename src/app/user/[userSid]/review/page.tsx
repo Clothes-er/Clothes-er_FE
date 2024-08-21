@@ -56,6 +56,8 @@ const UserReview = () => {
         <Content>
           {review && (
             <ReviewPage
+              nickname={review.nickname}
+              profileUrl={review.profileUrl}
               keywordReviews={review.keywordReviews}
               textReviews={review.textReviews}
             />

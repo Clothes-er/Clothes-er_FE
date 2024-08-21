@@ -1,4 +1,4 @@
-import { PostList } from "@/data/homeData";
+import { PostList } from "@/type/post";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -54,7 +54,13 @@ const Post: React.FC<PostList> = ({
       <Box>
         <Title>{title}</Title>
         <Row>
-          <Price>{isDeleted ? "삭제된 게시물입니다" : `${minPrice}원~`}</Price>
+          <Price>
+            {isDeleted
+              ? "삭제된 게시물입니다"
+              : nickname
+              ? `${minPrice}원~`
+              : `구매가 ${minPrice}원`}
+          </Price>
           {showReviewed && (
             <ReviewButton
               onClick={handleReviewButtonClick}
@@ -72,12 +78,12 @@ const Post: React.FC<PostList> = ({
           )}
         </Row>
         <Sub>
-          {postType === "share" ? createdAt : `${startDate}~${endDate}`}{" "}
           {nickname && (
             <>
-              | <Span>{nickname}</Span> 님
+              <Span>{nickname}</Span> 님 | {` `}
             </>
           )}
+          {postType === "share" ? createdAt : `${startDate}~${endDate}`}{" "}
         </Sub>
       </Box>
     </Container>

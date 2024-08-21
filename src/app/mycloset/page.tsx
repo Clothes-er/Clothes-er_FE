@@ -12,6 +12,7 @@ import { getLevelText } from "@/data/levelData";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { getGenderLabel } from "@/interface/Gender";
 import { theme } from "@/styles/theme";
+import { getLevelMessage } from "@/util/custom";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -178,10 +179,10 @@ const MyCloset = () => {
               <ScoreBox>
                 <InfoTop>
                   <Title>옷장점수</Title>
-                  <Comment>당신은 멀끔한 옷장을 가졌군요!</Comment>
-                  <Score>10점</Score>
+                  <Comment>{getLevelMessage(profileInfo?.level || 0)}</Comment>
+                  <Score>{profileInfo?.level}점</Score>
                 </InfoTop>
-                <ScoreBar recentScore={10} />
+                <ScoreBar recentScore={profileInfo?.level || 0} />
                 <MoreReview onClick={() => router.push("/mycloset/review")}>
                   거래 후기 확인하기
                 </MoreReview>
@@ -280,7 +281,7 @@ const MyCloset = () => {
         </SliderContainer>
         <Parent>
           <ListTab listType="me" />
-          <WriteButton onClick={() => router.push("/mycloset/write")}>
+          <WriteButton onClick={() => router.push("/mycloset/write/choice")}>
             옷장 채우기
           </WriteButton>
         </Parent>
@@ -457,13 +458,11 @@ const Gender = styled.span`
 const ProfileButton = styled.button`
   width: 74px;
   height: 30px;
-  border: none;
   border-radius: 5px;
   background: ${theme.colors.purple50};
   color: ${theme.colors.b200};
   ${(props) => props.theme.fonts.c2_medium};
   white-space: nowrap;
-  cursor: pointer;
 `;
 
 const Level = styled.div`
@@ -542,8 +541,6 @@ const MoreReview = styled.button`
   ${(props) => props.theme.fonts.b3_medium};
   text-decoration-line: underline;
   margin-top: auto;
-  border: none;
-  background: none;
 `;
 
 const StyleBox = styled(ScoreBox)`
@@ -562,8 +559,6 @@ const Edit = styled.button`
   position: absolute;
   top: 12px;
   right: 12px;
-  background: none;
-  border: none;
 `;
 
 const StyleBoxDiv = styled.div`
@@ -673,8 +668,6 @@ const WriteButton = styled.button`
   background: ${theme.colors.purple50};
   color: ${theme.colors.purple500};
   ${(props) => props.theme.fonts.c2_medium};
-  border: none;
-  cursor: pointer;
   position: absolute;
   top: 35px;
   right: 0;

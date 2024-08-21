@@ -8,23 +8,16 @@ import styled from "styled-components";
 import Post from "@/components/home/Post";
 import AuthAxios from "@/api/authAxios";
 import { theme } from "@/styles/theme";
-
-interface ClosetList {
-  id: number;
-  imgUrl: string;
-  name: string;
-  brand: string;
-  createdAt: string;
-}
+import { PostList } from "@/type/post";
 
 const WriteChoice = () => {
   const router = useRouter();
-  const [postList, setPostList] = useState<ClosetList[]>();
-  const [clothesId, setClothesId] = useState<number | null>(null);
+  const [postList, setPostList] = useState<PostList[]>();
+  const [rentalId, setRentalId] = useState<number | null>(null);
 
-  /* 대여글이 없는 나의 보유 옷 목록 조회 */
+  /* 보유 옷이 없는 나의 대여글 목록 조회 */
   useEffect(() => {
-    AuthAxios.get("/api/v1/rentals/my-clothes")
+    AuthAxios.get("/api/v1/clothes/my-rentals")
       .then((response) => {
         const data = response.data.result;
         setPostList(data);
@@ -37,15 +30,15 @@ const WriteChoice = () => {
   }, []);
 
   const handleClickChoice = (id: number) => {
-    if (clothesId === id) {
-      setClothesId(null);
+    if (rentalId === id) {
+      setRentalId(null);
     } else {
-      setClothesId(id);
+      setRentalId(id);
     }
   };
 
   const handleChoicePost = () => {
-    router.push(`/home/write/post?clothesId=${clothesId}`);
+    router.push(`/mycloset/write?rentalId=${rentalId}`);
   };
 
   return (
@@ -68,23 +61,22 @@ const WriteChoice = () => {
             onClick={() => router.back()}
             style={{ cursor: "pointer" }}
           />
-          대여 글 작성
+          보유 글 작성
         </Top>
-        <Sub>보유 목록 중 대여 글 작성할 옷을 선택해주세요.</Sub>
+        <Sub>대여 목록 중 보유 글 작성할 옷을 선택해주세요.</Sub>
         <Content>
           <Posts>
             {postList?.map((data, index) => (
               <PostContainer key={data.id}>
-                {/* price 값 서버 response 요청하기 */}
                 <Post
                   key={data.id}
                   id={data.id}
                   imgUrl={data.imgUrl}
-                  title={data.name || ""}
-                  minPrice={3000}
+                  title={data.title}
+                  minPrice={data.minPrice}
                   createdAt={data.createdAt}
                   onClickChoice={handleClickChoice}
-                  isSelected={clothesId === data.id}
+                  isSelected={rentalId === data.id}
                 />
                 {index < postList.length - 1 && <Divider />}
               </PostContainer>
@@ -96,7 +88,7 @@ const WriteChoice = () => {
         <Button
           buttonType="primary"
           size="large"
-          text={clothesId ? "선택 완료" : "미선택"}
+          text={rentalId ? "선택 완료" : "미선택"}
           onClick={handleChoicePost}
         />
       </SubmitButton>

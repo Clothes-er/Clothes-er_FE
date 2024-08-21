@@ -111,7 +111,7 @@ const ChatDetail = () => {
   }, [chatMsgList, checkGet.isChecked, rentalState]);
 
   const fetchChatMessages = () => {
-    AuthAxios.get(`/api/v1/chats/rooms/${id}`)
+    AuthAxios.get(`/api/v1/chats/rental-rooms/${id}`)
       .then((response) => {
         const data = response.data.result;
         setChatMsg(data);

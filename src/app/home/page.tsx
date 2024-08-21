@@ -7,7 +7,6 @@ import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import Filter from "@/components/common/Filter";
 import Post from "@/components/home/Post";
-import { postList } from "@/data/homeData";
 import Tabbar from "@/components/common/Tabbar";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

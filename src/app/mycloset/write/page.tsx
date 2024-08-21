@@ -13,16 +13,23 @@ import axios from "axios";
 import { getToken } from "@/hooks/getToken";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { clearCategory } from "@/redux/slices/categorySlice";
+import {
+  clearCategory,
+  setSelectedCategory,
+  setSelectedGender,
+  setSelectedStyle,
+} from "@/redux/slices/categorySlice";
 import { useRequireAuth } from "@/hooks/useAuth";
 import Toggle from "@/components/common/Toggle";
+import AuthAxios from "@/api/authAxios";
+import { convertURLtoFile } from "@/lib/convertURLtoFile";
 
 const MyClosetWrite = () => {
   useRequireAuth();
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
-  const clothesId = searchParams.get("clothesId");
+  const rentalId = searchParams.get("rentalId");
 
   const selectedGender = useSelector(
     (state: RootState) => state.category.selectedGender
@@ -58,6 +65,39 @@ const MyClosetWrite = () => {
     size: "",
     shoppingUrl: "",
   });
+
+  /* 대여글 조회 */
+  useEffect(() => {
+    if (rentalId) {
+      AuthAxios.get(`/api/v1/rentals/${rentalId}`)
+        .then(async (response) => {
+          const data = response.data.result;
+          setInputs({
+            ...inputs,
+            name: data.title,
+            gender: data.gender,
+            category: data.category,
+            style: data.style,
+            brand: data.brand,
+            size: data.size,
+          });
+
+          const filePromises = data.imgUrls.map((image: string) =>
+            convertURLtoFile(image)
+          );
+          const files = await Promise.all(filePromises);
+          setImages(files);
+
+          dispatch(setSelectedGender(data.gender));
+          dispatch(setSelectedCategory(data.category));
+          dispatch(setSelectedStyle(data.style));
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, []);
 
   useEffect(() => {
     console.log(inputs);

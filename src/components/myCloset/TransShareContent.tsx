@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Post from "../home/Post";
-import { PostList } from "@/data/homeData";
+import { PostList } from "@/type/post";
 import { useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
 
