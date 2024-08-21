@@ -13,7 +13,9 @@ const MyClosetContent: React.FC<MyClosetContentProps> = ({ userSid }) => {
 
   /* 보유 > 옷장 등록 목록 조회 */
   useEffect(() => {
-    const url = "/api/v1/closet/clothes";
+    const url = userSid
+      ? `/api/v1/closet/${userSid}/clothes`
+      : `/api/v1/closet/clothes`;
     AuthAxios.get(url)
       .then((response) => {
         const data = response.data.result;
