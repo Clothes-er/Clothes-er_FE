@@ -16,6 +16,8 @@ import { getCoordsAddress } from "@/hooks/getCoordsAddress";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { categoryMsg } from "@/data/category";
+import CategoryCard from "@/components/common/CategoryCard";
 import {
   SkeletonPost,
   SkeletonText,
@@ -160,6 +162,17 @@ const Home = () => {
               placeholder="원하는 상품명을 검색하세요!"
             ></SearchBox>
             <Filter onClick={() => router.push("/home/filter")} />
+            <CategorySlider>
+              {categoryMsg.map((item) => (
+                <CategoryCard
+                  key={item.id}
+                  keyword={item.keyword}
+                  description={item.description}
+                  image={item.image}
+                  color={item.color}
+                />
+              ))}
+            </CategorySlider>
             {loading ? (
               // 로딩 중일 때 스켈레톤 UI 표시
               <>
@@ -273,6 +286,23 @@ const SearchBox = styled.input`
     color: ${theme.colors.gray500};
     ${(props) => props.theme.fonts.b2_regular};
   }
+`;
+
+const CategorySlider = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow-x: scroll;
+  gap: 10px;
+  flex-wrap: nowrap;
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
 const Posts = styled.div`

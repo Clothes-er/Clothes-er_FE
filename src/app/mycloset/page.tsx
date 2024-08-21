@@ -278,7 +278,12 @@ const MyCloset = () => {
             </Indicator>
           </IndicatorContainer>
         </SliderContainer>
-        <ListTab listType="me" />
+        <Parent>
+          <ListTab listType="me" />
+          <WriteButton onClick={() => router.push("/mycloset/write")}>
+            옷장 채우기
+          </WriteButton>
+        </Parent>
       </Layout>
       {stylePopup && (
         <Modal
@@ -656,4 +661,21 @@ const Row = styled.div`
 const Span = styled.span`
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.b3_regular};
+`;
+
+const Parent = styled.div`
+  position: relative;
+`;
+const WriteButton = styled.button`
+  width: 90px;
+  height: 23px;
+  border-radius: 20px;
+  background: ${theme.colors.purple50};
+  color: ${theme.colors.purple500};
+  ${(props) => props.theme.fonts.c2_medium};
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 35px;
+  right: 0;
 `;

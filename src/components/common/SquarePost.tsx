@@ -1,16 +1,28 @@
 import { theme } from "@/styles/theme";
+import { ClosetPostList } from "@/type/post";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
 
-const SquarePost = () => {
+const SquarePost: React.FC<ClosetPostList> = (props) => {
+  const router = useRouter();
+  const { id, userSid, nickname, imgUrl, name, brand, createdAt } = props;
   const [heart, setHeart] = useState<boolean>(false);
 
+  const handleMorePost = (id: number) => {
+    router.push(nickname ? `/closet/${id}` : `mycloset/${id}`);
+  };
+
+  const handleMoreProfile = (userSid: string) => {
+    router.push(`/user/${id}`);
+  };
+
   return (
-    <Container>
+    <Container onClick={() => handleMorePost(id)}>
       <ImageBox>
         <StyledImage
-          src={`/assets/images/post_image.svg`}
+          src={imgUrl || "/assets/images/noImage.svg"}
           layout="fill"
           alt="image"
         />
@@ -24,9 +36,18 @@ const SquarePost = () => {
           }}
         />
       </ImageBox>
-      <Title>스퀘어 아이보리 블라우스</Title>
+      <Title>{name}</Title>
       <Sub>
-        1일 전 | <Span>러블리걸</Span> 님
+        {nickname ? (
+          <>
+            <Span onClick={() => handleMoreProfile(userSid)}>{nickname}</Span>{" "}
+            님 | {createdAt}
+          </>
+        ) : (
+          <>
+            <Span>{brand}</Span> | {createdAt}
+          </>
+        )}
       </Sub>
     </Container>
   );
@@ -73,4 +94,9 @@ const Sub = styled.div`
 
 const Span = styled.span`
   color: ${theme.colors.purple600};
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
