@@ -293,8 +293,6 @@ const Top = styled.div`
 const SubmitButton = styled.button`
   color: ${theme.colors.purple800};
   ${(props) => props.theme.fonts.h2_bold};
-  border: none;
-  background: none;
 
   &:disabled {
     color: ${theme.colors.gray800};

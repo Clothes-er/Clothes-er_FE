@@ -194,6 +194,4 @@ const StateBox = styled.button<{ check: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  outline: none;
 `;
