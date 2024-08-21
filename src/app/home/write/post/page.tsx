@@ -5,7 +5,7 @@ import Category from "@/components/common/Category";
 import Input from "@/components/common/Input";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";

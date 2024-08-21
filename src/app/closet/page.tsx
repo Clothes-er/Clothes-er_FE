@@ -70,7 +70,6 @@ const ClosetPage = () => {
         <Layout>
           <Header />
           <Topbar text="옷장 구경" align="left" />
-
           <Content>
             <Filter onClick={() => router.push("/closet/filter")} />
             <GridContainer>
@@ -127,20 +126,5 @@ const GridContainer = styled.div`
   justify-content: center;
   row-gap: 15px;
   column-gap: 22px;
-`;
-
-const Edit = styled.div`
-  width: 68px;
-  height: 68px;
-  border-radius: 50px;
-  background: ${theme.colors.purple400};
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  position: absolute;
-  bottom: 100px;
-  right: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 20;
-  cursor: pointer;
+  margin-top: 10px;
 `;
