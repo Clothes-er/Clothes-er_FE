@@ -1,7 +1,7 @@
 import React from "react";
 import Chip from "./Chip";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getSortLabel } from "@/interface/Sort";
 
@@ -18,30 +18,36 @@ const filterLabels = {
 };
 
 const Filter: React.FC<FilterProps> = ({ onClick }) => {
-  const dispatch = useDispatch();
-  const selectedFilter = useSelector((state: RootState) => state.filter);
+  const {
+    selectedSort,
+    selectedGender,
+    selectedMinHeight,
+    selectedMaxHeight,
+    selectedAge,
+    selectedCategory,
+    selectedStyle,
+  } = useSelector((state: RootState) => state.filter);
+
+  const defaultMinHeight = 130;
+  const defaultMaxHeight = 200;
+
+  const isHeightAgeChanged =
+    selectedMinHeight !== defaultMinHeight ||
+    selectedMaxHeight !== defaultMaxHeight ||
+    (Array.isArray(selectedAge) && selectedAge.length > 0);
 
   return (
     <Layout>
       {Object.entries(filterLabels).map(([label, key]) => {
         const values = {
-          selectedSort: [selectedFilter.selectedSort],
-          selectedGender: selectedFilter.selectedGender
-            ? [selectedFilter.selectedGender]
-            : [],
-          selectedAge: selectedFilter.selectedAge
-            ? [selectedFilter.selectedAge]
-            : [],
-          selectedCategory: selectedFilter.selectedCategory
-            ? [selectedFilter.selectedCategory]
-            : [],
-          selectedStyle: selectedFilter.selectedStyle
-            ? [selectedFilter.selectedStyle]
-            : [],
+          selectedSort: [selectedSort],
+          selectedGender: selectedGender ? [selectedGender] : [],
+          selectedAge: selectedAge ? [selectedAge] : [],
+          selectedCategory: selectedCategory ? [selectedCategory] : [],
+          selectedStyle: selectedStyle ? [selectedStyle] : [],
         }[key];
 
         const firstValue = values || "";
-        console.log(firstValue);
 
         return (
           <div key={label}>
@@ -60,7 +66,15 @@ const Filter: React.FC<FilterProps> = ({ onClick }) => {
             ) : (
               <Chip
                 label={`${label}`}
-                value={firstValue[0] && firstValue[0].length > 0 ? label : ""}
+                value={
+                  label === "키·연령"
+                    ? isHeightAgeChanged
+                      ? label
+                      : ""
+                    : firstValue[0] && firstValue[0].length > 0
+                    ? label
+                    : ""
+                }
                 onClick={onClick}
               />
             )}
