@@ -43,7 +43,7 @@ const colors = {
 
   white: "#FFFFFF",
   ivory: "#F9F8FF",
-  black: "#000000",
+  black: "#141414",
 } as const;
 
 interface Font {
