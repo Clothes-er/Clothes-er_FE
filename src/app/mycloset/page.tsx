@@ -281,7 +281,7 @@ const MyCloset = () => {
         </SliderContainer>
         <Parent>
           <ListTab listType="me" />
-          <WriteButton onClick={() => router.push("/mycloset/write")}>
+          <WriteButton onClick={() => router.push("/mycloset/write/choice")}>
             옷장 채우기
           </WriteButton>
         </Parent>
@@ -458,13 +458,11 @@ const Gender = styled.span`
 const ProfileButton = styled.button`
   width: 74px;
   height: 30px;
-  border: none;
   border-radius: 5px;
   background: ${theme.colors.purple50};
   color: ${theme.colors.b200};
   ${(props) => props.theme.fonts.c2_medium};
   white-space: nowrap;
-  cursor: pointer;
 `;
 
 const Level = styled.div`
@@ -543,8 +541,6 @@ const MoreReview = styled.button`
   ${(props) => props.theme.fonts.b3_medium};
   text-decoration-line: underline;
   margin-top: auto;
-  border: none;
-  background: none;
 `;
 
 const StyleBox = styled(ScoreBox)`
@@ -563,8 +559,6 @@ const Edit = styled.button`
   position: absolute;
   top: 12px;
   right: 12px;
-  background: none;
-  border: none;
 `;
 
 const StyleBoxDiv = styled.div`
@@ -674,8 +668,6 @@ const WriteButton = styled.button`
   background: ${theme.colors.purple50};
   color: ${theme.colors.purple500};
   ${(props) => props.theme.fonts.c2_medium};
-  border: none;
-  cursor: pointer;
   position: absolute;
   top: 35px;
   right: 0;
