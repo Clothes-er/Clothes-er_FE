@@ -13,6 +13,7 @@ interface ChatPreviewProps {
   rentalImgUrl: string;
   rentalState: string;
   recentMessageTime: string;
+  isDeleted: boolean;
 }
 
 const ChatPreview: React.FC<ChatPreviewProps> = ({
@@ -25,6 +26,7 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
   rentalImgUrl,
   rentalState,
   recentMessageTime,
+  isDeleted,
 }) => {
   const router = useRouter();
 
@@ -94,7 +96,9 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
           </Chat>
         </Top>
         <Preview>{recentMessage}</Preview>
-        <Product>{`${title}   |   ${recentMessageTime}`}</Product>
+        <Product>{`${
+          isDeleted ? "삭제된 글" : title
+        }   |   ${recentMessageTime}`}</Product>
       </Right>
     </Container>
   );

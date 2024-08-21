@@ -31,7 +31,7 @@ const Bottom: React.FC<BottomProps> = ({
   };
 
   const handleNewChat = () => {
-    AuthAxios.post(`/api/v1/chats/rooms/${id}`)
+    AuthAxios.post(`/api/v1/chats/rental-rooms/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
