@@ -18,20 +18,30 @@ export interface TextProps {
 }
 
 export interface ReviewProps {
+  nickname: string;
+  profileUrl: string;
   keywordReviews: KeywordProps[];
   textReviews: TextProps[];
 }
 
-const ReviewPage: React.FC<ReviewProps> = ({ keywordReviews, textReviews }) => {
+const ReviewPage: React.FC<ReviewProps> = ({
+  nickname,
+  profileUrl,
+  keywordReviews,
+  textReviews,
+}) => {
   return (
     <Container>
-      <Image
-        src={"/assets/images/basic_profile.svg"}
-        width={147}
-        height={147}
-        alt="profile"
-        style={{ borderRadius: "50%" }}
-      />
+      <Profile>
+        <Image
+          src={`${profileUrl || "/assets/images/basic_profile.svg"}`}
+          width={147}
+          height={147}
+          alt="profile"
+          style={{ borderRadius: "50%" }}
+        />
+        <Label>{nickname} 님</Label>
+      </Profile>
       <div>
         <Label>받은 키워드 후기</Label>
         <Keywords>
@@ -67,6 +77,12 @@ const Container = styled.div`
   gap: 50px;
 `;
 
+const Profile = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+`;
 const Label = styled.div`
   color: ${theme.colors.b500};
   ${(props) => props.theme.fonts.b2_bold};
