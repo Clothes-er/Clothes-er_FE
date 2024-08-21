@@ -42,6 +42,11 @@ a {
   text-decoration: none;
 }
 
+button {
+  cursor:pointer;
+  border: none;
+  background: transparent;
+}
 
 @font-face {
     font-family: "Pretendard";
