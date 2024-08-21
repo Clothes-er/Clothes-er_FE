@@ -7,39 +7,38 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Post from "@/components/home/Post";
 import AuthAxios from "@/api/authAxios";
-import { postList, PostList } from "@/data/homeData";
 import { theme } from "@/styles/theme";
+
+interface ClosetList {
+  id: number;
+  imgUrl: string;
+  name: string;
+  brand: string;
+  createdAt: string;
+}
 
 const WriteChoice = () => {
   const router = useRouter();
+  const [postList, setPostList] = useState<ClosetList[]>();
+  const [clothesId, setClothesId] = useState<number | null>(null);
 
-  // 추후 보유글 목록 조회 API 연동 후 수정
-  // const [postList, setPostList] = useState<PostList[]>();
-
-  // 예시 데이터 - 추후 삭제
-  const [exPostList, setExPostList] = useState<PostList[] | undefined>(
-    postList
-  );
-
-  const [clothesId, setClothesId] = useState<number | undefined>();
-
-  /* 보유글 목록 조회 */
-  // useEffect(() => {
-  //   AuthAxios.get("/api/v1/clothes")
-  //     .then((response) => {
-  //       const data = response.data.result;
-  //       setPostList(data);
-  //       console.log(data);
-  //       console.log(response.data.message);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
+  /* 대여글이 없는 나의 보유 옷 목록 조회 */
+  useEffect(() => {
+    AuthAxios.get("/api/v1/rentals/my-clothes")
+      .then((response) => {
+        const data = response.data.result;
+        setPostList(data);
+        console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleClickChoice = (id: number) => {
     if (clothesId === id) {
-      setClothesId(undefined);
+      setClothesId(null);
     } else {
       setClothesId(id);
     }
@@ -74,20 +73,20 @@ const WriteChoice = () => {
         <Sub>보유 목록 중 대여 글 작성할 옷을 선택해주세요.</Sub>
         <Content>
           <Posts>
-            {exPostList?.map((data, index) => (
+            {postList?.map((data, index) => (
               <PostContainer key={data.id}>
+                {/* price 값 서버 response 요청하기 */}
                 <Post
                   key={data.id}
                   id={data.id}
                   imgUrl={data.imgUrl}
-                  title={data.title}
-                  minPrice={data.minPrice}
+                  title={data.name || ""}
+                  minPrice={3000}
                   createdAt={data.createdAt}
-                  nickname={data.nickname}
                   onClickChoice={handleClickChoice}
                   isSelected={clothesId === data.id}
                 />
-                {index < exPostList.length - 1 && <Divider />}
+                {index < postList.length - 1 && <Divider />}
               </PostContainer>
             ))}
           </Posts>
@@ -97,9 +96,8 @@ const WriteChoice = () => {
         <Button
           buttonType="primary"
           size="large"
-          text="선택 완료"
+          text={clothesId ? "선택 완료" : "미선택"}
           onClick={handleChoicePost}
-          disabled={!clothesId}
         />
       </SubmitButton>
     </Layout>
