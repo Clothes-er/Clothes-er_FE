@@ -2,50 +2,43 @@ import styled from "styled-components";
 import SquarePost from "../common/SquarePost";
 import { useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
-import { PostList } from "@/data/homeData";
+import { ClosetPostList } from "@/type/post";
 
 interface MyClosetContentProps {
   userSid?: string;
 }
 
 const MyClosetContent: React.FC<MyClosetContentProps> = ({ userSid }) => {
-  // const [postList, setPostList] = useState<PostList[]>();
+  const [postList, setPostList] = useState<ClosetPostList[]>();
 
-  // /* 보유 > 옷장 등록 목록 조회 */
-  // useEffect(() => {
-  //   const url = userSid
-  //     ? `/api/v1/closet/${userSid}/rentals`
-  //     : `/api/v1/closet/rentals`;
-  //   AuthAxios.get(url)
-  //     .then((response) => {
-  //       const data = response.data.result;
-  //       setPostList(data);
-  //       console.log(data);
-  //       console.log(response.data.message);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
+  /* 보유 > 옷장 등록 목록 조회 */
+  useEffect(() => {
+    const url = "/api/v1/closet/clothes";
+    AuthAxios.get(url)
+      .then((response) => {
+        const data = response.data.result;
+        setPostList(data);
+        console.log(data);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <GridContainer>
-      {/* {postList?.map((data) => (
+      {postList?.map((data) => (
         <SquarePost
           key={data.id}
           id={data.id}
+          userSid={data.userSid}
+          nickname={data.nickname}
           imgUrl={data.imgUrl}
-          title={data.title}
-          minPrice={data.minPrice}
+          brand={data.brand}
           createdAt={data.createdAt}
         />
-      ))} */}
-      <SquarePost />
-      <SquarePost />
-      <SquarePost />
-      <SquarePost />
-      <SquarePost />
-      <SquarePost />
+      ))}
     </GridContainer>
   );
 };
@@ -53,6 +46,7 @@ const MyClosetContent: React.FC<MyClosetContentProps> = ({ userSid }) => {
 export default MyClosetContent;
 
 const GridContainer = styled.div`
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   padding: 10px 0;

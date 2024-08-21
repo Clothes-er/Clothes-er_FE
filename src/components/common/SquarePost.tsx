@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 const SquarePost: React.FC<ClosetPostList> = (props) => {
   const router = useRouter();
-  const { id, userSid, nickname, imgUrl, name, createdAt } = props;
+  const { id, userSid, nickname, imgUrl, name, brand, createdAt } = props;
   const [heart, setHeart] = useState<boolean>(false);
 
   const handleMorePost = (id: number) => {
@@ -38,8 +38,17 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
       </ImageBox>
       <Title>{name}</Title>
       <Sub>
-        {createdAt} |{" "}
-        <Span onClick={() => handleMoreProfile(userSid)}>{nickname}</Span> 님
+        {nickname ? (
+          <>
+            {createdAt} |{" "}
+            <Span onClick={() => handleMoreProfile(userSid)}>{nickname}</Span>{" "}
+            님
+          </>
+        ) : (
+          <>
+            <Span>{brand}</Span> | {createdAt}
+          </>
+        )}
       </Sub>
     </Container>
   );
