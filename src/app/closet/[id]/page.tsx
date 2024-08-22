@@ -217,8 +217,10 @@ const Page = () => {
       </Layout>
       {postInfo && (
         <Bottom
+          type="user"
           id={postInfo.id}
           bottomType="closet"
+          userSid={postInfo.userSid}
           isWriter={postInfo.isWriter}
         />
       )}

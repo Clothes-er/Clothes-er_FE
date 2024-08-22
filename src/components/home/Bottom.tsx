@@ -3,6 +3,7 @@ import { theme } from "@/styles/theme";
 import styled from "styled-components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { chatListType } from "@/type/chat";
 
 type bottomType = "share" | "closet" | "closetShare";
 
@@ -12,16 +13,20 @@ interface Price {
 }
 
 interface BottomProps {
+  type: chatListType;
   id: number;
   bottomType: bottomType;
   prices?: Price[];
+  userSid?: string;
   isWriter: boolean;
 }
 
 const Bottom: React.FC<BottomProps> = ({
+  type,
   id,
   bottomType,
   prices,
+  userSid,
   isWriter,
 }) => {
   const router = useRouter();
@@ -31,7 +36,11 @@ const Bottom: React.FC<BottomProps> = ({
   };
 
   const handleNewChat = () => {
-    AuthAxios.post(`/api/v1/chats/rental-rooms/${id}`)
+    AuthAxios.post(
+      `/api/v1/chats/${
+        type === "rental" ? `rental-rooms/${id}` : `user-rooms/${userSid}`
+      }`
+    )
       .then((response) => {
         const data = response.data.result;
         console.log(data);
