@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { chatListType } from "@/type/chat";
 
-type bottomType = "share" | "closet" | "closetShare";
+type bottomType = "share" | "closet";
 
 interface Price {
   days: number;
@@ -15,6 +15,7 @@ interface Price {
 interface BottomProps {
   type: chatListType;
   id: number;
+  rentalId?: number;
   bottomType: bottomType;
   prices?: Price[];
   userSid?: string;
@@ -24,6 +25,7 @@ interface BottomProps {
 const Bottom: React.FC<BottomProps> = ({
   type,
   id,
+  rentalId,
   bottomType,
   prices,
   userSid,
@@ -85,17 +87,19 @@ const Bottom: React.FC<BottomProps> = ({
           )}
         </div>
       )}
-      {bottomType === "closet" && (
-        <div>
-          현재 <Span>대여글</Span>이 올라와있어요! <br />
-          <Move onClick={() => router.push(`/home/${id}`)}>대여글로 이동</Move>
-        </div>
-      )}
-      {bottomType === "closetShare" && (
-        <div>
-          <Span>궁금한 정보</Span>를 <Span>문의</Span>해보세요!
-        </div>
-      )}
+      {bottomType === "closet" &&
+        (rentalId ? (
+          <div>
+            현재 <Span>대여글</Span>이 올라와있어요! <br />
+            <Move onClick={() => router.push(`/home/${rentalId}`)}>
+              대여글로 이동
+            </Move>
+          </div>
+        ) : (
+          <div>
+            <Span>궁금한 정보</Span>를 <Span>문의</Span>해보세요!
+          </div>
+        ))}
       {!isWriter && <Chat onClick={handleNewChat}>문의하기</Chat>}
     </StyledBottom>
   );

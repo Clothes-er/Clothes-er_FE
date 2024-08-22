@@ -219,6 +219,7 @@ const Page = () => {
         <Bottom
           type="user"
           id={postInfo.id}
+          rentalId={postInfo.rentalId}
           bottomType="closet"
           userSid={postInfo.userSid}
           isWriter={postInfo.isWriter}
