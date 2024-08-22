@@ -1,8 +1,14 @@
 import { useState } from "react";
 
-export const useCurrentTab = () => {
-  const [currentTab, setCurrentTab] = useState<string>("my");
-  const [currentSubTab, setCurrentSubTab] = useState<string>("closet");
+type listType = "me" | "other" | "chat";
+
+export const useCurrentTab = (listType: listType) => {
+  const [currentTab, setCurrentTab] = useState<string>(
+    listType === "chat" ? "rental" : "my"
+  );
+  const [currentSubTab, setCurrentSubTab] = useState<string>(
+    listType === "chat" ? "" : "closet"
+  );
 
   return { currentTab, setCurrentTab, currentSubTab, setCurrentSubTab };
 };

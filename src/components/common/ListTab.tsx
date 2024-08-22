@@ -1,4 +1,4 @@
-import { myClosetTabs } from "@/data/tabsData";
+import { chatTabs, myClosetTabs } from "@/data/tabsData";
 import { theme } from "@/styles/theme";
 import { useState } from "react";
 import styled from "styled-components";
@@ -10,8 +10,9 @@ import TransShareContent from "../myCloset/TransShareContent";
 import TransRentContent from "../myCloset/TransRentContent";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
+import ChatListContent from "../chat/ChatListContent";
 
-type listType = "me" | "other";
+type listType = "me" | "other" | "chat";
 
 interface ListTabProps {
   listType: listType;
@@ -31,22 +32,32 @@ interface TabItem {
 const ListTab: React.FC<ListTabProps> = ({ listType, userSid }) => {
   // const router = useRouter();
   const { currentTab, setCurrentTab, currentSubTab, setCurrentSubTab } =
-    useCurrentTab();
+    useCurrentTab(listType);
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [selectedSubTab, setSelectedSubTab] = useState<number>(0);
 
   // 탭 정보
   const tabsToDisplay: TabItem[] =
-    listType === "other" ? [myClosetTabs[0]] : myClosetTabs;
+    listType === "chat"
+      ? chatTabs
+      : listType === "other"
+      ? [myClosetTabs[0]]
+      : myClosetTabs;
 
   const handleTabClick = (tabIndex: number) => {
     setSelectedTab(tabIndex);
     setSelectedSubTab(0);
-    const newTab = myClosetTabs[tabIndex].key;
-    setCurrentTab(newTab);
-    setCurrentSubTab(myClosetTabs[tabIndex].sub?.[0]?.key || "");
-    // router.push(`/mycloset/${newTab}/${myClosetTabs[tabIndex].sub?.[0]?.key || ''}`);
+    if (listType === "chat") {
+      const newTab = chatTabs[tabIndex].key;
+      setCurrentTab(newTab);
+      setCurrentSubTab("");
+    } else {
+      const newTab = myClosetTabs[tabIndex].key;
+      setCurrentTab(newTab);
+      setCurrentSubTab(myClosetTabs[tabIndex].sub?.[0]?.key || "");
+      // router.push(`/mycloset/${newTab}/${myClosetTabs[tabIndex].sub?.[0]?.key || ''}`);
+    }
   };
 
   const handleSubTabClick = (subIndex: number) => {
@@ -58,7 +69,7 @@ const ListTab: React.FC<ListTabProps> = ({ listType, userSid }) => {
 
   return (
     <Container>
-      <ListContainer>
+      <ListContainer listType={listType}>
         {tabsToDisplay.map((item, index) => (
           <Tab
             key={index}
@@ -113,6 +124,10 @@ function ContentArea({
     return <TransRentContent />;
   } else if (currentTab === "storage") {
     return <StorageContent />;
+  } else if (currentTab === "rental") {
+    return <ChatListContent type="rental" />;
+  } else if (currentTab === "user") {
+    return <ChatListContent type="user" />;
   }
   return null;
 }
@@ -125,14 +140,14 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const ListContainer = styled.div`
+const ListContainer = styled.div<{ listType: listType }>`
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0px 40px;
   border-bottom: 1px solid ${theme.colors.gray200};
-  margin-bottom: 30px;
+  margin-bottom: ${({ listType }) => (listType === "chat" ? "0px" : "30px")};
   gap: 20px;
 `;
 
