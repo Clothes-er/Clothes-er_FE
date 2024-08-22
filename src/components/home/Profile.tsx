@@ -35,6 +35,4 @@ const Div = styled.button`
   align-items: center;
   gap: 29px;
   ${(props) => props.theme.fonts.b2_regular};
-  border: none;
-  cursor: pointer;
 `;

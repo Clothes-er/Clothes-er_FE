@@ -205,6 +205,7 @@ const Page = () => {
       </Layout>
       {postInfo && (
         <Bottom
+          type="rental"
           id={postInfo.id}
           bottomType="share"
           prices={postInfo.prices}

@@ -1,43 +1,16 @@
 "use client";
-import AuthAxios from "@/api/authAxios";
-import ChatPreview from "@/components/chat/ChatPreview";
+
+import ListTab from "@/components/common/ListTab";
 import Tabbar from "@/components/common/Tabbar";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-interface ChatList {
-  id: number;
-  userSid: string;
-  nickname: string;
-  profileImgUrl: string;
-  recentMessage: string;
-  recentMessageTime: string;
-  rentalImgUrl: string;
-  rentalState: string;
-  title: string;
-  isDeleted: boolean;
-}
 const Chat = () => {
   useRequireAuth();
   const router = useRouter();
-  const [chatList, setChatList] = useState<ChatList[]>();
-
-  useEffect(() => {
-    AuthAxios.get("/api/v1/chats/rental-rooms")
-      .then((response) => {
-        const data = response.data.result;
-        setChatList(data);
-        console.log(data);
-        console.log(response.data.message);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
   return (
     <>
@@ -61,23 +34,7 @@ const Chat = () => {
           />
           채팅
         </Top>
-        <ChatList>
-          {chatList?.map((data) => (
-            <ChatPreview
-              key={data.id}
-              id={data.id}
-              userSid={data.userSid}
-              nickname={data.nickname}
-              recentMessage={data.recentMessage}
-              title={data.title}
-              profileImgUrl={data.profileImgUrl}
-              rentalImgUrl={data.rentalImgUrl}
-              rentalState={data.rentalState}
-              recentMessageTime={data.recentMessageTime}
-              isDeleted={data.isDeleted}
-            />
-          ))}
-        </ChatList>
+        <ListTab listType="chat" />
       </Layout>
       <Tabbar />
     </>

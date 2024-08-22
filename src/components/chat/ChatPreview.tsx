@@ -1,22 +1,11 @@
 import { theme } from "@/styles/theme";
+import { ChatList, chatListType } from "@/type/chat";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-interface ChatPreviewProps {
-  id: number;
-  userSid: string;
-  nickname: string;
-  recentMessage: string;
-  title: string;
-  profileImgUrl: string;
-  rentalImgUrl: string;
-  rentalState: string;
-  recentMessageTime: string;
-  isDeleted: boolean;
-}
-
-const ChatPreview: React.FC<ChatPreviewProps> = ({
+const ChatPreview: React.FC<ChatList> = ({
+  type,
   id,
   userSid,
   nickname,
@@ -31,7 +20,7 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
   const router = useRouter();
 
   const handleChatDetail = () => {
-    router.push(`/chat/${id}`);
+    router.push(`/chat/${id}?type=${type}`);
   };
 
   const handleUserClick = (
@@ -46,6 +35,7 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
     <Container onClick={handleChatDetail}>
       <Left>
         <ProfileImage
+          type={type}
           src={profileImgUrl || `/assets/images/basic_profile.svg`}
           width={56}
           height={56}
@@ -53,21 +43,13 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
           style={{ borderRadius: "100px", background: "white" }}
           onClick={(e) => handleUserClick(e, `/user/${userSid}`)}
         />
-        {rentalImgUrl ? (
+        {type === "rental" && (
           <ProductImage
-            src={rentalImgUrl}
+            src={rentalImgUrl || "/assets/images/noImage.svg"}
             width={56}
             height={56}
             alt="product"
             style={{ borderRadius: "190px", background: "white" }}
-          />
-        ) : (
-          <ProductImage
-            src="/assets/images/noImage.svg"
-            width={56}
-            height={56}
-            alt="product"
-            style={{ borderRadius: "100px" }}
           />
         )}
       </Left>
@@ -77,10 +59,10 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
             <NickName onClick={(e) => handleUserClick(e, `/user/${userSid}`)}>
               {nickname}
             </NickName>
-            {rentalState === "RENTED" && (
+            {type === "rental" && rentalState === "RENTED" && (
               <StateBox check={true}>대여중</StateBox>
             )}
-            {rentalState === "RETURNED" && (
+            {type === "rental" && rentalState === "RETURNED" && (
               <StateBox check={false}>대여완료</StateBox>
             )}
           </Name>
@@ -97,8 +79,12 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
         </Top>
         <Preview>{recentMessage}</Preview>
         <Product>{`${
-          isDeleted ? "삭제된 글" : title
-        }   |   ${recentMessageTime}`}</Product>
+          type === "rental"
+            ? isDeleted
+              ? "삭제된 글    |   "
+              : title + "   |   "
+            : ""
+        }${recentMessageTime}`}</Product>
       </Right>
     </Container>
   );
@@ -110,7 +96,6 @@ const Container = styled.div`
   width: 100%;
   height: 110px;
   padding: 24px 8px;
-  border-bottom: 1px solid ${theme.colors.gray300};
   display: flex;
   justify-content: flex-start;
   gap: 20px;
@@ -123,12 +108,19 @@ const Left = styled.div`
   position: relative;
 `;
 
-const ProfileImage = styled(Image)`
+const ProfileImage = styled(Image)<{ type: chatListType }>`
   position: absolute;
   top: 10px;
   left: 0;
   z-index: 100;
   cursor: pointer;
+  ${({ type }) =>
+    type === "user" &&
+    css`
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `};
 `;
 
 const ProductImage = styled(Image)`
@@ -194,6 +186,4 @@ const StateBox = styled.button<{ check: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  outline: none;
 `;

@@ -27,3 +27,14 @@ export const myClosetTabs = [
     key: "storage"
   }
 ];
+
+export const chatTabs = [
+  {
+    tab: "대여글",
+    key: "rental",
+  },
+  {
+    tab: "유저",
+    key: "user",
+  }
+]

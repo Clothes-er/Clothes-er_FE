@@ -4,7 +4,7 @@ import ChatMsg from "@/components/chat/ChatMsg";
 import Post from "@/components/home/Post";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Modal from "@/components/common/Modal";
@@ -50,9 +50,11 @@ const ChatDetail = () => {
   useRequireAuth();
   const router = useRouter();
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
 
-  /* roomId */
+  /* roomId, type */
   const { id } = useParams();
+  const type = searchParams.get("type");
   /* get 메소드에서 받아오는 데이터 상태 저장*/
   const [chatMsg, setChatMsg] = useState<ChatMsg>();
   /* get 메소드에서 받아오는 체크리스트 값 저장*/
@@ -111,7 +113,7 @@ const ChatDetail = () => {
   }, [chatMsgList, checkGet.isChecked, rentalState]);
 
   const fetchChatMessages = () => {
-    AuthAxios.get(`/api/v1/chats/rental-rooms/${id}`)
+    AuthAxios.get(`/api/v1/chats/${type}-rooms/${id}`)
       .then((response) => {
         const data = response.data.result;
         setChatMsg(data);
@@ -698,8 +700,6 @@ const StateBox = styled.button<{ check: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  outline: none;
 `;
 
 const Row = styled.div`

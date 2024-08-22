@@ -48,9 +48,6 @@ const Element = styled.button<{ $red: boolean }>`
   color: ${({ $red, theme }) =>
     $red ? theme.colors.delete : theme.colors.b100};
   ${(props) => props.theme.fonts.b3_medium};
-  border: none;
-  background: none;
-  cursor: pointer;
 `;
 
 const Divider = styled.div`
