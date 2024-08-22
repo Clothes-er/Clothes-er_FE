@@ -20,7 +20,7 @@ const ChatPreview: React.FC<ChatList> = ({
   const router = useRouter();
 
   const handleChatDetail = () => {
-    router.push(`/chat/${id}`);
+    router.push(`/chat/${id}?type=${type}`);
   };
 
   const handleUserClick = (
