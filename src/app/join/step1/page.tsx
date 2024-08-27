@@ -123,7 +123,6 @@ const Step1 = () => {
             clearInterval(intervalId);
             setEmailSent(false);
             setCorrectCode(false);
-            setEmailSent(true);
             setSuccess({ ...success, email: "" });
             setInputs({ ...inputs, emailAuth: "" });
             setErrors({ ...errors, emailAuth: "" });
@@ -153,9 +152,12 @@ const Step1 = () => {
       .then((response) => {
         console.log("이메일 전송 성공", response.data);
         setEmailSent(true);
-        setInputs({ ...inputs, emailAuth: "" });
-        setErrors({ ...errors, emailAuth: "" });
+        setTimer(180);
         setSuccess({ ...success, email: "인증번호가 전송되었습니다." });
+        setCorrectCode(false);
+        setInputs({ ...inputs, emailAuth: "" });
+        setSuccess({ ...success, emailAuth: "" });
+        setErrors({ ...errors, emailAuth: "" });
       })
       .catch((error) => {
         console.log("이메일 전송 실패", error);
@@ -285,7 +287,7 @@ const Step1 = () => {
               }}
               disabled={!emailSent}
             />
-            {emailSent && (
+            {emailSent && !correctCode && (
               <Timer color={timerColor}>{`${Math.floor(timer / 60)}:${String(
                 timer % 60
               ).padStart(2, "0")}`}</Timer>
