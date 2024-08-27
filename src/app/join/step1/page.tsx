@@ -48,6 +48,10 @@ const Step1 = () => {
   /* 이메일 인증 코드 확인 여부 */
   const [correctCode, setCorrectCode] = useState(false);
 
+  /* 타이머 */
+  const [timer, setTimer] = useState<number>(180);
+  const [timerColor, setTimerColor] = useState<string>(theme.colors.purple500);
+
   /* redux 업데이트 */
   useEffect(() => {
     setInputs(step1);
@@ -108,15 +112,52 @@ const Step1 = () => {
     }
   };
 
+  /* 타이머 */
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (emailSent) {
+      intervalId = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 0) {
+            clearInterval(intervalId);
+            setEmailSent(false);
+            setCorrectCode(false);
+            setSuccess({ ...success, email: "" });
+            setInputs({ ...inputs, emailAuth: "" });
+            setErrors({ ...errors, emailAuth: "" });
+            setTimer(180);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // 타이머 색상 업데이트
+      if (timer <= 30) {
+        setTimerColor(theme.colors.red);
+      } else {
+        setTimerColor(theme.colors.purple500);
+      }
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [emailSent, timer]);
+
   /* 이메일 인증번호 전송 */
   const handleSendEmail = () => {
     Axios.post("/api/v1/users/send-email", { email: inputs.email })
       .then((response) => {
         console.log("이메일 전송 성공", response.data);
         setEmailSent(true);
-        setInputs({ ...inputs, emailAuth: "" });
-        setErrors({ ...errors, emailAuth: "" });
+        setTimer(180);
         setSuccess({ ...success, email: "인증번호가 전송되었습니다." });
+        setCorrectCode(false);
+        setInputs({ ...inputs, emailAuth: "" });
+        setSuccess({ ...success, emailAuth: "" });
+        setErrors({ ...errors, emailAuth: "" });
       })
       .catch((error) => {
         console.log("이메일 전송 실패", error);
@@ -226,25 +267,32 @@ const Step1 = () => {
           </CheckButton>
         </Row>
         <Row>
-          <Input
-            label="이메일 인증"
-            value={inputs.emailAuth}
-            size="small"
-            placeholder="인증번호"
-            successMsg={success.emailAuth}
-            errorMsg={errors.emailAuth}
-            onChange={(value: string) => {
-              validateEmailAuth(value);
-              setInputs({ ...inputs, emailAuth: value });
-              dispatch(
-                setStep1({
-                  ...inputs,
-                  emailAuth: value,
-                })
-              );
-            }}
-            disabled={!emailSent}
-          />
+          <TimerDiv>
+            <Input
+              label="이메일 인증"
+              value={inputs.emailAuth}
+              size="small"
+              placeholder="인증번호"
+              successMsg={success.emailAuth}
+              errorMsg={errors.emailAuth}
+              onChange={(value: string) => {
+                validateEmailAuth(value);
+                setInputs({ ...inputs, emailAuth: value });
+                dispatch(
+                  setStep1({
+                    ...inputs,
+                    emailAuth: value,
+                  })
+                );
+              }}
+              disabled={!emailSent}
+            />
+            {emailSent && !correctCode && (
+              <Timer color={timerColor}>{`${Math.floor(timer / 60)}:${String(
+                timer % 60
+              ).padStart(2, "0")}`}</Timer>
+            )}
+          </TimerDiv>
           <CheckButton>
             <Button
               buttonType="primaryLight"
@@ -331,4 +379,18 @@ const ButtonRow = styled.div`
   position: sticky;
   bottom: 25px;
   left: 0;
+`;
+
+const TimerDiv = styled.div`
+  width: 100%;
+  height: 90px;
+  position: relative;
+`;
+const Timer = styled.div<{ color: string }>`
+  position: absolute;
+  bottom: 35px;
+  right: 20px;
+  font-size: 14px;
+  color: ${(props) => props.color};
+  margin-top: 10px;
 `;

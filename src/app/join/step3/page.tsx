@@ -50,6 +50,10 @@ const Step3 = () => {
   /* 회원가입 축하 모달 */
   const [complete, setComplete] = useState<boolean>(false);
 
+  /* 타이머 */
+  const [timer, setTimer] = useState<number>(180);
+  const [timerColor, setTimerColor] = useState<string>(theme.colors.purple500);
+
   useEffect(() => {
     setInputs(step3);
   }, []);
@@ -99,16 +103,52 @@ const Step3 = () => {
     );
   }, [inputs.phone]);
 
+  /* 타이머 */
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (phoneSent) {
+      intervalId = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 0) {
+            clearInterval(intervalId);
+            setPhoneSent(false);
+            setCorrectCode(false);
+            setSuccess({ ...success, phone: "" });
+            setInputs({ ...inputs, phoneAuth: "" });
+            setErrors({ ...errors, phoneAuth: "" });
+            setTimer(180);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // 타이머 색상 업데이트
+      if (timer <= 30) {
+        setTimerColor(theme.colors.red);
+      } else {
+        setTimerColor(theme.colors.purple500);
+      }
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [phoneSent, timer]);
+
   /* 휴대폰 인증번호 전송 */
   const handleSendPhone = () => {
     Axios.post("/api/v1/users/send-phone", { phoneNumber: inputs.phone })
       .then((response) => {
         console.log("휴대폰 인증번호 전송 성공", response.data);
         setPhoneSent(true);
+        setTimer(180);
+        setSuccess({ ...success, phone: "인증번호가 전송되었습니다." });
         setCorrectCode(false);
         setInputs({ ...inputs, phoneAuth: "" });
+        setSuccess({ ...success, phoneAuth: "" });
         setErrors({ ...errors, phoneAuth: "" });
-        setSuccess({ ...success, phone: "인증번호가 전송되었습니다." });
       })
       .catch((error) => {
         console.log("휴대폰 인증 실패", error);
@@ -192,25 +232,32 @@ const Step3 = () => {
           </CheckButton>
         </Row>
         <Row>
-          <Input
-            label="전화번호 인증"
-            value={inputs.phoneAuth}
-            size="small"
-            placeholder="인증번호"
-            successMsg={success.phoneAuth}
-            errorMsg={errors.phoneAuth}
-            onChange={(value: string) => {
-              validatePhoneAuth(value);
-              setInputs({ ...inputs, phoneAuth: value });
-              dispatch(
-                setStep3({
-                  ...inputs,
-                  phoneAuth: value,
-                })
-              );
-            }}
-            disabled={!phoneSent}
-          />
+          <TimerDiv>
+            <Input
+              label="전화번호 인증"
+              value={inputs.phoneAuth}
+              size="small"
+              placeholder="인증번호"
+              successMsg={success.phoneAuth}
+              errorMsg={errors.phoneAuth}
+              onChange={(value: string) => {
+                validatePhoneAuth(value);
+                setInputs({ ...inputs, phoneAuth: value });
+                dispatch(
+                  setStep3({
+                    ...inputs,
+                    phoneAuth: value,
+                  })
+                );
+              }}
+              disabled={!phoneSent}
+            />
+            {phoneSent && !correctCode && (
+              <Timer color={timerColor}>{`${Math.floor(timer / 60)}:${String(
+                timer % 60
+              ).padStart(2, "0")}`}</Timer>
+            )}
+          </TimerDiv>
           <CheckButton>
             <Button
               buttonType="primaryLight"
@@ -298,6 +345,20 @@ const Row = styled.div`
 
 const CheckButton = styled.div`
   margin-bottom: 20px;
+`;
+
+const TimerDiv = styled.div`
+  width: 100%;
+  height: 90px;
+  position: relative;
+`;
+const Timer = styled.div<{ color: string }>`
+  position: absolute;
+  bottom: 35px;
+  right: 20px;
+  font-size: 14px;
+  color: ${(props) => props.color};
+  margin-top: 10px;
 `;
 
 const ButtonRow = styled.div`
