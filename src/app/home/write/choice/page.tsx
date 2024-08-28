@@ -8,6 +8,7 @@ import styled from "styled-components";
 import Post from "@/components/home/Post";
 import AuthAxios from "@/api/authAxios";
 import { theme } from "@/styles/theme";
+import Topbar from "@/components/common/Topbar";
 
 interface ClosetList {
   id: number;
@@ -59,17 +60,7 @@ const WriteChoice = () => {
           onClick={() => router.push("/home")}
           style={{ cursor: "pointer" }}
         />
-        <Top>
-          <Image
-            src="/assets/icons/ic_arrow.svg"
-            width={24}
-            height={24}
-            alt="back"
-            onClick={() => router.back()}
-            style={{ cursor: "pointer" }}
-          />
-          대여 글 작성
-        </Top>
+        <Topbar text="대여 글 작성" align="center" icon={true} />
         <Sub>보유 목록 중 대여 글 작성할 옷을 선택해주세요.</Sub>
         <Content>
           <Posts>

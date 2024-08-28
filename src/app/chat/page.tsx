@@ -2,6 +2,7 @@
 
 import ListTab from "@/components/common/ListTab";
 import Tabbar from "@/components/common/Tabbar";
+import Topbar from "@/components/common/Topbar";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
@@ -23,17 +24,7 @@ const Chat = () => {
           onClick={() => router.push("/home")}
           style={{ cursor: "pointer" }}
         />
-        <Top>
-          <Image
-            src="/assets/icons/ic_arrow.svg"
-            width={24}
-            height={24}
-            alt="back"
-            onClick={() => router.back()}
-            style={{ cursor: "pointer" }}
-          />
-          채팅
-        </Top>
+        <Topbar text="채팅" icon={true} align="center" />
         <ListTab listType="chat" />
       </Layout>
       <Tabbar />
@@ -53,19 +44,4 @@ const Layout = styled.div`
   flex-direction: column;
   gap: 23px;
   position: relative;
-`;
-
-const Top = styled.div`
-  width: calc(50% + 20px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 18px;
-  ${(props) => props.theme.fonts.h2_bold};
-`;
-
-const ChatList = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid ${theme.colors.gray300};
 `;

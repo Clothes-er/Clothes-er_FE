@@ -11,6 +11,7 @@ import { getAddressCoords } from "@/hooks/getAddressCoords";
 import AuthAxios from "@/api/authAxios";
 import { getCoordsAddress } from "@/hooks/getCoordsAddress";
 import { useRequireAuth } from "@/hooks/useAuth";
+import Topbar from "@/components/common/Topbar";
 
 const Location = () => {
   useRequireAuth();
@@ -73,17 +74,7 @@ const Location = () => {
     <>
       <Layout>
         <Header />
-        <Top>
-          <Image
-            src="/assets/icons/ic_arrow.svg"
-            width={24}
-            height={24}
-            alt="back"
-            onClick={() => router.back()}
-            style={{ cursor: "pointer" }}
-          />
-          내 위치 설정
-        </Top>
+        <Topbar text="내 위치 설정" icon={true} align="center" />
         <Map onClick={() => router.push("/home/location")}>
           <Image
             src="/assets/icons/ic_pin.svg"
@@ -130,16 +121,6 @@ const Layout = styled.div`
   flex-direction: column;
   align-items: flex-start;
   position: relative;
-`;
-
-const Top = styled.div`
-  width: calc(50% + 60px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 18px;
-  margin-bottom: 15px;
-  ${(props) => props.theme.fonts.h2_bold};
 `;
 
 const Map = styled.div`

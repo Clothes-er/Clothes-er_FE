@@ -60,7 +60,7 @@ const Container = styled.div`
   img {
     cursor: pointer;
   }
-  color: ${({ theme }) => theme.colors.b500};
+  color: ${({ theme }) => theme.colors.black};
 `;
 
 const Text = styled.div<{

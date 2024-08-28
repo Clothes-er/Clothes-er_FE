@@ -22,6 +22,7 @@ import {
 import { useRequireAuth } from "@/hooks/useAuth";
 import AuthAxios from "@/api/authAxios";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
+import Topbar from "@/components/common/Topbar";
 
 interface Price {
   days: number | null;
@@ -198,17 +199,7 @@ const WritePost = () => {
           onClick={() => router.push("/home")}
           style={{ cursor: "pointer" }}
         />
-        <Top>
-          <Image
-            src="/assets/icons/ic_arrow.svg"
-            width={24}
-            height={24}
-            alt="back"
-            onClick={() => router.back()}
-            style={{ cursor: "pointer" }}
-          />
-          대여 글 작성
-        </Top>
+        <Topbar text="대여 글 작성" icon={true} align="center" />
         <Content>
           <ColumnMargin>
             <Photo>
@@ -380,16 +371,6 @@ const Layout = styled.div`
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-`;
-
-const Top = styled.div`
-  width: calc(50% + 60px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 18px;
-  margin-bottom: 15px;
-  ${(props) => props.theme.fonts.h2_bold};
 `;
 
 const Content = styled.div`
