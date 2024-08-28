@@ -16,6 +16,7 @@ import { useRequireAuth } from "@/hooks/useAuth";
 import BottomModal from "@/components/common/BottomModal";
 import { setChatPost } from "@/redux/slices/chatPostSlice";
 import { useDispatch } from "react-redux";
+import MoreBox from "@/components/common/MoreBox";
 
 interface Message {
   nickname: string;
@@ -92,6 +93,13 @@ const ChatDetail = () => {
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+
+  const [menu, setMenu] = useState<boolean>(false);
+  const [reportModal, setReportModal] = useState<boolean>(false);
+
+  const handleMoreMenu = () => {
+    setMenu(!menu);
+  };
 
   const handleWriteReview = () => {
     // 대여 중 상태 (대여 완료 모달)
@@ -329,6 +337,10 @@ const ChatDetail = () => {
     }
   };
 
+  const handleReportClick = () => {
+    setReportModal(true);
+  };
+
   return (
     <>
       <Layout>
@@ -358,6 +370,17 @@ const ChatDetail = () => {
               ? "신고 당한 유저입니다"
               : chatMsg?.opponentNickname}
           </Nickname>
+          <Menu>
+            <Image
+              src="/assets/icons/ic_more_vertical.svg"
+              width={24}
+              height={24}
+              alt="more"
+              onClick={handleMoreMenu}
+              style={{ cursor: "pointer" }}
+            />
+            {menu && <MoreBox type="other" reportOnClick={handleReportClick} />}
+          </Menu>
         </Top>
         {type === "rental" && chatMsg && (
           <Post
@@ -645,6 +668,10 @@ const Top = styled.div`
 
 const Nickname = styled.div`
   cursor: pointer;
+`;
+
+const Menu = styled.div`
+  position: relative;
 `;
 
 const ChatList = styled.div`
