@@ -5,6 +5,7 @@ import Button from "@/components/common/Button";
 import Category from "@/components/common/Category";
 import Input from "@/components/common/Input";
 import Toggle from "@/components/common/Toggle";
+import Topbar from "@/components/common/Topbar";
 import { getToken } from "@/hooks/getToken";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
@@ -169,17 +170,7 @@ const Modify = () => {
           onClick={() => router.push("/home")}
           style={{ cursor: "pointer" }}
         />
-        <Top>
-          <Image
-            src="/assets/icons/ic_arrow.svg"
-            width={24}
-            height={24}
-            alt="back"
-            onClick={() => router.back()}
-            style={{ cursor: "pointer" }}
-          />
-          대여 글 수정
-        </Top>
+        <Topbar text="대여 글 수정" icon={true} align="center" />
         <Content>
           <ColumnMargin>
             <Photo>

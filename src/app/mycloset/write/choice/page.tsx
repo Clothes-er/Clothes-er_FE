@@ -9,6 +9,7 @@ import Post from "@/components/home/Post";
 import AuthAxios from "@/api/authAxios";
 import { theme } from "@/styles/theme";
 import { PostList } from "@/type/post";
+import Topbar from "@/components/common/Topbar";
 
 const WriteChoice = () => {
   const router = useRouter();
@@ -52,17 +53,7 @@ const WriteChoice = () => {
           onClick={() => router.push("/home")}
           style={{ cursor: "pointer" }}
         />
-        <Top>
-          <Image
-            src="/assets/icons/ic_arrow.svg"
-            width={24}
-            height={24}
-            alt="back"
-            onClick={() => router.back()}
-            style={{ cursor: "pointer" }}
-          />
-          보유 글 작성
-        </Top>
+        <Topbar text="보유 글 작성" icon={true} align="center" />
         <Sub>대여 목록 중 보유 글 작성할 옷을 선택해주세요.</Sub>
         <Content>
           <Posts>
@@ -107,16 +98,6 @@ const Layout = styled.div`
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-`;
-
-const Top = styled.div`
-  width: calc(50% + 60px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 18px;
-  margin-bottom: 15px;
-  ${(props) => props.theme.fonts.h2_bold};
 `;
 
 const Sub = styled.div`

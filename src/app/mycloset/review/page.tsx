@@ -1,6 +1,7 @@
 "use client";
 
 import AuthAxios from "@/api/authAxios";
+import Topbar from "@/components/common/Topbar";
 import ReviewPage, { ReviewProps } from "@/components/review/ReviewPage";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
@@ -40,18 +41,7 @@ const MyClosetReview = () => {
           onClick={() => router.push("/home")}
           style={{ cursor: "pointer" }}
         />
-        <Top>
-          <Image
-            src="/assets/icons/ic_arrow.svg"
-            width={24}
-            height={24}
-            alt="back"
-            onClick={() => router.back()}
-            style={{ cursor: "pointer" }}
-          />
-          거래 후기
-          <div />
-        </Top>
+        <Topbar text="거래 후기" icon={true} align="center" />
         <Content>
           {review && (
             <ReviewPage
@@ -93,16 +83,6 @@ const Background = styled.div`
   transform: translateX(-50%);
   z-index: -10;
   overflow: hidden;
-`;
-
-const Top = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 22px;
-  margin-bottom: 15px;
-  ${(props) => props.theme.fonts.h2_bold};
 `;
 
 const Content = styled.div`

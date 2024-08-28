@@ -1,6 +1,7 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface CategoryCardProps {
@@ -8,6 +9,9 @@ interface CategoryCardProps {
   description: string;
   image: string;
   color: string;
+  params: string;
+  selectedCard: string | null;
+  onClick: (params: string) => void;
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({
@@ -15,9 +19,14 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   description,
   image,
   color,
+  params,
+  selectedCard,
+  onClick,
 }) => {
+  const isSelected = selectedCard === params;
+
   return (
-    <Box>
+    <Box onClick={() => onClick(params)} $isSelected={isSelected}>
       <Text>
         <Keyword>{keyword}</Keyword>
         <Description>{description}</Description>
@@ -36,7 +45,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
 
 export default CategoryCard;
 
-const Box = styled.div`
+const Box = styled.div<{ $isSelected: boolean }>`
   width: 163px;
   height: 64px;
   padding: 8px 12px;
@@ -44,6 +53,9 @@ const Box = styled.div`
   border: 1px solid ${theme.colors.gray100};
   background: ${theme.colors.white};
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+  flex-grow: 1;
+  opacity: ${(props) => (props.$isSelected ? 1 : 0.5)};
   position: relative;
   flex-shrink: 0;
   flex-grow: 1;

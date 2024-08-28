@@ -4,6 +4,7 @@ import AuthAxios from "@/api/authAxios";
 import Button from "@/components/common/Button";
 import Category from "@/components/common/Category";
 import Input from "@/components/common/Input";
+import Topbar from "@/components/common/Topbar";
 import { getToken } from "@/hooks/getToken";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
@@ -190,17 +191,7 @@ const Modify = () => {
           onClick={() => router.push("/home")}
           style={{ cursor: "pointer" }}
         />
-        <Top>
-          <Image
-            src="/assets/icons/ic_arrow.svg"
-            width={24}
-            height={24}
-            alt="back"
-            onClick={() => router.back()}
-            style={{ cursor: "pointer" }}
-          />
-          대여 글 수정
-        </Top>
+        <Topbar text="대여 글 수정" icon={true} align="center" />
         <Content>
           <ColumnMargin>
             <Photo>
@@ -374,16 +365,6 @@ const Layout = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-const Top = styled.div`
-  width: calc(50% + 60px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 18px;
-  margin-bottom: 15px;
-  ${(props) => props.theme.fonts.h2_bold};
 `;
 
 const Content = styled.div`

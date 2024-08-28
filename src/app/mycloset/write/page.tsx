@@ -23,6 +23,7 @@ import { useRequireAuth } from "@/hooks/useAuth";
 import Toggle from "@/components/common/Toggle";
 import AuthAxios from "@/api/authAxios";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
+import Topbar from "@/components/common/Topbar";
 
 const MyClosetWrite = () => {
   useRequireAuth();
@@ -182,17 +183,7 @@ const MyClosetWrite = () => {
           onClick={() => router.push("/home")}
           style={{ cursor: "pointer" }}
         />
-        <Top>
-          <Image
-            src="/assets/icons/ic_arrow.svg"
-            width={24}
-            height={24}
-            alt="back"
-            onClick={() => router.back()}
-            style={{ cursor: "pointer" }}
-          />
-          옷장 채우기
-        </Top>
+        <Topbar text="옷장 채우기" icon={true} align="center" />
         <Content>
           <ColumnMargin>
             <Photo>
@@ -349,16 +340,6 @@ const Layout = styled.div`
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-`;
-
-const Top = styled.div`
-  width: calc(50% + 60px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 18px;
-  margin-bottom: 15px;
-  ${(props) => props.theme.fonts.h2_bold};
 `;
 
 const Content = styled.div`

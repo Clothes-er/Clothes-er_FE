@@ -8,7 +8,7 @@ import Header from "@/components/common/Header";
 import Filter from "@/components/common/Filter";
 import Post from "@/components/home/Post";
 import Tabbar from "@/components/common/Tabbar";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
 import { getCoordsAddress } from "@/hooks/getCoordsAddress";
@@ -37,6 +37,7 @@ interface PostList {
 const Home = () => {
   useRequireAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   /* 검색 및 필터링을 위한 상태 관리 */
   const [postList, setPostList] = useState<PostList[]>([]);
@@ -58,6 +59,10 @@ const Home = () => {
   );
   const style = useSelector((state: RootState) => state.filter.selectedStyle);
 
+  const situation = searchParams.get("situation");
+
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
+
   /* Query String 생성 함수 */
   const buildQueryString = () => {
     const params = new URLSearchParams();
@@ -78,7 +83,9 @@ const Home = () => {
       );
     if (style.length > 0)
       params.append("style", style.map((s) => s.replace(/\s+/g, "")).join(","));
-
+    if (situation) {
+      params.append("situation", situation);
+    }
     return params.toString();
   };
 
@@ -106,12 +113,13 @@ const Home = () => {
 
   useEffect(() => {}, [location, postList]);
 
-  /* 대여글 목록 조회(검색, 필터링) */
+  /* 대여글 목록 조회(검색, 필터링, 카테고리) */
   useEffect(() => {
     const fetchPostList = async () => {
       setLoading(true); // 로딩 시작
       try {
         const queryString = buildQueryString(); // Query String 생성
+        console.log("queryString", queryString);
         const response = await AuthAxios.get(`/api/v1/rentals?${queryString}`);
         const data = response.data.result;
         console.log("쿼리 응답 성공");
@@ -137,7 +145,18 @@ const Home = () => {
     age,
     category,
     style,
+    situation,
   ]);
+
+  const handleCardClick = (params: string) => {
+    if (selectedCard === params) {
+      setSelectedCard(null);
+      router.push("/home");
+    } else {
+      setSelectedCard(params);
+      router.push(`/home?situation=${params}`);
+    }
+  };
 
   return (
     <>
@@ -159,7 +178,7 @@ const Home = () => {
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="원하는 상품명을 검색하세요!"
-            ></SearchBox>
+            />
             <Filter onClick={() => router.push("/home/filter")} />
             <CategorySlider>
               {categoryMsg.map((item) => (
@@ -169,6 +188,9 @@ const Home = () => {
                   description={item.description}
                   image={item.image}
                   color={item.color}
+                  params={item.params}
+                  selectedCard={selectedCard}
+                  onClick={() => handleCardClick(item.params)}
                 />
               ))}
             </CategorySlider>
