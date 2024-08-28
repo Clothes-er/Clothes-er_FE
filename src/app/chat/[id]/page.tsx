@@ -95,7 +95,6 @@ const ChatDetail = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   const [menu, setMenu] = useState<boolean>(false);
-  const [reportModal, setReportModal] = useState<boolean>(false);
 
   const handleMoreMenu = () => {
     setMenu(!menu);
@@ -338,7 +337,11 @@ const ChatDetail = () => {
   };
 
   const handleReportClick = () => {
-    setReportModal(true);
+    router.push(
+      `/report?type=${type === "rental" ? "chat" : "closet"}&userSid=${
+        chatMsg?.opponentSid
+      }&nickname=${chatMsg?.opponentNickname}`
+    );
   };
 
   return (
@@ -658,7 +661,7 @@ const Layout = styled.div`
 `;
 
 const Top = styled.div`
-  width: calc(50% + 30px);
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;

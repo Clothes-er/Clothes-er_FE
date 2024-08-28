@@ -54,7 +54,6 @@ const Page = () => {
   const [menu, setMenu] = useState<boolean>(false);
   const [postInfo, setPostInfo] = useState<PostInfo>();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [reportModal, setReportModal] = useState<boolean>(false);
 
   const handleBackButtonClick = () => {
     router.back();
@@ -86,7 +85,9 @@ const Page = () => {
   };
 
   const handleReportClick = () => {
-    setReportModal(true);
+    router.push(
+      `/report?type=rental&userSid=${postInfo?.userSid}&nickname=${postInfo?.nickname}`
+    );
   };
 
   const handleSubmitDelete = () => {
