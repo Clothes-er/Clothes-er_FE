@@ -12,4 +12,5 @@ export interface ChatList {
     rentalState?: string;
     title?: string;
     isDeleted?: boolean;
+    isRestricted?: boolean;
   }

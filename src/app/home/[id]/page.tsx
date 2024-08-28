@@ -51,7 +51,7 @@ const Page = () => {
   useRequireAuth();
   const router = useRouter();
   const { id } = useParams();
-  const [menu, setMenu] = useState(false);
+  const [menu, setMenu] = useState<boolean>(false);
   const [postInfo, setPostInfo] = useState<PostInfo>();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
@@ -84,6 +84,12 @@ const Page = () => {
     setDeleteModal(true);
   };
 
+  const handleReportClick = () => {
+    router.push(
+      `/report?type=rental&userSid=${postInfo?.userSid}&nickname=${postInfo?.nickname}`
+    );
+  };
+
   const handleSubmitDelete = () => {
     AuthAxios.delete(`/api/v1/rentals/${id}`)
       .then((response) => {
@@ -113,26 +119,24 @@ const Page = () => {
               style={{ cursor: "pointer" }}
             />
             공유 옷장
-            {postInfo?.isWriter ? (
-              <Menu>
-                <Image
-                  src="/assets/icons/ic_more_vertical.svg"
-                  width={24}
-                  height={24}
-                  alt="more"
-                  onClick={handleMoreMenu}
-                  style={{ cursor: "pointer" }}
+            <Menu>
+              <Image
+                src="/assets/icons/ic_more_vertical.svg"
+                width={24}
+                height={24}
+                alt="more"
+                onClick={handleMoreMenu}
+                style={{ cursor: "pointer" }}
+              />
+              {menu && (
+                <MoreBox
+                  type={postInfo?.isWriter ? "me" : "other"}
+                  modifyOnClick={handleModifyClick}
+                  deleteOnClick={handleDeleteClick}
+                  reportOnClick={handleReportClick}
                 />
-                {menu && (
-                  <MoreBox
-                    firstOnClick={handleModifyClick}
-                    secondOnClick={handleDeleteClick}
-                  />
-                )}
-              </Menu>
-            ) : (
-              <Menu />
-            )}
+              )}
+            </Menu>
           </Top>
         </Head>
         {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (

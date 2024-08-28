@@ -107,26 +107,23 @@ const Page = () => {
               style={{ cursor: "pointer" }}
             />
             나의 옷장
-            {postInfo?.isWriter ? (
-              <Menu>
-                <Image
-                  src="/assets/icons/ic_more_vertical.svg"
-                  width={24}
-                  height={24}
-                  alt="more"
-                  onClick={handleMoreMenu}
-                  style={{ cursor: "pointer" }}
+            <Menu>
+              <Image
+                src="/assets/icons/ic_more_vertical.svg"
+                width={24}
+                height={24}
+                alt="more"
+                onClick={handleMoreMenu}
+                style={{ cursor: "pointer" }}
+              />
+              {menu && (
+                <MoreBox
+                  type="me"
+                  modifyOnClick={handleModifyClick}
+                  deleteOnClick={handleDeleteClick}
                 />
-                {menu && (
-                  <MoreBox
-                    firstOnClick={handleModifyClick}
-                    secondOnClick={handleDeleteClick}
-                  />
-                )}
-              </Menu>
-            ) : (
-              <Menu />
-            )}
+              )}
+            </Menu>
           </Top>
         </Head>
         {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (

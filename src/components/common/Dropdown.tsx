@@ -146,7 +146,7 @@ const MoreIcon = styled(Image)`
 const DropdownWrapper = styled.div`
   width: 100%;
   max-height: 180px;
-  border-radius: 15px;
+  border-radius: 5px;
   border: 1px solid ${theme.colors.gray400};
   background-color: ${theme.colors.white};
   overflow: hidden;

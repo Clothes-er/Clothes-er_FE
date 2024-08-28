@@ -2,33 +2,51 @@ import { theme } from "@/styles/theme";
 import React from "react";
 import styled from "styled-components";
 
+type moreBoxType = "me" | "other";
+
 interface MoreBoxProps {
-  firstOnClick: () => void;
-  secondOnClick: () => void;
+  type: moreBoxType;
+  modifyOnClick?: () => void;
+  deleteOnClick?: () => void;
+  reportOnClick?: () => void;
 }
 
-const MoreBox: React.FC<MoreBoxProps> = ({ firstOnClick, secondOnClick }) => {
+const MoreBox: React.FC<MoreBoxProps> = ({
+  type,
+  modifyOnClick,
+  deleteOnClick,
+  reportOnClick,
+}) => {
   return (
-    <Box>
-      <Element $red={false} onClick={firstOnClick}>
-        수정하기
-      </Element>
-      <Divider />
-      <Element $red={true} onClick={secondOnClick}>
-        삭제하기
-      </Element>
+    <Box $type={type}>
+      {type === "me" ? (
+        <>
+          <Element $red={false} onClick={modifyOnClick}>
+            수정하기
+          </Element>
+          <Divider />
+          <Element $red={true} onClick={deleteOnClick}>
+            삭제하기
+          </Element>
+        </>
+      ) : (
+        <Element $red={false} onClick={reportOnClick}>
+          신고하기
+        </Element>
+      )}
     </Box>
   );
 };
 
 export default MoreBox;
 
-const Box = styled.div`
+const Box = styled.div<{ $type: moreBoxType }>`
   width: 100px;
-  height: 76px;
+  height: ${({ $type }) => ($type === "me" ? "76px" : "38px")};
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.14);
   background: ${theme.colors.white};

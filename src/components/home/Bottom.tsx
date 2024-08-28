@@ -47,12 +47,12 @@ const Bottom: React.FC<BottomProps> = ({
         const data = response.data.result;
         console.log(data);
         console.log(response.data.message);
-        router.push(`/chat/${data.id}`);
+        router.push(`/chat/${data.id}?type=${type}`);
       })
       .catch((error) => {
         console.log(error);
         console.log(error.response.data.message);
-        router.push(`/chat/${error.response.data.result.roomId}`);
+        router.push(`/chat/${error.response.data.result.roomId}?type=${type}`);
       });
   };
 

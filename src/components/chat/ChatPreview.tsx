@@ -16,6 +16,7 @@ const ChatPreview: React.FC<ChatList> = ({
   rentalState,
   recentMessageTime,
   isDeleted,
+  isRestricted,
 }) => {
   const router = useRouter();
 
@@ -57,7 +58,7 @@ const ChatPreview: React.FC<ChatList> = ({
         <Top>
           <Name>
             <NickName onClick={(e) => handleUserClick(e, `/user/${userSid}`)}>
-              {nickname}
+              {isRestricted ? "신고 당한 유저입니다" : nickname}
             </NickName>
             {type === "rental" && rentalState === "RENTED" && (
               <StateBox check={true}>대여중</StateBox>

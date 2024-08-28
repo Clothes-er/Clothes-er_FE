@@ -6,6 +6,7 @@ import GlobalStyles from "@/styles/GlobalStyle";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import StyledJsxRegistry from "./registry";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
   children,
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body>
         <StyledJsxRegistry>
           <Provider store={store}>
+            <Toaster />
             <ThemeProvider theme={theme}>
               <GlobalStyles />
               {children}
