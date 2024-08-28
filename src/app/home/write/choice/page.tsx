@@ -15,6 +15,7 @@ interface ClosetList {
   imgUrl: string;
   name: string;
   brand: string;
+  price: number;
   createdAt: string;
 }
 
@@ -66,13 +67,12 @@ const WriteChoice = () => {
           <Posts>
             {postList?.map((data, index) => (
               <PostContainer key={data.id}>
-                {/* price 값 서버 response 요청하기 */}
                 <Post
                   key={data.id}
                   id={data.id}
                   imgUrl={data.imgUrl}
                   title={data.name || ""}
-                  minPrice={3000}
+                  minPrice={data.price}
                   createdAt={data.createdAt}
                   onClickChoice={handleClickChoice}
                   isSelected={clothesId === data.id}
