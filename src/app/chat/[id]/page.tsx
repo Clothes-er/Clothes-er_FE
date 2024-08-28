@@ -38,6 +38,7 @@ interface ChatMsg {
   isChecked: boolean;
   isDeleted: boolean;
   isReviewed: boolean;
+  isRestricted: boolean;
 }
 
 interface CheckList {
@@ -353,10 +354,12 @@ const ChatDetail = () => {
               router.push(`/user/${chatMsg?.opponentSid}`);
             }}
           >
-            {chatMsg?.opponentNickname}
+            {chatMsg?.isRestricted
+              ? "신고 당한 유저입니다"
+              : chatMsg?.opponentNickname}
           </Nickname>
         </Top>
-        {chatMsg && (
+        {type === "rental" && chatMsg && (
           <Post
             title={chatMsg.title}
             minPrice={chatMsg.minPrice}
