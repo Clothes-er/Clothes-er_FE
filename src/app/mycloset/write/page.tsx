@@ -6,7 +6,7 @@ import Input from "@/components/common/Input";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import axios from "axios";
@@ -329,7 +329,13 @@ const MyClosetWrite = () => {
   );
 };
 
-export default MyClosetWrite;
+export default function MyClosetWritePaging() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MyClosetWrite />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;

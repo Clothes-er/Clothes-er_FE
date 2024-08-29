@@ -9,7 +9,7 @@ import Filter from "@/components/common/Filter";
 import Post from "@/components/home/Post";
 import Tabbar from "@/components/common/Tabbar";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
 import { getCoordsAddress } from "@/hooks/getCoordsAddress";
 import { useRequireAuth } from "@/hooks/useAuth";
@@ -254,7 +254,13 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default function HomePaging() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Home />
+    </Suspense>
+  );
+}
 
 const Contain = styled.div`
   width: 100%;

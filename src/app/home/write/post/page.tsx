@@ -6,7 +6,7 @@ import Input from "@/components/common/Input";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import axios from "axios";
@@ -360,7 +360,13 @@ const WritePost = () => {
   );
 };
 
-export default WritePost;
+export default function WritePostPaging() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WritePost />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;
