@@ -13,7 +13,7 @@ import { showToast } from "@/hooks/showToast";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import styled from "styled-components";
 
 const ReportPage = () => {
@@ -116,7 +116,13 @@ const ReportPage = () => {
   );
 };
 
-export default ReportPage;
+export default function ReportPaging() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ReportPage />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;
