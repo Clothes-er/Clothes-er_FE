@@ -68,9 +68,9 @@ const Step3 = () => {
         />
       </Background>
       <Story>
-        동네 설정을 위한
+        서비스 이용을 위한
         <br />
-        주소를 입력해주세요.
+        취향을 입력해주세요
         <Small>모든 항목은 수정할 수 있습니다.</Small>
       </Story>
       <Card>

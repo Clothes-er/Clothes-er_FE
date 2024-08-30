@@ -7,9 +7,10 @@ import styled, { css } from "styled-components";
 
 const Post: React.FC<PostList> = ({
   id,
-  postType = "share",
+  postType = "normal",
   imgUrl,
   nickname,
+  brand,
   title,
   minPrice,
   isDeleted = false,
@@ -20,7 +21,7 @@ const Post: React.FC<PostList> = ({
   createdAt,
   startDate,
   endDate,
-  size = "nomal",
+  size = "normal",
   isSelected = false,
 }) => {
   const router = useRouter();
@@ -43,7 +44,12 @@ const Post: React.FC<PostList> = ({
   };
 
   return (
-    <Container onClick={handleDetail} size={size} isSelected={isSelected}>
+    <Container
+      onClick={handleDetail}
+      size={size}
+      isSelected={isSelected}
+      disabled={isDeleted}
+    >
       <Image
         src={`${imgUrl ? imgUrl : "/assets/images/noImage.svg"}`}
         width={size === "small" ? 60 : 76}
@@ -57,9 +63,9 @@ const Post: React.FC<PostList> = ({
           <Price>
             {isDeleted
               ? "삭제된 게시물입니다"
-              : nickname
-              ? `${minPrice}원~`
-              : `구매가 ${minPrice}원`}
+              : postType === "choice"
+              ? `구매가 ${minPrice}원`
+              : `${minPrice}원~`}
           </Price>
           {showReviewed && (
             <ReviewButton
@@ -78,12 +84,18 @@ const Post: React.FC<PostList> = ({
           )}
         </Row>
         <Sub>
-          {nickname && (
+          {brand ? (
             <>
-              <Span>{nickname}</Span> 님 | {` `}
+              <Span>{brand}</Span> | {` `}
             </>
+          ) : (
+            nickname && (
+              <>
+                <Span>{nickname}</Span> 님 | {` `}
+              </>
+            )
           )}
-          {postType === "share" ? createdAt : `${startDate}~${endDate}`}{" "}
+          {postType === "rental" ? `${startDate}~${endDate}` : createdAt}
         </Sub>
       </Box>
     </Container>
@@ -92,7 +104,7 @@ const Post: React.FC<PostList> = ({
 
 export default Post;
 
-const Container = styled.div<{ size: string; isSelected: boolean }>`
+const Container = styled.button<{ size: string; isSelected: boolean }>`
   display: flex;
   width: 100%;
   height: 100px;
@@ -111,6 +123,10 @@ const Container = styled.div<{ size: string; isSelected: boolean }>`
     css`
       background-color: ${theme.colors.purple10};
     `}
+
+  &:disabled {
+    opacity: 0.7;
+  }
 `;
 
 const Box = styled.div`

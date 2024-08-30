@@ -34,6 +34,7 @@ const TransRentContent = () => {
             startDate={data.startDate}
             endDate={data.endDate}
             nickname={data.nickname}
+            isDeleted={data.isDeleted}
           />
           {index < postList.length - 1 && <Divider />}
         </PostContainer>

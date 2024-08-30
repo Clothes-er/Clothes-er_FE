@@ -10,14 +10,18 @@ interface TabProps {
   disabled?: boolean;
 }
 
-const Tabbar: React.FC<TabProps> = ({ disabled = "false" }) => {
+const Tabbar: React.FC<TabProps> = ({ disabled = false }) => {
   const pathname = usePathname();
   const [selected, setSelected] = useState(pathname);
   const router = useRouter();
 
+  useEffect(() => {
+    setSelected(pathname);
+  }, [pathname]);
+
   const handleTabClick = (path: any) => {
-    setSelected(path);
     router.push(path);
+    setSelected(path);
   };
 
   return (
@@ -26,9 +30,10 @@ const Tabbar: React.FC<TabProps> = ({ disabled = "false" }) => {
         <Tab
           key={index}
           onClick={pathname === "/" ? () => {} : () => handleTabClick(tab.path)}
-          selected={pathname === tab.path}
+          selected={selected === tab.path}
+          disabled={disabled}
         >
-          <Bar selected={pathname === tab.path} />
+          <Bar selected={selected === tab.path} />
           <Image
             src={`/assets/icons/${
               selected === tab.path ? tab.icon + "_select" : tab.icon
@@ -60,7 +65,7 @@ const Container = styled.div`
   z-index: 100;
 `;
 
-const Tab = styled.div<TabProps>`
+const Tab = styled.button<TabProps>`
   display: flex;
   flex-direction: column;
   align-items: center;

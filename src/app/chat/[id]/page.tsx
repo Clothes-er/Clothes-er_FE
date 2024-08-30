@@ -387,6 +387,7 @@ const ChatDetail = () => {
         </Top>
         {type === "rental" && chatMsg && (
           <Post
+            postType="normal"
             title={chatMsg.title}
             minPrice={chatMsg.minPrice}
             imgUrl={chatMsg.rentalImgUrl}

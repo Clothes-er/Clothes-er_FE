@@ -39,6 +39,7 @@ const MyShareContent: React.FC<MyShareContentProps> = ({ userSid }) => {
           minPrice={data.minPrice}
           createdAt={data.createdAt}
           nickname={data.nickname}
+          brand={data.brand}
         />
       ))}
     </ListContainer>
