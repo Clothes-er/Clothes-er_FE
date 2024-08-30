@@ -93,16 +93,13 @@ const Background = styled.div`
 
 const Content = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   z-index: 10;
-`;
-
-const Box = styled.div`
-  width: 100%;
-  height: 550px;
+  position: relative;
 `;
 
 const Story = styled.div`
@@ -117,8 +114,18 @@ const Story = styled.div`
   gap: 8px;
 `;
 
+const Box = styled.div`
+  width: 100%;
+  height: 550px;
+  position: absolute;
+  top: 100px;
+  left: 0;
+`;
+
 const StyledButton = styled.div`
   width: 100%;
-  position: sticky;
+  position: absolute;
   bottom: 38px;
+  left: 0;
+  z-index: 10;
 `;
