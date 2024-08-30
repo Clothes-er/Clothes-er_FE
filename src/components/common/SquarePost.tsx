@@ -26,7 +26,7 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
           layout="fill"
           alt="image"
         />
-        <HeartImage
+        {/* <HeartImage
           src={`/assets/icons/ic_heart${heart ? "_fill" : ""}.svg`}
           width={20}
           height={20}
@@ -34,7 +34,7 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
           onClick={() => {
             setHeart(!heart);
           }}
-        />
+        /> */}
       </ImageBox>
       <Title>{name}</Title>
       <Sub>

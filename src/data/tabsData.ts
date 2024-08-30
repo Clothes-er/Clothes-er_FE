@@ -22,10 +22,10 @@ export const myClosetTabs = [
       { subTab: "대여", key: "rental" }
     ]
   },
-  { 
-    tab: "찜", 
-    key: "storage"
-  }
+  // { 
+  //   tab: "찜", 
+  //   key: "storage"
+  // }
 ];
 
 export const chatTabs = [

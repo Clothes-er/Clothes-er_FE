@@ -65,6 +65,7 @@ const MyCloset = () => {
         setStyle(data.styles);
         console.log(data);
         console.log(response.data.message);
+        console.log(getLevelText(profileInfo?.level || 0));
       })
       .catch((error) => {
         console.log(error);
@@ -162,7 +163,7 @@ const MyCloset = () => {
                 </Top>
                 <Level>
                   {profileInfo?.level &&
-                    `${getLevelText(profileInfo.level) + ""} (Lv. ${
+                    `${getLevelText(profileInfo?.level || 0) + ""} (Lv. ${
                       profileInfo?.level
                     })`}
                   <LevelText>
