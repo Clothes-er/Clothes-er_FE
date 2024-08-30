@@ -48,14 +48,11 @@ export default function Home() {
           isFirstLogin: response.data.result.isFirstLogin,
         };
         dispatch(setUser(userData));
-        localStorage.setItem("accessToken", userData.token);
+        localStorage.setItem(
+          "accessToken",
+          response.data.result.token.accessToken
+        );
         localStorage.setItem("isFirstLogin", userData.isFirstLogin);
-        console.log("userData", userData.isFirstLogin);
-        if (userData.isFirstLogin) {
-          router.push("/first/step1");
-        } else {
-          router.push("/home");
-        }
       })
       .catch((error) => {
         console.log("로그인 실패", error);

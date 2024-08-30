@@ -24,6 +24,7 @@ import {
   SkeletonBox,
   SkeletonDiv,
 } from "@/components/common/Skeleton";
+import { getToken } from "@/hooks/getToken";
 
 interface PostList {
   id: number;
@@ -93,6 +94,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true); // 로딩 시작
+      console.log("토큰", getToken());
       try {
         const response = await AuthAxios.get(`/api/v1/users/address`);
         const latitude = response.data.result.latitude;
