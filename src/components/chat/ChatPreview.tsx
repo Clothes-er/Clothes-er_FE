@@ -131,11 +131,14 @@ const ProductImage = styled(Image)`
 `;
 
 const Right = styled.div`
-  width: 100%;
-  display: flex;
+  width: calc(100% - 100px);
+  display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Top = styled.div`
@@ -164,10 +167,14 @@ const NickName = styled.div`
   ${(props) => props.theme.fonts.b2_medium};
   cursor: pointer;
 `;
+
 const Preview = styled.div`
   ${(props) => props.theme.fonts.b3_regular};
   color: ${theme.colors.b100};
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
+
 const Product = styled.div`
   ${(props) => props.theme.fonts.c1_regular};
   color: ${theme.colors.gray800};
