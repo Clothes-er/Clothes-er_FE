@@ -1,4 +1,4 @@
-export type postType = "share" | "rental";
+export type postType = "normal" | "rental" | "choice";
 
 export interface PostList {
   id?: number;
@@ -6,6 +6,7 @@ export interface PostList {
   postType?: postType;
   imgUrl?: string | null;
   nickname?: string;
+  brand?: string;
   title: string;
   minPrice?: number;
   isDeleted?: boolean;
@@ -16,7 +17,7 @@ export interface PostList {
   createdAt?: string;
   startDate?: string;
   endDate?: string;
-  size?: "nomal" | "small";
+  size?: "normal" | "small";
   isSelected?: boolean;
 }
 

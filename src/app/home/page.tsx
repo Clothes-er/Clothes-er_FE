@@ -227,6 +227,7 @@ const Home = () => {
                 {postList?.map((data, index) => (
                   <PostContainer key={data.id}>
                     <Post
+                      postType="normal"
                       key={data.id}
                       id={data.id}
                       imgUrl={data.imgUrl}

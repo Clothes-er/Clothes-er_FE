@@ -7,9 +7,10 @@ import styled, { css } from "styled-components";
 
 const Post: React.FC<PostList> = ({
   id,
-  postType = "share",
+  postType = "normal",
   imgUrl,
   nickname,
+  brand,
   title,
   minPrice,
   isDeleted = false,
@@ -20,7 +21,7 @@ const Post: React.FC<PostList> = ({
   createdAt,
   startDate,
   endDate,
-  size = "nomal",
+  size = "normal",
   isSelected = false,
 }) => {
   const router = useRouter();
@@ -57,9 +58,9 @@ const Post: React.FC<PostList> = ({
           <Price>
             {isDeleted
               ? "삭제된 게시물입니다"
-              : nickname
-              ? `${minPrice}원~`
-              : `구매가 ${minPrice}원`}
+              : postType === "choice"
+              ? `구매가 ${minPrice}원`
+              : `${minPrice}원~`}
           </Price>
           {showReviewed && (
             <ReviewButton
@@ -78,12 +79,18 @@ const Post: React.FC<PostList> = ({
           )}
         </Row>
         <Sub>
-          {nickname && (
+          {brand ? (
             <>
-              <Span>{nickname}</Span> 님 | {` `}
+              <Span>{brand}</Span> | {` `}
             </>
+          ) : (
+            nickname && (
+              <>
+                <Span>{nickname}</Span> 님 | {` `}
+              </>
+            )
           )}
-          {postType === "share" ? createdAt : `${startDate}~${endDate}`}{" "}
+          {postType === "rental" ? `${startDate}~${endDate}` : createdAt}
         </Sub>
       </Box>
     </Container>
