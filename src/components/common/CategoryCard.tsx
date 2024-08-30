@@ -45,7 +45,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
 
 export default CategoryCard;
 
-const Box = styled.div<{ $isSelected: boolean }>`
+const Box = styled.button<{ $isSelected: boolean }>`
   width: 163px;
   height: 64px;
   padding: 8px 12px;

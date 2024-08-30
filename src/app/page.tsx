@@ -53,6 +53,12 @@ export default function Home() {
           response.data.result.token.accessToken
         );
         localStorage.setItem("isFirstLogin", userData.isFirstLogin);
+
+        if (userData.isFirstLogin) {
+          router.push("/first/step1");
+        } else {
+          router.push("/home");
+        }
       })
       .catch((error) => {
         console.log("로그인 실패", error);
