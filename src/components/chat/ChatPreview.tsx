@@ -114,6 +114,7 @@ const ProfileImage = styled(Image)<{ type: chatListType }>`
   top: 10px;
   left: 0;
   z-index: 100;
+  box-shadow: 0px 4px 8px 0px rgba(161, 161, 161, 0.25);
   cursor: pointer;
   ${({ type }) =>
     type === "user" &&
@@ -128,6 +129,7 @@ const ProductImage = styled(Image)`
   position: absolute;
   top: 0;
   left: 20px;
+  box-shadow: 0px 4px 8px 0px rgba(161, 161, 161, 0.25);
 `;
 
 const Right = styled.div`
