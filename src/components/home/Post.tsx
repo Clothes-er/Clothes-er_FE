@@ -44,7 +44,12 @@ const Post: React.FC<PostList> = ({
   };
 
   return (
-    <Container onClick={handleDetail} size={size} isSelected={isSelected}>
+    <Container
+      onClick={handleDetail}
+      size={size}
+      isSelected={isSelected}
+      disabled={isDeleted}
+    >
       <Image
         src={`${imgUrl ? imgUrl : "/assets/images/noImage.svg"}`}
         width={size === "small" ? 60 : 76}
@@ -99,7 +104,7 @@ const Post: React.FC<PostList> = ({
 
 export default Post;
 
-const Container = styled.div<{ size: string; isSelected: boolean }>`
+const Container = styled.button<{ size: string; isSelected: boolean }>`
   display: flex;
   width: 100%;
   height: 100px;
@@ -118,6 +123,10 @@ const Container = styled.div<{ size: string; isSelected: boolean }>`
     css`
       background-color: ${theme.colors.purple10};
     `}
+
+  &:disabled {
+    opacity: 0.7;
+  }
 `;
 
 const Box = styled.div`
