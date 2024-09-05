@@ -16,6 +16,8 @@ const Post: React.FC<PostList> = ({
   isDeleted = false,
   isReviewed = false, // 후기 작성 여부 (후기 보내기, 작성 완료)
   showReviewed = false, // 후기 버튼 유무
+  isRestricted = false,
+  isSuspended = false,
   onClickReview,
   onClickChoice,
   createdAt,
@@ -91,7 +93,14 @@ const Post: React.FC<PostList> = ({
           ) : (
             nickname && (
               <>
-                <Span>{nickname}</Span> 님 | {` `}
+                {isDeleted ? (
+                  "탈퇴한 회원"
+                ) : (
+                  <>
+                    <Span>{nickname} </Span> 님
+                  </>
+                )}{" "}
+                | {` `}
               </>
             )
           )}

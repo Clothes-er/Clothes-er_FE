@@ -17,6 +17,7 @@ const ChatPreview: React.FC<ChatList> = ({
   recentMessageTime,
   isDeleted,
   isRestricted,
+  isSuspended,
 }) => {
   const router = useRouter();
 
@@ -29,7 +30,9 @@ const ChatPreview: React.FC<ChatList> = ({
     route: string
   ) => {
     e.stopPropagation(); // 부모 요소로의 클릭 전파 방지
-    router.push(route);
+    if (!isRestricted) {
+      router.push(route);
+    }
   };
 
   return (
@@ -58,7 +61,7 @@ const ChatPreview: React.FC<ChatList> = ({
         <Top>
           <Name>
             <NickName onClick={(e) => handleUserClick(e, `/user/${userSid}`)}>
-              {isRestricted ? "신고 당한 유저입니다" : nickname}
+              {nickname} {isRestricted || (isSuspended && "(신고된 유저)")}
             </NickName>
             {type === "rental" && rentalState === "RENTED" && (
               <StateBox check={true}>대여중</StateBox>

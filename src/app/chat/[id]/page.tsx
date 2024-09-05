@@ -40,6 +40,7 @@ interface ChatMsg {
   isDeleted: boolean;
   isReviewed: boolean;
   isRestricted: boolean;
+  isSuspended: boolean;
 }
 
 interface CheckList {
@@ -369,9 +370,9 @@ const ChatDetail = () => {
               router.push(`/user/${chatMsg?.opponentSid}`);
             }}
           >
-            {chatMsg?.isRestricted
-              ? "신고 당한 유저입니다"
-              : chatMsg?.opponentNickname}
+            {chatMsg?.opponentNickname}
+            {chatMsg?.isRestricted ||
+              (chatMsg?.isSuspended && " (신고된 유저)")}
           </Nickname>
           <Menu>
             <Image

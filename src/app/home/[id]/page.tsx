@@ -31,6 +31,8 @@ interface PostInfo {
   profileUrl: string;
   nickname: string;
   isWriter: boolean;
+  isSuspended: boolean;
+  isRestricted: boolean;
   followers: number;
   followees: number;
   imgUrls: string[];
@@ -175,9 +177,21 @@ const Page = () => {
           </>
         )}
         <Profile
-          nickname={postInfo?.nickname ? postInfo.nickname : ""}
+          nickname={
+            postInfo?.nickname
+              ? `${postInfo.nickname}${
+                  postInfo.isSuspended || postInfo.isRestricted
+                    ? " (신고된 유저)"
+                    : ""
+                }`
+              : ""
+          }
           profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
-          onClick={() => router.push(`/user/${postInfo?.userSid}`)}
+          onClick={() => {
+            if (!postInfo?.isRestricted) {
+              router.push(`/user/${postInfo?.userSid}`);
+            }
+          }}
         />
         <Body>
           <Title>{postInfo?.title}</Title>

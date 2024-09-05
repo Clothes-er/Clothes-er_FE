@@ -48,6 +48,7 @@ const ChatListContent: React.FC<ChatListContentProps> = ({ type }) => {
             recentMessageTime={data.recentMessageTime}
             isDeleted={data.isDeleted}
             isRestricted={data.isRestricted}
+            isSuspended={data.isSuspended}
           />
           {index < chatList.length - 1 && <Divider />}
         </ChatContainer>
