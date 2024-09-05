@@ -4,7 +4,6 @@ import ListTab from "@/components/common/ListTab";
 import Tabbar from "@/components/common/Tabbar";
 import Topbar from "@/components/common/Topbar";
 import { useRequireAuth } from "@/hooks/useAuth";
-import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
