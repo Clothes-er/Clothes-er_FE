@@ -27,7 +27,7 @@ const TransRentContent = () => {
         <PostContainer key={data.id}>
           <Post
             id={data.id}
-            postType="rental"
+            postType="transition"
             imgUrl={data.imgUrl}
             title={data.title}
             minPrice={data.minPrice}
@@ -37,6 +37,7 @@ const TransRentContent = () => {
             isDeleted={data.isDeleted}
             isRestricted={data.isRestricted}
             isSuspended={data.isSuspended}
+            roomId={data.roomId}
           />
           {index < postList.length - 1 && <Divider />}
         </PostContainer>

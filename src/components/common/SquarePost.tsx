@@ -3,7 +3,7 @@ import { ClosetPostList } from "@/type/post";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const SquarePost: React.FC<ClosetPostList> = (props) => {
   const router = useRouter();
@@ -45,7 +45,8 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
           </>
         ) : (
           <>
-            <Span>{brand}</Span> | {createdAt}
+            <Span $disabled={!brand}>{brand ? brand : "미기재"}</Span> |{" "}
+            {createdAt}
           </>
         )}
       </Sub>
@@ -92,11 +93,21 @@ const Sub = styled.div`
   ${(props) => props.theme.fonts.c2_regular};
 `;
 
-const Span = styled.span`
+const Span = styled.span<{ $disabled?: boolean }>`
   color: ${theme.colors.purple600};
   cursor: pointer;
 
   &:hover {
     text-decoration: underline;
   }
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      color: ${theme.colors.b100};
+      cursor: auto;
+      &:hover {
+        text-decoration: none;
+      }
+    `}
 `;

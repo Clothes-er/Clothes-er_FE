@@ -33,6 +33,7 @@ const MyShareContent: React.FC<MyShareContentProps> = ({ userSid }) => {
       {postList?.map((data) => (
         <Post
           key={data.id}
+          postType="normal"
           id={data.id}
           imgUrl={data.imgUrl}
           title={data.title}

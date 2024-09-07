@@ -25,12 +25,15 @@ const Post: React.FC<PostList> = ({
   endDate,
   size = "normal",
   isSelected = false,
+  roomId,
 }) => {
   const router = useRouter();
 
   const handleDetail = () => {
     if (onClickChoice && id !== undefined) {
       onClickChoice(id);
+    } else if (postType === "transition") {
+      router.push(`/chat/${roomId}?type=rental`);
     } else if (!isDeleted) {
       router.push(`/home/${id}`);
     }
@@ -86,25 +89,26 @@ const Post: React.FC<PostList> = ({
           )}
         </Row>
         <Sub>
-          {brand ? (
+          {(postType === "normal" || postType === "choice") && (
             <>
-              <Span>{brand}</Span> | {` `}
+              <Span $disabled={!brand}>{brand ? brand : "미기재"}</Span> | {` `}
             </>
-          ) : (
-            nickname && (
-              <>
-                {isDeleted ? (
-                  "탈퇴한 회원"
-                ) : (
-                  <>
-                    <Span>{nickname} </Span> 님
-                  </>
-                )}{" "}
-                | {` `}
-              </>
-            )
           )}
-          {postType === "rental" ? `${startDate}~${endDate}` : createdAt}
+          {nickname && (
+            <>
+              {isDeleted ? (
+                "탈퇴한 회원"
+              ) : (
+                <>
+                  <Span>{nickname} </Span> 님
+                </>
+              )}{" "}
+              | {` `}
+            </>
+          )}
+          {postType === "rental" || postType === "transition"
+            ? `${startDate}~${endDate}`
+            : createdAt}
         </Sub>
       </Box>
     </Container>
@@ -181,10 +185,20 @@ const ReviewButton = styled.button`
 `;
 
 const Sub = styled.div`
-  color: ${theme.colors.gray400};
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.c2_regular};
 `;
 
-const Span = styled.span`
+const Span = styled.span<{ $disabled?: boolean }>`
   color: ${theme.colors.purple400};
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      color: ${theme.colors.b100};
+      cursor: auto;
+      &:hover {
+        text-decoration: none;
+      }
+    `}
 `;

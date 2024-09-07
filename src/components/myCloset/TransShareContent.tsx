@@ -27,7 +27,7 @@ const TransShareContent = () => {
         <PostContainer key={data.id}>
           <Post
             id={data.id}
-            postType="rental"
+            postType="transition"
             imgUrl={data.imgUrl}
             title={data.title}
             minPrice={data.minPrice}
@@ -35,6 +35,7 @@ const TransShareContent = () => {
             endDate={data.endDate}
             nickname={data.nickname}
             isDeleted={data.isDeleted}
+            roomId={data.roomId}
           />
           {index < postList.length - 1 && <Divider />}
         </PostContainer>
