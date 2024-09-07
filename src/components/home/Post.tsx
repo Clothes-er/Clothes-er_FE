@@ -89,7 +89,7 @@ const Post: React.FC<PostList> = ({
           )}
         </Row>
         <Sub>
-          {(postType === "normal" || postType === "choice") && (
+          {(postType === "my" || postType === "choice") && (
             <>
               <Span $disabled={!brand}>{brand ? brand : "미기재"}</Span> | {` `}
             </>
