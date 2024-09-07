@@ -60,7 +60,7 @@ const ChatBox = styled.div<{ $me: boolean }>`
   background: ${({ $me }) =>
     $me ? theme.colors.purple50 : theme.colors.gray100};
   ${(props) => props.theme.fonts.b2_regular};
-  color: ${theme.colors.b100};
+  color: #232323;
   position: relative;
   ${({ $me }) => ($me ? "margin-right: 8px;" : "margin-left: 8px;")}
 
