@@ -1,4 +1,5 @@
 "use client";
+
 import AuthAxios from "@/api/authAxios";
 import ChatMsg from "@/components/chat/ChatMsg";
 import Post from "@/components/home/Post";
@@ -17,6 +18,7 @@ import BottomModal from "@/components/common/BottomModal";
 import { setChatPost } from "@/redux/slices/chatPostSlice";
 import { useDispatch } from "react-redux";
 import MoreBox from "@/components/common/MoreBox";
+import { format, parse } from "date-fns";
 
 interface Message {
   nickname: string;
@@ -402,14 +404,50 @@ const ChatDetail = () => {
         )}
         {chatMsg && (
           <ChatList>
-            {chatMsg.messages.map((data, index) => (
-              <ChatMsg
-                key={index}
-                nickname={data.nickname}
-                me={data.nickname !== chatMsg?.opponentNickname}
-                msg={data.message}
-              />
-            ))}
+            {chatMsg.messages.map((data, index) => {
+              const prevMsg = chatMsg.messages[index - 1];
+              const nextMsg = chatMsg.messages[index + 1];
+
+              const currentTime = format(
+                parse(data.createdAt, "yyyy년 MM월 dd일 HH:mm:ss", new Date()),
+                "HH:mm"
+              );
+              const prevTime = prevMsg
+                ? format(
+                    parse(
+                      prevMsg.createdAt,
+                      "yyyy년 MM월 dd일 HH:mm:ss",
+                      new Date()
+                    ),
+                    "HH:mm"
+                  )
+                : null;
+              const nextTime = nextMsg
+                ? format(
+                    parse(
+                      nextMsg.createdAt,
+                      "yyyy년 MM월 dd일 HH:mm:ss",
+                      new Date()
+                    ),
+                    "HH:mm"
+                  )
+                : null;
+
+              const isSameSender = prevMsg?.nickname === data.nickname;
+              const isLastInGroup = nextTime !== currentTime;
+
+              return (
+                <ChatMsg
+                  key={index}
+                  nickname={data.nickname}
+                  me={data.nickname !== chatMsg?.opponentNickname}
+                  msg={data.message}
+                  createdAt={data.createdAt}
+                  showNickname={!isSameSender}
+                  showTime={isLastInGroup}
+                />
+              );
+            })}
           </ChatList>
         )}
         {chatMsg?.opponentNickname === chatMsg?.buyerNickname && (
@@ -795,22 +833,6 @@ const Element = styled.div`
   justify-content: center;
   gap: 6px;
 `;
-
-// const ReviewTypeImage = styled(Image)<{ $selected: boolean }>`
-//   fill: ${({ $selected }) =>
-//     $selected ? theme.colors.purple500 : theme.colors.gray700};
-//   stroke: ${({ $selected }) =>
-//     $selected ? theme.colors.purple500 : theme.colors.gray700};
-//   .svg-icon {
-//     stroke: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
-//   }
-
-//   .svg-icon circle,
-//   .svg-icon path {
-//     fill: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
-//     stroke: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
-//   }
-// `;
 
 const ReviewType = styled.div<{ $selected: boolean }>`
   color: ${({ theme, $selected }) =>
