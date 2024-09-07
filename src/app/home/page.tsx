@@ -221,8 +221,8 @@ const Home = () => {
                   </SkeletonDiv>
                 </SkeletonPost>
               </>
-            ) : (
-              // 로딩 완료 후 실제 데이터 표시
+            ) : // 로딩 완료 후 실제 데이터 표시
+            postList && postList.length > 0 ? (
               <Posts>
                 {postList?.map((data, index) => (
                   <PostContainer key={data.id}>
@@ -240,6 +240,22 @@ const Home = () => {
                   </PostContainer>
                 ))}
               </Posts>
+            ) : (
+              <NoData>
+                {buildQueryString() === "" ? (
+                  <>
+                    현재 위치에는 등록된 공유글이 없어요.
+                    <br />
+                    제일 먼저 글을 작성해보세요!
+                  </>
+                ) : (
+                  <>
+                    해당 필터링에 대한 검색 결과가 없습니다 :(
+                    <br />
+                    다른 조건으로 검색해보는 건 어떨까요?
+                  </>
+                )}
+              </NoData>
             )}
           </Content>
         </Layout>
@@ -291,6 +307,7 @@ const Location = styled.div`
 
 const Content = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -363,4 +380,19 @@ const Edit = styled.div`
   justify-content: center;
   z-index: 20;
   cursor: pointer;
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b2_regular}
+
+  @media screen and (max-width: 400px) {
+    ${(props) => props.theme.fonts.b3_regular}
+  }
 `;
