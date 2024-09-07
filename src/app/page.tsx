@@ -63,7 +63,11 @@ export default function Home() {
       .catch((error) => {
         console.log("로그인 실패", error);
         if (error.response) {
-          setError(error.response.data.message);
+          if (error.response.data.code === 2130 || 3101) {
+            setError("이메일 또는 비밀번호가 잘못되었습니다.");
+          } else {
+            setError(error.response.data.message);
+          }
         } else {
           setError("이메일과 비밀번호를 확인해주세요.");
         }
