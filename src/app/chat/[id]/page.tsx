@@ -434,7 +434,8 @@ const ChatDetail = () => {
                 : null;
 
               const isSameSender = prevMsg?.nickname === data.nickname;
-              const isLastInGroup = nextTime !== currentTime;
+              const isLastInGroup =
+                nextTime !== currentTime || data.nickname !== nextMsg.nickname;
 
               return (
                 <ChatMsg
@@ -723,7 +724,7 @@ const ChatList = styled.div`
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   ::-webkit-scrollbar {
     display: none;
   }
