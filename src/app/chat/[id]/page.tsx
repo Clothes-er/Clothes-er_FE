@@ -6,7 +6,7 @@ import Post from "@/components/home/Post";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Modal from "@/components/common/Modal";
 import RentalDate from "@/components/common/RentalDate";
@@ -56,6 +56,7 @@ const ChatDetail = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   /* roomId, type */
   const { id } = useParams();
@@ -137,6 +138,13 @@ const ChatDetail = () => {
       });
   };
 
+  /* 새 메시지가 들어올 때 스크롤 하단 */
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMsgList]);
+
   /* chatPost 정보 리덕스 업데이트 */
   useEffect(() => {
     if (chatMsg) {
@@ -197,7 +205,6 @@ const ChatDetail = () => {
 
     client.onWebSocketError = (event) => {
       console.error("WebSocket error:", event);
-      // alert("메시지 전송 중 오류가 발생했습니다.");
     };
 
     client.activate();
@@ -449,6 +456,7 @@ const ChatDetail = () => {
                 />
               );
             })}
+            <div ref={bottomRef} />
           </ChatList>
         )}
         {chatMsg?.opponentNickname === chatMsg?.buyerNickname && (
