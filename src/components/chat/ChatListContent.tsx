@@ -32,27 +32,47 @@ const ChatListContent: React.FC<ChatListContentProps> = ({ type }) => {
 
   return (
     <ChatListContianer>
-      {chatList.map((data, index) => (
-        <ChatContainer key={data.id}>
-          <ChatPreview
-            type={type}
-            key={data.id}
-            id={data.id}
-            userSid={data.userSid}
-            nickname={data.nickname}
-            recentMessage={data.recentMessage}
-            title={data.title}
-            profileImgUrl={data.profileImgUrl}
-            rentalImgUrl={data.rentalImgUrl}
-            rentalState={data.rentalState}
-            recentMessageTime={data.recentMessageTime}
-            isDeleted={data.isDeleted}
-            isRestricted={data.isRestricted}
-            isSuspended={data.isSuspended}
-          />
-          {index < chatList.length - 1 && <Divider />}
+      {chatList.length > 0 ? (
+        <ChatContainer>
+          {chatList.map((data, index) => (
+            <>
+              <ChatPreview
+                type={type}
+                key={data.id}
+                id={data.id}
+                userSid={data.userSid}
+                nickname={data.nickname}
+                recentMessage={data.recentMessage}
+                title={data.title}
+                profileImgUrl={data.profileImgUrl}
+                rentalImgUrl={data.rentalImgUrl}
+                rentalState={data.rentalState}
+                recentMessageTime={data.recentMessageTime}
+                isDeleted={data.isDeleted}
+                isRestricted={data.isRestricted}
+                isSuspended={data.isSuspended}
+              />
+              {index < chatList.length - 1 && <Divider />}
+            </>
+          ))}
         </ChatContainer>
-      ))}
+      ) : (
+        <NoData>
+          {type === "rental" ? (
+            <>
+              아직 채팅 내역이 없어요.
+              <br />
+              대여글을 통해 채팅을 시작해보세요!
+            </>
+          ) : (
+            <>
+              아직 채팅 내역이 없어요.
+              <br />
+              다른 유저의 옷장을 구경하며 채팅을 시작해보세요!
+            </>
+          )}
+        </NoData>
+      )}
     </ChatListContianer>
   );
 };
@@ -60,12 +80,15 @@ const ChatListContent: React.FC<ChatListContentProps> = ({ type }) => {
 export default ChatListContent;
 
 const ChatListContianer = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   border-top: 1px solid ${theme.colors.gray300};
 `;
 
 const ChatContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
 `;
@@ -73,4 +96,20 @@ const ChatContainer = styled.div`
 const Divider = styled.div`
   height: 0.5px;
   background-color: rgba(219, 219, 219, 0.7);
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b2_regular}
+
+  @media screen and (max-width: 400px) {
+    ${(props) => props.theme.fonts.b3_regular}
+  }
 `;
