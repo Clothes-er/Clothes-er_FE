@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
 import Post from "../home/Post";
 import styled from "styled-components";
+import { theme } from "@/styles/theme";
 
 interface MyShareContentProps {
   userSid?: string;
@@ -29,21 +30,29 @@ const MyShareContent: React.FC<MyShareContentProps> = ({ userSid }) => {
   }, []);
 
   return (
-    <ListContainer>
-      {postList?.map((data) => (
-        <Post
-          key={data.id}
-          postType="my"
-          id={data.id}
-          imgUrl={data.imgUrl}
-          title={data.title}
-          minPrice={data.minPrice}
-          createdAt={data.createdAt}
-          nickname={data.nickname}
-          brand={data.brand}
-        />
-      ))}
-    </ListContainer>
+    <>
+      {postList && postList?.length > 0 ? (
+        <ListContainer>
+          {postList.map((data) => (
+            <Post
+              key={data.id}
+              postType="my"
+              id={data.id}
+              imgUrl={data.imgUrl}
+              title={data.title}
+              minPrice={data.minPrice}
+              createdAt={data.createdAt}
+              nickname={data.nickname}
+              brand={data.brand}
+            />
+          ))}
+        </ListContainer>
+      ) : (
+        <NoData>
+          <>등록한 대여글이 없네요!</>
+        </NoData>
+      )}
+    </>
   );
 };
 
@@ -53,4 +62,20 @@ const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b2_regular}
+
+  @media screen and (max-width: 400px) {
+    ${(props) => props.theme.fonts.b3_regular}
+  }
 `;

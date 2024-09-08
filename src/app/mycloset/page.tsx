@@ -660,6 +660,7 @@ const Span = styled.span`
 `;
 
 const Parent = styled.div`
+  height: 100%;
   position: relative;
 `;
 const WriteButton = styled.button`
