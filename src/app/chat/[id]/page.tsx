@@ -1,11 +1,12 @@
 "use client";
+
 import AuthAxios from "@/api/authAxios";
 import ChatMsg from "@/components/chat/ChatMsg";
 import Post from "@/components/home/Post";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Modal from "@/components/common/Modal";
 import RentalDate from "@/components/common/RentalDate";
@@ -17,6 +18,7 @@ import BottomModal from "@/components/common/BottomModal";
 import { setChatPost } from "@/redux/slices/chatPostSlice";
 import { useDispatch } from "react-redux";
 import MoreBox from "@/components/common/MoreBox";
+import { format, parse } from "date-fns";
 
 interface Message {
   nickname: string;
@@ -54,6 +56,7 @@ const ChatDetail = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   /* roomId, type */
   const { id } = useParams();
@@ -135,6 +138,13 @@ const ChatDetail = () => {
       });
   };
 
+  /* 새 메시지가 들어올 때 스크롤 하단 */
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMsgList]);
+
   /* chatPost 정보 리덕스 업데이트 */
   useEffect(() => {
     if (chatMsg) {
@@ -144,7 +154,7 @@ const ChatDetail = () => {
           minPrice: chatMsg.minPrice,
           imgUrl: chatMsg.rentalImgUrl,
           id: chatMsg.rentalId,
-          isDeleted: true,
+          isDeleted: chatMsg.isDeleted,
           isReviewed: chatMsg.isReviewed,
           showReviewed: Boolean(chatMsg.rentalState),
           buyerNickname: chatMsg.buyerNickname,
@@ -195,7 +205,6 @@ const ChatDetail = () => {
 
     client.onWebSocketError = (event) => {
       console.error("WebSocket error:", event);
-      // alert("메시지 전송 중 오류가 발생했습니다.");
     };
 
     client.activate();
@@ -402,14 +411,52 @@ const ChatDetail = () => {
         )}
         {chatMsg && (
           <ChatList>
-            {chatMsg.messages.map((data, index) => (
-              <ChatMsg
-                key={index}
-                nickname={data.nickname}
-                me={data.nickname !== chatMsg?.opponentNickname}
-                msg={data.message}
-              />
-            ))}
+            {chatMsg.messages.map((data, index) => {
+              const prevMsg = chatMsg.messages[index - 1];
+              const nextMsg = chatMsg.messages[index + 1];
+
+              const currentTime = format(
+                parse(data.createdAt, "yyyy년 MM월 dd일 HH:mm:ss", new Date()),
+                "HH:mm"
+              );
+              const prevTime = prevMsg
+                ? format(
+                    parse(
+                      prevMsg.createdAt,
+                      "yyyy년 MM월 dd일 HH:mm:ss",
+                      new Date()
+                    ),
+                    "HH:mm"
+                  )
+                : null;
+              const nextTime = nextMsg
+                ? format(
+                    parse(
+                      nextMsg.createdAt,
+                      "yyyy년 MM월 dd일 HH:mm:ss",
+                      new Date()
+                    ),
+                    "HH:mm"
+                  )
+                : null;
+
+              const isSameSender = prevMsg?.nickname === data.nickname;
+              const isLastInGroup =
+                nextTime !== currentTime || data.nickname !== nextMsg.nickname;
+
+              return (
+                <ChatMsg
+                  key={index}
+                  nickname={data.nickname}
+                  me={data.nickname !== chatMsg?.opponentNickname}
+                  msg={data.message}
+                  createdAt={data.createdAt}
+                  showNickname={!isSameSender}
+                  showTime={isLastInGroup}
+                />
+              );
+            })}
+            <div ref={bottomRef} />
           </ChatList>
         )}
         {chatMsg?.opponentNickname === chatMsg?.buyerNickname && (
@@ -685,7 +732,8 @@ const ChatList = styled.div`
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
+
   ::-webkit-scrollbar {
     display: none;
   }
@@ -795,22 +843,6 @@ const Element = styled.div`
   justify-content: center;
   gap: 6px;
 `;
-
-// const ReviewTypeImage = styled(Image)<{ $selected: boolean }>`
-//   fill: ${({ $selected }) =>
-//     $selected ? theme.colors.purple500 : theme.colors.gray700};
-//   stroke: ${({ $selected }) =>
-//     $selected ? theme.colors.purple500 : theme.colors.gray700};
-//   .svg-icon {
-//     stroke: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
-//   }
-
-//   .svg-icon circle,
-//   .svg-icon path {
-//     fill: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
-//     stroke: ${({ $selected }) => ($selected ? "purple" : "#C0C0C0")};
-//   }
-// `;
 
 const ReviewType = styled.div<{ $selected: boolean }>`
   color: ${({ theme, $selected }) =>

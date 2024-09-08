@@ -1,8 +1,8 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
+import BackgroundSVG from "./BackgroundSVG";
 
 interface CategoryCardProps {
   keyword: string;
@@ -32,13 +32,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         <Description>{description}</Description>
       </Text>
       <IconImage src={image} width={31} height={31} alt={keyword} />
-      <BackgroundImage
-        src="/assets/images/category/background.svg"
-        width={42}
-        height={32}
-        alt={keyword}
-        $color={color}
-      />
+      <BackgroundWrapper>
+        <BackgroundSVG color={color} />
+      </BackgroundWrapper>
     </Box>
   );
 };
@@ -46,7 +42,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
 export default CategoryCard;
 
 const Box = styled.button<{ $isSelected: boolean }>`
-  width: 163px;
+  width: 170px;
   height: 64px;
   padding: 8px 12px;
   border-radius: 5px;
@@ -74,6 +70,7 @@ const Keyword = styled.div`
 `;
 
 const Description = styled.div`
+  text-align: left;
   color: ${theme.colors.gray950};
   ${(props) => props.theme.fonts.c2_medium};
   z-index: 100;
@@ -94,4 +91,11 @@ const BackgroundImage = styled(Image)<{ $color: string }>`
   svg path {
     fill: color;
   }
+`;
+
+const BackgroundWrapper = styled.div`
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  z-index: 1;
 `;

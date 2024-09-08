@@ -16,17 +16,10 @@ html {
   box-shadow: 0px 0px 64px 0px rgba(30, 41, 59, 0.1);
 
   ::-webkit-scrollbar {
-    width: 8px;
+    display: none;
   }
-  ::-webkit-scrollbar-thumb {
-    height: 20%; /* 스크롤바의 길이 */
-    background: #D5D5D6; /* 스크롤바의 색상 */
-    border-radius: 10px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #EBEBEB;  /*스크롤바 뒷 배경 색상*/
-    border-radius: 10px;
-  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 body {

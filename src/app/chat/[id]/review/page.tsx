@@ -40,7 +40,7 @@ const ReviewPage = () => {
         good_review_keywords.filter(
           (item) =>
             item.target === "COMMON" ||
-            (isLender ? item.target === "LENDER" : item.target === "SELLER")
+            (isLender ? item.target === "SELLER" : item.target === "LENDER")
         )
       );
     } else {
@@ -48,7 +48,7 @@ const ReviewPage = () => {
         bad_review_keywords.filter(
           (item) =>
             item.target === "COMMON" ||
-            (isLender ? item.target === "LENDER" : item.target === "SELLER")
+            (isLender ? item.target === "SELLER" : item.target === "LENDER")
         )
       );
     }
@@ -82,7 +82,7 @@ const ReviewPage = () => {
     })
       .then((response) => {
         console.log("거래 후기 작성 성공", response.data);
-        router.push(`/chat/${id}`);
+        router.push(`/chat/${id}?type=rental`);
       })
       .catch((error) => {
         console.log("거래 후기 작성 실패", error);
@@ -197,8 +197,6 @@ const SubmitButton = styled.div`
 const Content = styled.div`
   width: 100%;
   height: 100%;
-  padding: 25px 0;
-  background-color: #ffffff;
   border-radius: 8px;
   display: flex;
   flex-direction: column;

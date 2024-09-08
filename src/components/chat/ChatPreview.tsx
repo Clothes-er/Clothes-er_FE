@@ -98,11 +98,10 @@ export default ChatPreview;
 
 const Container = styled.div`
   width: 100%;
-  height: 110px;
   padding: 24px 8px;
   display: flex;
   justify-content: flex-start;
-  gap: 20px;
+  gap: 10px;
   z-index: 0;
 `;
 
@@ -174,6 +173,7 @@ const NickName = styled.div`
 `;
 
 const Preview = styled.div`
+  width: 100%;
   ${(props) => props.theme.fonts.b3_regular};
   color: ${theme.colors.b100};
   overflow: hidden;

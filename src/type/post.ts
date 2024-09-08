@@ -1,4 +1,4 @@
-export type postType = "normal" | "rental" | "choice";
+export type postType = "normal" | "rental" | "choice" | "my" | "transition";
 
 export interface PostList {
   id?: number;
@@ -21,6 +21,7 @@ export interface PostList {
   endDate?: string;
   size?: "normal" | "small";
   isSelected?: boolean;
+  roomId?: number;
 }
 
 export interface ClosetPostList {

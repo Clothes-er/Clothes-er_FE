@@ -162,7 +162,7 @@ const MyCloset = () => {
                   </ProfileButton>
                 </Top>
                 <Level>
-                  {profileInfo?.level &&
+                  {profileInfo?.level !== null &&
                     `${getLevelText(profileInfo?.level || 0) + ""} (Lv. ${
                       profileInfo?.level
                     })`}
@@ -660,6 +660,7 @@ const Span = styled.span`
 `;
 
 const Parent = styled.div`
+  height: 100%;
   position: relative;
 `;
 const WriteButton = styled.button`

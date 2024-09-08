@@ -72,19 +72,37 @@ const ClosetPage = () => {
           <Topbar text="옷장 구경" align="left" />
           <Content>
             <Filter onClick={() => router.push("/closet/filter")} />
-            <GridContainer>
-              {postList?.map((data) => (
-                <SquarePost
-                  key={data.id}
-                  id={data.id}
-                  userSid={data.userSid}
-                  nickname={data.nickname}
-                  imgUrl={data.imgUrl}
-                  name={data.name}
-                  createdAt={data.createdAt}
-                />
-              ))}
-            </GridContainer>
+            {postList && postList.length > 0 ? (
+              <GridContainer>
+                {postList.map((data) => (
+                  <SquarePost
+                    key={data.id}
+                    id={data.id}
+                    userSid={data.userSid}
+                    nickname={data.nickname}
+                    imgUrl={data.imgUrl}
+                    name={data.name}
+                    createdAt={data.createdAt}
+                  />
+                ))}
+              </GridContainer>
+            ) : (
+              <NoData>
+                {buildQueryString() === "" ? (
+                  <>
+                    아직 다른 유저들의 옷장이 채워져있지 않습니다!
+                    <br />
+                    옷장을 채워볼까요?
+                  </>
+                ) : (
+                  <>
+                    해당 필터링에 대한 검색 결과가 없습니다 :(
+                    <br />
+                    다른 조건으로 검색해보는 건 어떨까요?
+                  </>
+                )}
+              </NoData>
+            )}
           </Content>
         </Layout>
       </Contain>
@@ -113,6 +131,7 @@ const Layout = styled.div`
 
 const Content = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -127,4 +146,19 @@ const GridContainer = styled.div`
   row-gap: 15px;
   column-gap: 22px;
   margin-top: 10px;
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b2_regular}
+
+  @media screen and (max-width: 400px) {
+    ${(props) => props.theme.fonts.b3_regular}
+  }
 `;

@@ -11,7 +11,7 @@ export const categoryMsg = [
         id: 1,
         keyword: "졸업",
         params: "GRADUATION",
-        description: "학위복부터 대학, 중고등\n졸업사진용 옷들을 한번에!",
+        description: "학위복부터 대학, 중고등\n졸업사진 옷들을 한번에!",
         image: "/assets/images/category/graduation.svg",
         color: "#808080"
     },
@@ -27,7 +27,7 @@ export const categoryMsg = [
         id: 3,
         keyword: "행사",
         params: "EVENT",
-        description: "매번 결혼식, 모임 때마다\n입을 옷이 없어 고민인가요?",
+        description: "매번 결혼식, 모임 때마다\n뭘 입을지 고민이신가요?",
         image: "/assets/images/category/event.svg",
         color: "#2CD5FB"
     },
@@ -51,7 +51,7 @@ export const categoryMsg = [
         id: 6,
         keyword: "장마",
         params: "MONSOON",
-        description: "덥고.. 습한 요즘..\n장마템으로 든든한 여름을!",
+        description: "덥고.. 습한 요즘..\n장마템과 든든한 여름을!",
         image: "/assets/images/category/umbrella.svg",
         color: "#6EFF00"
     },
@@ -67,7 +67,7 @@ export const categoryMsg = [
         id: 8,
         keyword: "롱패딩 말고 없어?",
         params: "WINTER",
-        description: "겨울에도 멋내고 싶은 당신!\n한파용 아이템을 장만해봐요!",
+        description: "겨울에도 멋내고 싶다면!\n한파용 아이템은 어떤가요?",
         image: "/assets/images/category/winter.svg",
         color: "#00AAFF"
     },

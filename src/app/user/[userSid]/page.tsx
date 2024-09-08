@@ -104,7 +104,7 @@ const MyCloset = () => {
                   </Nickname>
                 </Top>
                 <Level>
-                  {profileInfo?.level &&
+                  {profileInfo?.level !== null &&
                     `${getLevelText(profileInfo.level) + ""} (Lv. ${
                       profileInfo?.level
                     })`}

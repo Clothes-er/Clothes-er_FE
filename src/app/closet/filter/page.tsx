@@ -3,6 +3,7 @@
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import FilterChip from "@/components/common/FilterChip";
+import Header from "@/components/common/Header";
 import RangeSlider from "@/components/common/RangeSlider";
 import Topbar from "@/components/common/Topbar";
 import { ageMapping, ages, categories, styles } from "@/data/filterData";
@@ -131,21 +132,14 @@ const FilterPage = () => {
     dispatch(setSelectedAge(localAge));
     dispatch(setSelectedCategory(localCategory));
     dispatch(setSelectedStyle(localStyle));
-    router.push("/home");
+    router.push("/closet");
   };
 
   return (
     <Layout>
       <div>
-        <Image
-          src="/assets/images/logo_black.svg"
-          width={101}
-          height={18}
-          alt="logo"
-          onClick={() => router.push("/home")}
-          style={{ cursor: "pointer" }}
-        />
-        <Topbar text="필터" icon={true} link="/home" align="center" />
+        <Header />
+        <Topbar text="필터" icon={true} link="/closet" align="center" />
         <Content>
           <div>
             <OptionsList>
