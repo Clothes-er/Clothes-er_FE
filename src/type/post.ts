@@ -1,4 +1,4 @@
-export type postType = "normal" | "rental" | "choice" | "transition";
+export type postType = "normal" | "rental" | "choice" | "my" | "transition";
 
 export interface PostList {
   id?: number;

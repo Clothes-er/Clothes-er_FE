@@ -733,6 +733,7 @@ const ChatList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
   ::-webkit-scrollbar {
     display: none;
   }
