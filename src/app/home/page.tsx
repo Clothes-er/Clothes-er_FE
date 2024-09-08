@@ -307,7 +307,7 @@ const Location = styled.div`
 
 const Content = styled.div`
   width: 100%;
-  height: 100%;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -337,6 +337,7 @@ const SearchBox = styled.input`
 
 const CategorySlider = styled.div`
   width: 100%;
+  height: 64px;
   display: flex;
   align-items: center;
   overflow-x: scroll;
@@ -378,13 +379,13 @@ const Edit = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 20;
+  z-index: 150;
   cursor: pointer;
 `;
 
 const NoData = styled.div`
   width: 100%;
-  height: 100%;
+  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
