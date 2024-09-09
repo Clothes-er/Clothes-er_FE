@@ -26,6 +26,7 @@ interface PostInfo {
   profileUrl: string;
   nickname: string;
   isWriter: boolean;
+  isWithdrawn: boolean;
   imgUrls: string[];
   name: string;
   description: string;
@@ -170,7 +171,13 @@ const Page = () => {
           </>
         )}
         <Profile
-          nickname={postInfo?.nickname ? postInfo.nickname : ""}
+          nickname={
+            postInfo?.nickname
+              ? `${postInfo.nickname}${
+                  postInfo.isWithdrawn ? " (탈퇴한 회원)" : ""
+                }`
+              : ""
+          }
           profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
           onClick={() => router.push(`/user/${postInfo?.userSid}`)}
         />
@@ -227,6 +234,7 @@ const Page = () => {
           bottomType="closet"
           userSid={postInfo.userSid}
           isWriter={postInfo.isWriter}
+          isWithdrawn={postInfo.isWithdrawn}
         />
       )}
       {/* 삭제하기 모달 */}

@@ -39,6 +39,7 @@ const TransShareContent = () => {
                 endDate={data.endDate}
                 nickname={data.nickname}
                 isDeleted={data.isDeleted}
+                isWithdrawn={data.isWithdrawn}
                 roomId={data.roomId}
               />
               {index < postList.length - 1 && <Divider />}

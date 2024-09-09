@@ -19,6 +19,7 @@ const Post: React.FC<PostList> = ({
   showReviewed = false, // 후기 버튼 유무
   isRestricted = false,
   isSuspended = false,
+  isWithdrawn = false,
   onClickReview,
   onClickChoice,
   createdAt,
@@ -101,7 +102,7 @@ const Post: React.FC<PostList> = ({
           )}
           {nickname && (
             <>
-              {isDeleted ? (
+              {isWithdrawn ? (
                 "탈퇴한 회원"
               ) : (
                 <>
@@ -112,7 +113,9 @@ const Post: React.FC<PostList> = ({
             </>
           )}
           {postType === "rental" || postType === "transition"
-            ? `${startDate}~${endDate}`
+            ? `${startDate?.slice(2).replace(/-/g, "/")}~${endDate
+                ?.slice(2)
+                .replace(/-/g, "/")}`
             : createdAt}
         </Sub>
       </Box>

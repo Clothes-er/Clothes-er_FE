@@ -15,6 +15,7 @@ export interface PostList {
   showReviewed?: boolean;
   isRestricted?: boolean;
   isSuspended?: boolean;
+  isWithdrawn?: boolean;
   onClickReview?: () => void;
   onClickChoice?: (id: number) => void;
   createdAt?: string;

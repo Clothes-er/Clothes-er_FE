@@ -18,6 +18,7 @@ const ChatPreview: React.FC<ChatList> = ({
   isDeleted,
   isRestricted,
   isSuspended,
+  isWithdrawn,
 }) => {
   const router = useRouter();
 
@@ -61,7 +62,10 @@ const ChatPreview: React.FC<ChatList> = ({
         <Top>
           <Name>
             <NickName onClick={(e) => handleUserClick(e, `/user/${userSid}`)}>
-              {nickname} {isRestricted || (isSuspended && "(신고된 유저)")}
+              {nickname}
+              {isWithdrawn
+                ? " (탈퇴한 유저)"
+                : (isRestricted || isSuspended) && " (신고된 유저)"}
             </NickName>
             {type === "rental" && rentalState === "RENTED" && (
               <StateBox $check={true}>대여중</StateBox>

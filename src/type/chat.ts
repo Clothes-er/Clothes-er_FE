@@ -14,4 +14,5 @@ export interface ChatList {
     isDeleted?: boolean;
     isRestricted?: boolean;
     isSuspended?: boolean;
+    isWithdrawn?: boolean;
   }

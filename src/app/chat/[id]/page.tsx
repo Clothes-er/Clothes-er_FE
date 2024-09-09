@@ -44,6 +44,7 @@ interface ChatMsg {
   isReviewed: boolean;
   isRestricted: boolean;
   isSuspended: boolean;
+  isWithdrawn: boolean;
 }
 
 interface CheckList {
@@ -381,8 +382,10 @@ const ChatDetail = () => {
             }}
           >
             {chatMsg?.opponentNickname}
-            {chatMsg?.isRestricted ||
-              (chatMsg?.isSuspended && " (신고된 유저)")}
+            {chatMsg?.isWithdrawn
+              ? " (탈퇴한 유저)"
+              : (chatMsg?.isRestricted || chatMsg?.isSuspended) &&
+                " (신고된 유저)"}
           </Nickname>
           <Menu>
             <Image
