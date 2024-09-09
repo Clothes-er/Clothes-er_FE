@@ -494,35 +494,38 @@ const ChatDetail = () => {
             )}
           </State>
         )}
-        {chatMsg?.opponentNickname === chatMsg?.lenderNickname && (
+        {chatMsg?.opponentNickname === chatMsg?.lenderNickname && chatMsg && (
           <State>
-            {chatMsg && (
-              <>
-                <StateBox
-                  check={chatMsg.isChecked}
-                  onClick={
-                    chatMsg.isChecked
-                      ? () => {
-                          setLookChecked(true);
-                          handleLookCheck();
-                        }
-                      : () => setChecked(true)
-                  }
-                >
-                  체크리스트
-                  <Image
-                    src={
-                      chatMsg.isChecked
-                        ? "/assets/icons/ic_checklist_true.svg"
-                        : "/assets/icons/ic_checklist_false.svg"
+            <StateBox
+              check={chatMsg.isChecked}
+              onClick={
+                chatMsg.isChecked
+                  ? () => {
+                      setLookChecked(true);
+                      handleLookCheck();
                     }
-                    width={24}
-                    height={24}
-                    alt="checklist"
-                  />
-                </StateBox>
-              </>
-            )}
+                  : () => setChecked(true)
+              }
+            >
+              체크리스트
+              <Image
+                src={
+                  chatMsg.isChecked
+                    ? "/assets/icons/ic_checklist_true.svg"
+                    : "/assets/icons/ic_checklist_false.svg"
+                }
+                width={24}
+                height={24}
+                alt="checklist"
+              />
+            </StateBox>
+            <StateBox
+              check={chatMsg?.rentalState === "RETURNED"}
+              onClick={() => setRentaled(true)}
+              disabled={chatMsg?.rentalState === "RETURNED"}
+            >
+              대여 완료
+            </StateBox>
           </State>
         )}
         {rentaling && (
