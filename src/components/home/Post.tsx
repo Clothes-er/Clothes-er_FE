@@ -13,6 +13,7 @@ const Post: React.FC<PostList> = ({
   brand,
   title,
   minPrice,
+  minDays,
   isDeleted = false,
   isReviewed = false, // 후기 작성 여부 (후기 보내기, 작성 완료)
   showReviewed = false, // 후기 버튼 유무
@@ -65,13 +66,18 @@ const Post: React.FC<PostList> = ({
       <Box>
         <Title>{title}</Title>
         <Row>
-          <Price>
-            {isDeleted
-              ? "삭제된 게시물입니다"
-              : postType === "choice"
-              ? `구매가 ${minPrice}원`
-              : `${minPrice}원~`}
-          </Price>
+          <Bottom>
+            <Price>
+              {isDeleted
+                ? "삭제된 게시물입니다"
+                : postType === "choice"
+                ? `구매가 ${minPrice}원`
+                : `${minPrice}원~`}
+            </Price>
+            <Days>
+              {isDeleted ? "" : postType !== "choice" && `${minDays}day`}
+            </Days>
+          </Bottom>
           {showReviewed && (
             <ReviewButton
               onClick={handleReviewButtonClick}
@@ -161,9 +167,19 @@ const Row = styled.div`
   gap: 15px;
 `;
 
+const Bottom = styled(Row)`
+  align-items: flex-end;
+  gap: 10px;
+`;
+
 const Price = styled.div`
   color: ${theme.colors.purple400};
   ${(props) => props.theme.fonts.b2_bold};
+`;
+
+const Days = styled.div`
+  color: ${theme.colors.gray900};
+  ${(props) => props.theme.fonts.c1_regular};
 `;
 
 const ReviewButton = styled.button`

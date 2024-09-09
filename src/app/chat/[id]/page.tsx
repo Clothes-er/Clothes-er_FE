@@ -36,6 +36,7 @@ interface ChatMsg {
   rentalImgUrl: string;
   title: string;
   minPrice: number;
+  minDays: number;
   rentalState: string;
   messages: Message[];
   isChecked: boolean;
@@ -400,6 +401,7 @@ const ChatDetail = () => {
             postType="normal"
             title={chatMsg.title}
             minPrice={chatMsg.minPrice}
+            minDays={chatMsg.minDays}
             imgUrl={chatMsg.rentalImgUrl}
             id={chatMsg.rentalId}
             isDeleted={chatMsg.isDeleted}

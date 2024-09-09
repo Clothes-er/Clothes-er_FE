@@ -60,13 +60,15 @@ const Bottom: React.FC<BottomProps> = ({
     setPricePop(false);
   };
 
+  const minPrice = prices?.sort((a, b) => b.days - a.days)[0];
+
   return (
     <StyledBottom>
       {bottomType === "share" && (
         <div>
           <Price>
-            {prices ? prices[0].price : "N/A"}원~
-            <Days>3days</Days>
+            {prices ? minPrice?.price : "N/A"}원~
+            <Days>{minPrice?.days}days</Days>
           </Price>
           <MorePrice onClick={handleShowPrice}>가격표 보기</MorePrice>
           {pricePop && (

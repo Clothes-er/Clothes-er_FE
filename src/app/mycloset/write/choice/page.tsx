@@ -65,6 +65,7 @@ const WriteChoice = () => {
                   imgUrl={data.imgUrl}
                   title={data.title}
                   minPrice={data.minPrice}
+                  minDays={data.minDays}
                   createdAt={data.createdAt}
                   onClickChoice={handleClickChoice}
                   isSelected={rentalId === data.id}

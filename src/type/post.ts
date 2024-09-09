@@ -9,6 +9,7 @@ export interface PostList {
   brand?: string;
   title: string;
   minPrice?: number;
+  minDays?: number;
   isDeleted?: boolean;
   isReviewed?: boolean;
   showReviewed?: boolean;
