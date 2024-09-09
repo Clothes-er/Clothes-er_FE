@@ -283,6 +283,12 @@ const MyCloset = () => {
         <Parent>
           <ListTab listType="me" />
           <WriteButton onClick={() => router.push("/mycloset/write/choice")}>
+            <Image
+              src="/assets/icons/ic_plus_purple.svg"
+              width={16}
+              height={16}
+              alt="plus"
+            />
             옷장 채우기
           </WriteButton>
         </Parent>
@@ -663,14 +669,29 @@ const Parent = styled.div`
   height: 100%;
   position: relative;
 `;
+
 const WriteButton = styled.button`
   width: 90px;
   height: 23px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
   border-radius: 20px;
   background: ${theme.colors.purple50};
   color: ${theme.colors.purple500};
-  ${(props) => props.theme.fonts.c2_medium};
+  ${(props) => props.theme.fonts.c2_bold};
   position: absolute;
   top: 35px;
   right: 0;
+  white-space: nowrap;
+
+  transition: color 200ms, background-color 200ms;
+  &:hover {
+    background: ${theme.colors.purple150};
+  }
+  &:active {
+    background: ${theme.colors.purple150};
+  }
 `;

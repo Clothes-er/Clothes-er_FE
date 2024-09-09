@@ -88,7 +88,6 @@ const Post: React.FC<PostList> = ({
                 width={12}
                 height={12}
                 alt="review"
-                style={{ borderRadius: "10px" }}
               />
               {isReviewed ? "후기 작성 완료" : "후기 작성하기"}
             </ReviewButton>
@@ -180,6 +179,7 @@ const Price = styled.div`
 const Days = styled.div`
   color: ${theme.colors.gray900};
   ${(props) => props.theme.fonts.c1_regular};
+  margin-bottom: 2px;
 `;
 
 const ReviewButton = styled.button`
