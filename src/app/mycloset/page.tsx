@@ -272,10 +272,16 @@ const MyCloset = () => {
             </Slide>
           </Slider>
           <IndicatorContainer>
-            <Indicator onClick={() => goToSlide(0)} active={currentSlide === 0}>
+            <Indicator
+              onClick={() => goToSlide(0)}
+              $active={currentSlide === 0}
+            >
               {/* 스코어 박스 */}
             </Indicator>
-            <Indicator onClick={() => goToSlide(1)} active={currentSlide === 1}>
+            <Indicator
+              onClick={() => goToSlide(1)}
+              $active={currentSlide === 1}
+            >
               {/* 스타일 박스 */}
             </Indicator>
           </IndicatorContainer>
@@ -624,14 +630,14 @@ const IndicatorContainer = styled.div`
   margin-top: 10px;
 `;
 
-const Indicator = styled.div<{ active: boolean }>`
+const Indicator = styled.div<{ $active: boolean }>`
   width: 50%;
   height: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${({ active }) =>
-    active ? theme.colors.gray900 : theme.colors.gray400};
+  background: ${({ $active }) =>
+    $active ? theme.colors.gray900 : theme.colors.gray400};
   border-radius: 3px;
   cursor: pointer;
   ${(props) => props.theme.fonts.b3_medium};

@@ -69,7 +69,7 @@ const ListTab: React.FC<ListTabProps> = ({ listType, userSid }) => {
 
   return (
     <Container>
-      <ListContainer listType={listType}>
+      <ListContainer $listType={listType}>
         {tabsToDisplay.map((item, index) => (
           <Tab
             key={index}
@@ -141,14 +141,14 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const ListContainer = styled.div<{ listType: listType }>`
+const ListContainer = styled.div<{ $listType: listType }>`
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0px 40px;
   border-bottom: 1px solid ${theme.colors.gray200};
-  margin-bottom: ${({ listType }) => (listType === "chat" ? "0px" : "30px")};
+  margin-bottom: ${({ $listType }) => ($listType === "chat" ? "0px" : "30px")};
   gap: 20px;
 `;
 

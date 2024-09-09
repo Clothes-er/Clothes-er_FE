@@ -20,7 +20,7 @@ const ScoreBar: React.FC<ScoreBarProps> = (props) => {
           </Column>
         ))}
       </Dots>
-      <Location recentScore={recentScore}>{nickname || "나"}의 옷장</Location>
+      <Location $recentScore={recentScore}>{nickname || "나"}의 옷장</Location>
     </Bar>
   );
 };
@@ -74,7 +74,7 @@ const Score = styled.div`
   ${(props) => props.theme.fonts.c3_medium};
 `;
 
-const Location = styled.div<{ recentScore: number }>`
+const Location = styled.div<{ $recentScore: number }>`
   height: 20px;
   padding: 4px 8px;
   border-radius: 10px;
@@ -86,7 +86,7 @@ const Location = styled.div<{ recentScore: number }>`
   ${(props) => props.theme.fonts.c3_medium};
   position: absolute;
   top: -25px;
-  left: calc(${({ recentScore }) => (100 * recentScore) / 20}% - 28px);
+  left: calc(${({ $recentScore }) => (100 * $recentScore) / 20}% - 28px);
   white-space: nowrap;
 
   &:after {
