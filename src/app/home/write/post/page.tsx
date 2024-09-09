@@ -23,6 +23,7 @@ import { useRequireAuth } from "@/hooks/useAuth";
 import AuthAxios from "@/api/authAxios";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import Topbar from "@/components/common/Topbar";
+import { showToast } from "@/hooks/showToast";
 
 interface Price {
   days: number | null;
@@ -73,7 +74,7 @@ const WritePost = () => {
 
   /* 보유글 조회 */
   useEffect(() => {
-    if (clothesId) {
+    if (clothesId !== "null") {
       AuthAxios.get(`/api/v1/clothes/${clothesId}`)
         .then(async (response) => {
           const data = response.data.result;
@@ -125,6 +126,11 @@ const WritePost = () => {
   };
 
   const handleNewPost = () => {
+    const formattedPrices = inputs.prices.map((price) => ({
+      days: price.days,
+      price: price.price !== null ? Number(price.price) : null,
+    }));
+
     const formData = new FormData();
 
     formData.append(
@@ -137,7 +143,7 @@ const WritePost = () => {
             gender: selectedGender,
             category: selectedCategory,
             style: selectedStyle,
-            prices: inputs.prices,
+            prices: formattedPrices,
             brand: inputs.brand,
             size: inputs.size,
             fit: inputs.fit,
@@ -171,7 +177,29 @@ const WritePost = () => {
         router.push(`/home`);
       })
       .catch((error) => {
+        console.log("대여글 작성 실패", error);
         console.log(error.response.data.message);
+        if (error.response) {
+          // 거래 중 혹은 유예된 경우
+          if (
+            error.response.data.code === 2000 ||
+            error.response.data.code === 2209 ||
+            error.response.data.code === 2131 ||
+            error.response.data.code === 3400 ||
+            error.response.data.code === 2211 ||
+            error.response.data.code === 2008 ||
+            error.response.data.code === 2203
+          ) {
+            console.log(error.response.data.code);
+            showToast({
+              text: `${error.response.data.message}`,
+              icon: "❌",
+              type: "error",
+            });
+          } else {
+            console.log(error.response.data.message);
+          }
+        }
       });
   };
 
@@ -269,30 +297,36 @@ const WritePost = () => {
               </AddPrice>
             </Label>
             <PriceBoxList>
-              {inputs.prices.map((price, index) => (
-                <PriceBox key={index}>
-                  <Input
-                    inputType="write"
-                    size="small"
-                    value={price.days}
-                    // value={price.days ? `${price.days}일` : ""}
-                    placeholder="날짜"
-                    onChange={(value: string) =>
-                      handlePriceChange(index, "days", value)
-                    }
-                    disabled={price.days === 5 || price.days === 10}
-                  />
-                  <Input
-                    inputType="write"
-                    size="small"
-                    value={price.price}
-                    placeholder="가격"
-                    onChange={(value: string) =>
-                      handlePriceChange(index, "price", value)
-                    }
-                  />
-                </PriceBox>
-              ))}
+              {inputs.prices.map((price, index) => {
+                const formattedPrice = price.price
+                  ? new Intl.NumberFormat().format(Number(price.price))
+                  : "";
+
+                return (
+                  <PriceBox key={index}>
+                    <Input
+                      inputType="write"
+                      size="small"
+                      value={price.days}
+                      placeholder="날짜"
+                      onChange={(value: string) =>
+                        handlePriceChange(index, "days", value)
+                      }
+                      disabled={price.days === 5 || price.days === 10}
+                    />
+                    <Input
+                      inputType="write"
+                      size="small"
+                      value={formattedPrice}
+                      placeholder="가격"
+                      onChange={(value: string) => {
+                        const numericValue = value.replace(/[^0-9]/g, "");
+                        handlePriceChange(index, "price", numericValue);
+                      }}
+                    />
+                  </PriceBox>
+                );
+              })}
             </PriceBoxList>
           </Column>
           <Row>
@@ -424,7 +458,6 @@ const PriceBoxList = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 11px;
 `;
 
 const PriceBox = styled.div`

@@ -69,7 +69,7 @@ const MyClosetWrite = () => {
 
   /* 대여글 조회 */
   useEffect(() => {
-    if (rentalId) {
+    if (rentalId !== "null") {
       AuthAxios.get(`/api/v1/rentals/${rentalId}`)
         .then(async (response) => {
           const data = response.data.result;
@@ -121,6 +121,8 @@ const MyClosetWrite = () => {
   };
 
   const handleNewPost = () => {
+    const priceWithoutCommas = inputs.price.replace(/,/g, "");
+
     const formData = new FormData();
 
     formData.append(
@@ -134,7 +136,7 @@ const MyClosetWrite = () => {
             category: selectedCategory,
             style: selectedStyle,
             isPublic: inputs.isPublic,
-            price: inputs.price,
+            price: priceWithoutCommas,
             brand: inputs.brand,
             size: inputs.size,
             shoppingUrl: inputs.shoppingUrl,
@@ -246,9 +248,13 @@ const MyClosetWrite = () => {
                 inputType="write"
                 size="small"
                 value={inputs.price}
-                placeholder="3,000 원"
+                placeholder="가격"
                 onChange={(value: string) => {
-                  setInputs({ ...inputs, price: value });
+                  const numericValue = value.replace(/[^0-9]/g, "");
+                  const formattedValue = numericValue
+                    ? new Intl.NumberFormat().format(Number(numericValue))
+                    : "";
+                  setInputs({ ...inputs, price: formattedValue });
                 }}
               />
             </Column>
