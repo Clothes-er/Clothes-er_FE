@@ -26,6 +26,7 @@ interface PostInfo {
   profileUrl: string;
   nickname: string;
   isWriter: boolean;
+  isWithdrawn: boolean;
   imgUrls: string[];
   name: string;
   description: string;
