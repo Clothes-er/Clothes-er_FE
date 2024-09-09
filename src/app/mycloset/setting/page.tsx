@@ -7,6 +7,7 @@ import { clearUser } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
@@ -14,28 +15,37 @@ const Setting = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const refreshToken = localStorage.getItem("refreshToken");
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("refreshToken");
+      setRefreshToken(token);
+    }
+  }, []);
 
   const handleLogout = () => {
-    AuthAxios.post("/api/v1/users/logout", {
-      refreshToken,
-    })
-      .then((response) => {
-        console.log("로그아웃 성공", response);
-        showToast({
-          text: `성공적으로 로그아웃 되었습니다.`,
-          icon: "💜",
-          type: "success",
-        });
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("isFirstLogin");
-        dispatch(clearUser());
-        router.push("/");
+    if (refreshToken) {
+      AuthAxios.post("/api/v1/users/logout", {
+        refreshToken,
       })
-      .catch((error) => {
-        console.log("로그아웃 실패", error);
-      });
+        .then((response) => {
+          console.log("로그아웃 성공", response);
+          showToast({
+            text: `성공적으로 로그아웃 되었습니다.`,
+            icon: "💜",
+            type: "success",
+          });
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("isFirstLogin");
+          dispatch(clearUser());
+          router.push("/");
+        })
+        .catch((error) => {
+          console.log("로그아웃 실패", error);
+        });
+    }
   };
 
   const handleWithdrawal = () => {
