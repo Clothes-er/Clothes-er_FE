@@ -52,7 +52,7 @@ const Post: React.FC<PostList> = ({
     <Container
       onClick={handleDetail}
       size={size}
-      isSelected={isSelected}
+      $isSelected={isSelected}
       disabled={isDeleted}
     >
       <Image
@@ -117,7 +117,7 @@ const Post: React.FC<PostList> = ({
 
 export default Post;
 
-const Container = styled.button<{ size: string; isSelected: boolean }>`
+const Container = styled.button<{ size: string; $isSelected: boolean }>`
   display: flex;
   width: 100%;
   height: 100px;
@@ -132,7 +132,7 @@ const Container = styled.button<{ size: string; isSelected: boolean }>`
     `}
   cursor: pointer;
   ${(props) =>
-    props.isSelected &&
+    props.$isSelected &&
     css`
       background-color: ${theme.colors.purple10};
     `}

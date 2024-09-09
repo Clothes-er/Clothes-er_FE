@@ -11,7 +11,7 @@ interface ChipProps {
 
 const Chip: React.FC<ChipProps> = ({ label, value, onClick }) => {
   return (
-    <StyledChip hasValue={!!value} onClick={onClick}>
+    <StyledChip $hasValue={!!value} onClick={onClick}>
       {value || label}
       {value ? (
         <Image
@@ -34,11 +34,7 @@ const Chip: React.FC<ChipProps> = ({ label, value, onClick }) => {
 
 export default Chip;
 
-interface StyledChipProps {
-  hasValue: boolean;
-}
-
-const StyledChip = styled.div<StyledChipProps>`
+const StyledChip = styled.div<{ $hasValue: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,11 +43,11 @@ const StyledChip = styled.div<StyledChipProps>`
   gap: 2px;
   border-radius: 15px;
   border: 1px solid
-    ${({ hasValue }) => (hasValue ? "transparent" : theme.colors.gray500)};
-  background: ${({ hasValue }) =>
-    hasValue ? theme.colors.linear_purple : theme.colors.white};
-  color: ${({ hasValue }) =>
-    hasValue ? theme.colors.white : theme.colors.gray900};
+    ${({ $hasValue }) => ($hasValue ? "transparent" : theme.colors.gray500)};
+  background: ${({ $hasValue }) =>
+    $hasValue ? theme.colors.linear_purple : theme.colors.white};
+  color: ${({ $hasValue }) =>
+    $hasValue ? theme.colors.white : theme.colors.gray900};
   ${(props) => props.theme.fonts.c1_medium};
   cursor: pointer;
   white-space: nowrap;
