@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { chatListType } from "@/type/chat";
+import { showToast } from "@/hooks/showToast";
 
 type bottomType = "share" | "closet";
 
@@ -50,9 +51,26 @@ const Bottom: React.FC<BottomProps> = ({
         router.push(`/chat/${data.id}?type=${type}`);
       })
       .catch((error) => {
-        console.log(error);
+        console.log("채팅방 생성 실패", error);
         console.log(error.response.data.message);
-        router.push(`/chat/${error.response.data.result.roomId}?type=${type}`);
+        if (error.response) {
+          // 순서대로 대여글 작성자, 유예, 대여글 없음, 채팅방 중복의 경우
+          if (
+            error.response.data.code === 2300 ||
+            error.response.data.code === 2131 ||
+            error.response.data.code === 3200 ||
+            error.response.data.code === 2301
+          ) {
+            console.log(error.response.data.code);
+            showToast({
+              text: `${error.response.data.message}`,
+              icon: "❌",
+              type: "error",
+            });
+          } else {
+            console.log(error.response.data.message);
+          }
+        }
       });
   };
 

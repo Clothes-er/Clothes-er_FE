@@ -42,6 +42,11 @@ const Setting = () => {
     AuthAxios.delete("/api/v1/users/withdraw")
       .then((response) => {
         console.log("회원탈퇴 성공", response);
+        showToast({
+          text: `성공적으로 회원탈퇴 되었습니다.`,
+          icon: "👋🏻",
+          type: "success",
+        });
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("isFirstLogin");
