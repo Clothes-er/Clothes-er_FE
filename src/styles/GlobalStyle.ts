@@ -26,7 +26,7 @@ body {
   width: 100%;
   height: 100%;
   max-width: 480px;
-  font-family: "Pretendard";
+  font-family: "Pretendard", sans-serif;
   white-space: pre-line;
 }
 
@@ -43,7 +43,8 @@ button {
 
 @font-face {
     font-family: "Pretendard";
-    src: url("/public/assets/fonts/PretendardVariable.woff2") format('font-woff2'); 
+    src: url("/assets/fonts/PretendardVariable.woff2") format('font-woff2'),
+        url("/assets/fonts/PretendardVariable.ttf") format('truetype');
   }
 `;
 

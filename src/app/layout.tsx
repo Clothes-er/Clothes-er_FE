@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import StyledJsxRegistry from "./registry";
 import { Toaster } from "react-hot-toast";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 
 export default function RootLayout({
   children,
@@ -22,15 +23,23 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <StyledJsxRegistry>
-          <Provider store={store}>
-            <Toaster />
-            <ThemeProvider theme={theme}>
-              <GlobalStyles />
-              {children}
-            </ThemeProvider>
-          </Provider>
-        </StyledJsxRegistry>
+        <HelmetProvider>
+          <Helmet>
+            <link
+              href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css"
+              rel="stylesheet"
+            />
+          </Helmet>
+          <StyledJsxRegistry>
+            <Provider store={store}>
+              <Toaster />
+              <ThemeProvider theme={theme}>
+                <GlobalStyles />
+                {children}
+              </ThemeProvider>
+            </Provider>
+          </StyledJsxRegistry>
+        </HelmetProvider>
       </body>
     </html>
   );
