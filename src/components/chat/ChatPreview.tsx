@@ -18,6 +18,7 @@ const ChatPreview: React.FC<ChatList> = ({
   isDeleted,
   isRestricted,
   isSuspended,
+  isWithdrawn,
 }) => {
   const router = useRouter();
 
@@ -61,13 +62,16 @@ const ChatPreview: React.FC<ChatList> = ({
         <Top>
           <Name>
             <NickName onClick={(e) => handleUserClick(e, `/user/${userSid}`)}>
-              {nickname} {isRestricted || (isSuspended && "(신고된 유저)")}
+              {nickname}
+              {isWithdrawn
+                ? " (탈퇴한 유저)"
+                : (isRestricted || isSuspended) && " (신고된 유저)"}
             </NickName>
             {type === "rental" && rentalState === "RENTED" && (
-              <StateBox check={true}>대여중</StateBox>
+              <StateBox $check={true}>대여중</StateBox>
             )}
             {type === "rental" && rentalState === "RETURNED" && (
-              <StateBox check={false}>대여완료</StateBox>
+              <StateBox $check={false}>대여완료</StateBox>
             )}
           </Name>
 
@@ -186,15 +190,15 @@ const Product = styled.div`
   white-space: pre;
 `;
 
-const StateBox = styled.button<{ check: boolean }>`
+const StateBox = styled.button<{ $check: boolean }>`
   width: auto;
   height: 25px;
   padding: 6px 10px;
   border-radius: 20px;
   background: ${(props) =>
-    props.check ? props.theme.colors.purple100 : props.theme.colors.gray100};
+    props.$check ? props.theme.colors.purple100 : props.theme.colors.gray100};
   color: ${(props) =>
-    props.check ? props.theme.colors.purple300 : props.theme.colors.b100};
+    props.$check ? props.theme.colors.purple300 : props.theme.colors.b100};
   ${(props) => props.theme.fonts.b3_bold};
   display: flex;
   align-items: center;

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { chatListType } from "@/type/chat";
+import { showToast } from "@/hooks/showToast";
 
 type bottomType = "share" | "closet";
 
@@ -20,6 +21,7 @@ interface BottomProps {
   prices?: Price[];
   userSid?: string;
   isWriter: boolean;
+  isWithdrawn?: boolean;
 }
 
 const Bottom: React.FC<BottomProps> = ({
@@ -30,6 +32,7 @@ const Bottom: React.FC<BottomProps> = ({
   prices,
   userSid,
   isWriter,
+  isWithdrawn,
 }) => {
   const router = useRouter();
   const [pricePop, setPricePop] = useState<boolean>(false);
@@ -50,9 +53,33 @@ const Bottom: React.FC<BottomProps> = ({
         router.push(`/chat/${data.id}?type=${type}`);
       })
       .catch((error) => {
-        console.log(error);
+        console.log("채팅방 생성 실패", error);
         console.log(error.response.data.message);
-        router.push(`/chat/${error.response.data.result.roomId}?type=${type}`);
+        if (error.response) {
+          if (
+            (type === "rental" &&
+              // 순서대로 대여글 작성자, 유예,  대여글 없음, 채팅방 중복의 경우
+              error.response.data.code === 2300) ||
+            error.response.data.code === 2131 ||
+            error.response.data.code === 3200 ||
+            error.response.data.code === 2301 ||
+            (type === "user" &&
+              // 순서대로 대여글 작성자, 유예, 회원 없음(탈퇴), 채팅방 중복의 경우
+              error.response.data.code === 2131) ||
+            error.response.data.code === 2305 ||
+            error.response.data.code === 3100 ||
+            error.response.data.code === 2304
+          ) {
+            console.log(error.response.data.code);
+            showToast({
+              text: `${error.response.data.message}`,
+              icon: "❌",
+              type: "error",
+            });
+          } else {
+            console.log(error.response.data.message);
+          }
+        }
       });
   };
 
@@ -60,13 +87,15 @@ const Bottom: React.FC<BottomProps> = ({
     setPricePop(false);
   };
 
+  const minPrice = prices?.sort((a, b) => b.days - a.days)[0];
+
   return (
     <StyledBottom>
       {bottomType === "share" && (
         <div>
           <Price>
-            {prices ? prices[0].price : "N/A"}원~
-            <Days>3days</Days>
+            {prices ? minPrice?.price : "N/A"}원~
+            <Days>{minPrice?.days}days</Days>
           </Price>
           <MorePrice onClick={handleShowPrice}>가격표 보기</MorePrice>
           {pricePop && (
@@ -100,7 +129,11 @@ const Bottom: React.FC<BottomProps> = ({
             <Span>궁금한 정보</Span>를 <Span>문의</Span>해보세요!
           </div>
         ))}
-      {!isWriter && <Chat onClick={handleNewChat}>문의하기</Chat>}
+      {!isWriter && (
+        <Chat onClick={handleNewChat} disabled={isWithdrawn}>
+          문의하기
+        </Chat>
+      )}
     </StyledBottom>
   );
 };
@@ -141,7 +174,7 @@ const MorePrice = styled.div`
   cursor: pointer;
 `;
 
-const Chat = styled.div`
+const Chat = styled.button`
   width: 137px;
   height: 40px;
   border-radius: 15px;
@@ -152,6 +185,10 @@ const Chat = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.b2_regular};
   cursor: pointer;
+
+  &:disabled {
+    background: ${theme.colors.gray400};
+  }
 `;
 
 const PricePopup = styled.div`

@@ -33,6 +33,7 @@ interface PostInfo {
   isWriter: boolean;
   isSuspended: boolean;
   isRestricted: boolean;
+  isWithdrawn: boolean;
   followers: number;
   followees: number;
   imgUrls: string[];
@@ -180,7 +181,9 @@ const Page = () => {
           nickname={
             postInfo?.nickname
               ? `${postInfo.nickname}${
-                  postInfo.isSuspended || postInfo.isRestricted
+                  postInfo.isWithdrawn
+                    ? " (탈퇴한 회원"
+                    : postInfo.isSuspended || postInfo.isRestricted
                     ? " (신고된 유저)"
                     : ""
                 }`
@@ -228,6 +231,7 @@ const Page = () => {
           bottomType="share"
           prices={postInfo.prices}
           isWriter={postInfo.isWriter}
+          isWithdrawn={postInfo.isWithdrawn}
         />
       )}
       {/* 삭제하기 모달 */}
@@ -282,18 +286,21 @@ const Menu = styled.div`
 
 const ImageSlide = styled.div`
   width: 100%;
-  height: 400px;
-  border-radius: 7px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  height: 100%;
   .slick-slide img {
     width: 100%;
-    height: 400px;
+    height: auto;
+    object-fit: contain;
     border-radius: 7px;
   }
 `;
 
 const StyledSlider = styled(Slider)`
-  height: 400px;
   width: 100%;
+  /* height: auto; */
+  aspect-ratio: 1 / 1;
   position: relative;
   .slick-prev::before,
   .slick-next::before {
@@ -328,8 +335,14 @@ const DivNext = styled.div`
 const ImageBox = styled.div`
   position: relative;
   width: 100%;
-  height: 400px;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: ${theme.colors.white};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
+
 const Body = styled.div`
   width: 100%;
   display: flex;

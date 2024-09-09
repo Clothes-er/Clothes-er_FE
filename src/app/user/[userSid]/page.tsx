@@ -48,7 +48,15 @@ const MyCloset = () => {
         console.log(response.data.message);
       })
       .catch((error) => {
-        console.log(error);
+        console.log("유저 프로필 조회 실패", error);
+        if (error.response) {
+          // 회원 찾을 수 없는 경우 (탈퇴)
+          if (error.response.data.code === 3100) {
+            console.log("탈퇴한 회원입니다.");
+          } else {
+            console.log(error.response.data.message);
+          }
+        }
       });
   }, []);
 
@@ -68,41 +76,49 @@ const MyCloset = () => {
     <>
       <Layout>
         <Background />
-        {profileInfo && (
-          <>
+        <Image
+          src="/assets/images/logo_black.svg"
+          width={101}
+          height={18}
+          alt="logo"
+          onClick={() => router.push("/home")}
+          style={{ cursor: "pointer" }}
+        />
+        <TopRow>
+          <Topbar
+            text={`${
+              profileInfo
+                ? `${profileInfo.nickname} 님의 옷장`
+                : "존재하지 않는 옷장"
+            }`}
+            icon={true}
+            align="left"
+          />
+        </TopRow>
+        <Profile>
+          <ProfileImage>
             <Image
-              src="/assets/images/logo_black.svg"
-              width={101}
-              height={18}
-              alt="logo"
-              onClick={() => router.push("/home")}
-              style={{ cursor: "pointer" }}
+              src={
+                profileInfo && profileInfo.profileUrl
+                  ? profileInfo.profileUrl
+                  : "/assets/images/basic_profile.svg"
+              }
+              layout="fill"
+              objectFit="cover"
+              alt="profile"
             />
-            <TopRow>
-              <Topbar
-                text={`${profileInfo.nickname} 님의 옷장`}
-                icon={true}
-                align="left"
-              />
-            </TopRow>
-            <Profile>
-              <ProfileImage>
-                <Image
-                  src={
-                    profileInfo.profileUrl || "/assets/images/basic_profile.svg"
-                  }
-                  layout="fill"
-                  objectFit="cover"
-                  alt="profile"
-                />
-              </ProfileImage>
-              <Text>
-                <Top>
-                  <Nickname>
-                    {profileInfo?.nickname}
-                    <Gender>{getGenderLabel(profileInfo.gender)}</Gender>
-                  </Nickname>
-                </Top>
+          </ProfileImage>
+          <Text>
+            <Top>
+              <Nickname>
+                {profileInfo ? profileInfo.nickname : "탈퇴한 유저"}
+                {profileInfo && (
+                  <Gender>{getGenderLabel(profileInfo.gender)}</Gender>
+                )}
+              </Nickname>
+            </Top>
+            {profileInfo && (
+              <>
                 <Level>
                   {profileInfo?.level !== null &&
                     `${getLevelText(profileInfo.level) + ""} (Lv. ${
@@ -112,107 +128,129 @@ const MyCloset = () => {
                     {profileInfo?.rentalCount}개의 옷을 아꼈어요!
                   </LevelText>
                 </Level>
-              </Text>
-            </Profile>
-          </>
-        )}
+              </>
+            )}
+          </Text>
+        </Profile>
         <SliderContainer>
           <Slider ref={sliderRef}>
             <Slide>
               <ScoreBox>
-                <InfoTop>
-                  <Title>옷장점수</Title>
-                  <Comment>{getLevelMessage(profileInfo?.level || 0)}</Comment>
-                  <Score>{profileInfo?.level}점</Score>
-                </InfoTop>
-                <ScoreBar
-                  recentScore={profileInfo?.level || 0}
-                  nickname={profileInfo?.nickname}
-                />
-                <MoreReview
-                  onClick={() => router.push(`/user/${userSid}/review`)}
-                >
-                  거래 후기 확인하기
-                </MoreReview>
+                {profileInfo ? (
+                  <>
+                    <InfoTop>
+                      <Title>옷장점수</Title>
+                      <Comment>
+                        {getLevelMessage(profileInfo?.level || 0)}
+                      </Comment>
+                      <Score>{profileInfo?.level}점</Score>
+                    </InfoTop>
+                    <ScoreBar
+                      recentScore={profileInfo?.level || 0}
+                      nickname={profileInfo?.nickname}
+                    />
+                    <MoreReview
+                      onClick={() => router.push(`/user/${userSid}/review`)}
+                    >
+                      거래 후기 확인하기
+                    </MoreReview>
+                  </>
+                ) : (
+                  <NoUser>탈퇴한 유저입니다. 정보를 제공할 수 없어요:(</NoUser>
+                )}
               </ScoreBox>
             </Slide>
             <Slide>
               <StyleBox>
-                <StyleBoxDiv>
-                  <div>
-                    <Title>스펙</Title>
-                    <SpecText>
-                      <div>키</div>
+                {profileInfo ? (
+                  <>
+                    <StyleBoxDiv>
                       <div>
-                        {profileInfo?.height
-                          ? `${profileInfo.height}cm`
-                          : "미공개"}
+                        <Title>스펙</Title>
+                        <SpecText>
+                          <div>키</div>
+                          <div>
+                            {profileInfo?.height
+                              ? `${profileInfo.height}cm`
+                              : "미공개"}
+                          </div>
+                          <div>몸무게</div>
+                          <div>
+                            {profileInfo?.weight
+                              ? `${profileInfo.weight}kg`
+                              : "미공개"}
+                          </div>
+                          <div>발 크기</div>
+                          <div>
+                            {profileInfo?.shoeSize
+                              ? `${profileInfo.shoeSize}mm`
+                              : "미공개"}
+                          </div>
+                        </SpecText>
                       </div>
-                      <div>몸무게</div>
+                      <Keywords>
+                        {profileInfo?.bodyShapes[0] ? (
+                          <>
+                            {profileInfo?.bodyShapes.map((data, index) => (
+                              <Keyword key={index} type={1}>
+                                {data}
+                              </Keyword>
+                            ))}
+                          </>
+                        ) : (
+                          <Keyword type={0}>체형정보 미기입</Keyword>
+                        )}
+                      </Keywords>
+                    </StyleBoxDiv>
+                    <StyleBoxDiv>
                       <div>
-                        {profileInfo?.weight
-                          ? `${profileInfo.weight}kg`
-                          : "미공개"}
+                        <Title>취향</Title>
+                        <StyleText>
+                          {profileInfo?.categories.map((data, index) => (
+                            <span key={index}>
+                              {data}
+                              {`  `}
+                            </span>
+                          ))}
+                        </StyleText>
                       </div>
-                      <div>발 크기</div>
-                      <div>
-                        {profileInfo?.shoeSize
-                          ? `${profileInfo.shoeSize}mm`
-                          : "미공개"}
-                      </div>
-                    </SpecText>
-                  </div>
-                  <Keywords>
-                    {profileInfo?.bodyShapes[0] ? (
-                      <>
-                        {profileInfo?.bodyShapes.map((data, index) => (
-                          <Keyword key={index} type={1}>
-                            {data}
-                          </Keyword>
-                        ))}
-                      </>
-                    ) : (
-                      <Keyword type={0}>체형정보 미기입</Keyword>
-                    )}
-                  </Keywords>
-                </StyleBoxDiv>
-                <StyleBoxDiv>
-                  <div>
-                    <Title>취향</Title>
-                    <StyleText>
-                      {profileInfo?.categories.map((data, index) => (
-                        <span key={index}>
-                          {data}
-                          {`  `}
-                        </span>
-                      ))}
-                    </StyleText>
-                  </div>
-                  <Keywords>
-                    {profileInfo?.styles[0] ? (
-                      <>
-                        {profileInfo?.styles.map((data, index) => (
-                          <Keyword key={index} type={2}>
-                            {data}
-                          </Keyword>
-                        ))}
-                      </>
-                    ) : (
-                      <Keyword type={0}>스타일 미기입</Keyword>
-                    )}
-                  </Keywords>
-                </StyleBoxDiv>
+                      <Keywords>
+                        {profileInfo?.styles[0] ? (
+                          <>
+                            {profileInfo?.styles.map((data, index) => (
+                              <Keyword key={index} type={2}>
+                                {data}
+                              </Keyword>
+                            ))}
+                          </>
+                        ) : (
+                          <Keyword type={0}>스타일 미기입</Keyword>
+                        )}
+                      </Keywords>
+                    </StyleBoxDiv>
+                  </>
+                ) : (
+                  <NoUser>탈퇴한 유저입니다. 정보를 제공할 수 없어요:(</NoUser>
+                )}
               </StyleBox>
             </Slide>
           </Slider>
-          <IndicatorContainer>
-            <Indicator onClick={() => goToSlide(0)} active={currentSlide === 0}>
-              {/* 스코어 박스 */}
-            </Indicator>
-            <Indicator onClick={() => goToSlide(1)} active={currentSlide === 1}>
-              {/* 스타일 박스 */}
-            </Indicator>
-          </IndicatorContainer>
+          {profileInfo && (
+            <IndicatorContainer>
+              <Indicator
+                onClick={() => goToSlide(0)}
+                active={currentSlide === 0}
+              >
+                {/* 스코어 박스 */}
+              </Indicator>
+              <Indicator
+                onClick={() => goToSlide(1)}
+                active={currentSlide === 1}
+              >
+                {/* 스타일 박스 */}
+              </Indicator>
+            </IndicatorContainer>
+          )}
         </SliderContainer>
         <ListTab listType="other" userSid={String(userSid)} />
       </Layout>
@@ -302,16 +340,6 @@ const Gender = styled.span`
   margin-top: 5px;
 `;
 
-const ProfileButton = styled.button`
-  width: 74px;
-  height: 30px;
-  border-radius: 5px;
-  background: ${theme.colors.purple50};
-  color: ${theme.colors.b200};
-  ${(props) => props.theme.fonts.c2_medium};
-  white-space: nowrap;
-`;
-
 const Level = styled.div`
   height: 21px;
   display: flex;
@@ -388,6 +416,22 @@ const MoreReview = styled.button`
   ${(props) => props.theme.fonts.b3_medium};
   text-decoration-line: underline;
   margin-top: auto;
+`;
+
+const NoUser = styled.div`
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b3_regular}
+
+  @media screen and (max-width: 400px) {
+    ${(props) => props.theme.fonts.c1_regular}
+  }
 `;
 
 const StyleBox = styled(ScoreBox)`

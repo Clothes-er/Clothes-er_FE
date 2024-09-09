@@ -34,6 +34,7 @@ const TransRentContent = () => {
                 imgUrl={data.imgUrl}
                 title={data.title}
                 minPrice={data.minPrice}
+                minDays={data.minDays}
                 startDate={data.startDate}
                 endDate={data.endDate}
                 nickname={data.nickname}

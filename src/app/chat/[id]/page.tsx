@@ -36,6 +36,7 @@ interface ChatMsg {
   rentalImgUrl: string;
   title: string;
   minPrice: number;
+  minDays: number;
   rentalState: string;
   messages: Message[];
   isChecked: boolean;
@@ -43,6 +44,7 @@ interface ChatMsg {
   isReviewed: boolean;
   isRestricted: boolean;
   isSuspended: boolean;
+  isWithdrawn: boolean;
 }
 
 interface CheckList {
@@ -380,8 +382,10 @@ const ChatDetail = () => {
             }}
           >
             {chatMsg?.opponentNickname}
-            {chatMsg?.isRestricted ||
-              (chatMsg?.isSuspended && " (신고된 유저)")}
+            {chatMsg?.isWithdrawn
+              ? " (탈퇴한 유저)"
+              : (chatMsg?.isRestricted || chatMsg?.isSuspended) &&
+                " (신고된 유저)"}
           </Nickname>
           <Menu>
             <Image
@@ -400,6 +404,7 @@ const ChatDetail = () => {
             postType="normal"
             title={chatMsg.title}
             minPrice={chatMsg.minPrice}
+            minDays={chatMsg.minDays}
             imgUrl={chatMsg.rentalImgUrl}
             id={chatMsg.rentalId}
             isDeleted={chatMsg.isDeleted}
@@ -492,35 +497,38 @@ const ChatDetail = () => {
             )}
           </State>
         )}
-        {chatMsg?.opponentNickname === chatMsg?.lenderNickname && (
+        {chatMsg?.opponentNickname === chatMsg?.lenderNickname && chatMsg && (
           <State>
-            {chatMsg && (
-              <>
-                <StateBox
-                  check={chatMsg.isChecked}
-                  onClick={
-                    chatMsg.isChecked
-                      ? () => {
-                          setLookChecked(true);
-                          handleLookCheck();
-                        }
-                      : () => setChecked(true)
-                  }
-                >
-                  체크리스트
-                  <Image
-                    src={
-                      chatMsg.isChecked
-                        ? "/assets/icons/ic_checklist_true.svg"
-                        : "/assets/icons/ic_checklist_false.svg"
+            <StateBox
+              check={chatMsg.isChecked}
+              onClick={
+                chatMsg.isChecked
+                  ? () => {
+                      setLookChecked(true);
+                      handleLookCheck();
                     }
-                    width={24}
-                    height={24}
-                    alt="checklist"
-                  />
-                </StateBox>
-              </>
-            )}
+                  : () => setChecked(true)
+              }
+            >
+              체크리스트
+              <Image
+                src={
+                  chatMsg.isChecked
+                    ? "/assets/icons/ic_checklist_true.svg"
+                    : "/assets/icons/ic_checklist_false.svg"
+                }
+                width={24}
+                height={24}
+                alt="checklist"
+              />
+            </StateBox>
+            <StateBox
+              check={chatMsg?.rentalState === "RETURNED"}
+              onClick={() => setRentaled(true)}
+              disabled={chatMsg?.rentalState === "RETURNED"}
+            >
+              대여 완료
+            </StateBox>
           </State>
         )}
         {rentaling && (

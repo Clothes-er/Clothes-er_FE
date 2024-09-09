@@ -1,23 +1,77 @@
 "use client";
 
-import Tabbar from "@/components/common/Tabbar";
+import AuthAxios from "@/api/authAxios";
 import Topbar from "@/components/common/Topbar";
+import { showToast } from "@/hooks/showToast";
+import { clearUser } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const Setting = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  const refreshToken = localStorage.getItem("refreshToken");
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("isFirstLogin");
-    router.push("/");
+    AuthAxios.post("/api/v1/users/logout", {
+      refreshToken,
+    })
+      .then((response) => {
+        console.log("로그아웃 성공", response);
+        showToast({
+          text: `성공적으로 로그아웃 되었습니다.`,
+          icon: "💜",
+          type: "success",
+        });
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("isFirstLogin");
+        dispatch(clearUser());
+        router.push("/");
+      })
+      .catch((error) => {
+        console.log("로그아웃 실패", error);
+      });
   };
 
   const handleWithdrawal = () => {
-    // 탈퇴하기 API
+    AuthAxios.delete("/api/v1/users/withdraw")
+      .then((response) => {
+        console.log("회원탈퇴 성공", response);
+        showToast({
+          text: `성공적으로 회원탈퇴 되었습니다.`,
+          icon: "👋🏻",
+          type: "success",
+        });
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("isFirstLogin");
+        dispatch(clearUser());
+        router.push("/");
+      })
+      .catch((error) => {
+        console.log("회원탈퇴 실패", error);
+        if (error.response) {
+          // 거래 중 혹은 유예된 경우
+          if (
+            error.response.data.code === 2160 ||
+            error.response.data.code === 2131
+          ) {
+            console.log(error.response.data.code);
+            showToast({
+              text: `${error.response.data.message}`,
+              icon: "❌",
+              type: "error",
+            });
+          } else {
+            console.log(error.response.data.message);
+          }
+        }
+      });
   };
 
   return (

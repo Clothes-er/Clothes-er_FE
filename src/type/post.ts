@@ -9,11 +9,13 @@ export interface PostList {
   brand?: string;
   title: string;
   minPrice?: number;
+  minDays?: number;
   isDeleted?: boolean;
   isReviewed?: boolean;
   showReviewed?: boolean;
   isRestricted?: boolean;
   isSuspended?: boolean;
+  isWithdrawn?: boolean;
   onClickReview?: () => void;
   onClickChoice?: (id: number) => void;
   createdAt?: string;

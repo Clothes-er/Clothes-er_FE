@@ -34,10 +34,12 @@ const TransShareContent = () => {
                 imgUrl={data.imgUrl}
                 title={data.title}
                 minPrice={data.minPrice}
+                minDays={data.minDays}
                 startDate={data.startDate}
                 endDate={data.endDate}
                 nickname={data.nickname}
                 isDeleted={data.isDeleted}
+                isWithdrawn={data.isWithdrawn}
                 roomId={data.roomId}
               />
               {index < postList.length - 1 && <Divider />}

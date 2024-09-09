@@ -52,6 +52,10 @@ export default function Home() {
           "accessToken",
           response.data.result.token.accessToken
         );
+        localStorage.setItem(
+          "refreshToken",
+          response.data.result.token.refreshToken
+        );
         localStorage.setItem("isFirstLogin", userData.isFirstLogin);
 
         if (userData.isFirstLogin) {

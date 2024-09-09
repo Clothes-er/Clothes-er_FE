@@ -13,11 +13,13 @@ const Post: React.FC<PostList> = ({
   brand,
   title,
   minPrice,
+  minDays,
   isDeleted = false,
   isReviewed = false, // 후기 작성 여부 (후기 보내기, 작성 완료)
   showReviewed = false, // 후기 버튼 유무
   isRestricted = false,
   isSuspended = false,
+  isWithdrawn = false,
   onClickReview,
   onClickChoice,
   createdAt,
@@ -52,7 +54,7 @@ const Post: React.FC<PostList> = ({
     <Container
       onClick={handleDetail}
       size={size}
-      isSelected={isSelected}
+      $isSelected={isSelected}
       disabled={isDeleted}
     >
       <Image
@@ -65,13 +67,18 @@ const Post: React.FC<PostList> = ({
       <Box>
         <Title>{title}</Title>
         <Row>
-          <Price>
-            {isDeleted
-              ? "삭제된 게시물입니다"
-              : postType === "choice"
-              ? `구매가 ${minPrice}원`
-              : `${minPrice}원~`}
-          </Price>
+          <Bottom>
+            <Price>
+              {isDeleted
+                ? "삭제된 게시물입니다"
+                : postType === "choice"
+                ? `구매가 ${minPrice}원`
+                : `${minPrice}원~`}
+            </Price>
+            <Days>
+              {isDeleted ? "" : postType !== "choice" && `${minDays}day`}
+            </Days>
+          </Bottom>
           {showReviewed && (
             <ReviewButton
               onClick={handleReviewButtonClick}
@@ -82,7 +89,6 @@ const Post: React.FC<PostList> = ({
                 width={12}
                 height={12}
                 alt="review"
-                style={{ borderRadius: "10px" }}
               />
               {isReviewed ? "후기 작성 완료" : "후기 작성하기"}
             </ReviewButton>
@@ -96,7 +102,7 @@ const Post: React.FC<PostList> = ({
           )}
           {nickname && (
             <>
-              {isDeleted ? (
+              {isWithdrawn ? (
                 "탈퇴한 회원"
               ) : (
                 <>
@@ -107,7 +113,9 @@ const Post: React.FC<PostList> = ({
             </>
           )}
           {postType === "rental" || postType === "transition"
-            ? `${startDate}~${endDate}`
+            ? `${startDate?.slice(2).replace(/-/g, "/")}~${endDate
+                ?.slice(2)
+                .replace(/-/g, "/")}`
             : createdAt}
         </Sub>
       </Box>
@@ -117,7 +125,7 @@ const Post: React.FC<PostList> = ({
 
 export default Post;
 
-const Container = styled.button<{ size: string; isSelected: boolean }>`
+const Container = styled.button<{ size: string; $isSelected: boolean }>`
   display: flex;
   width: 100%;
   height: 100px;
@@ -132,7 +140,7 @@ const Container = styled.button<{ size: string; isSelected: boolean }>`
     `}
   cursor: pointer;
   ${(props) =>
-    props.isSelected &&
+    props.$isSelected &&
     css`
       background-color: ${theme.colors.purple10};
     `}
@@ -161,9 +169,20 @@ const Row = styled.div`
   gap: 15px;
 `;
 
+const Bottom = styled(Row)`
+  align-items: flex-end;
+  gap: 10px;
+`;
+
 const Price = styled.div`
   color: ${theme.colors.purple400};
   ${(props) => props.theme.fonts.b2_bold};
+`;
+
+const Days = styled.div`
+  color: ${theme.colors.gray900};
+  ${(props) => props.theme.fonts.c1_regular};
+  margin-bottom: 2px;
 `;
 
 const ReviewButton = styled.button`

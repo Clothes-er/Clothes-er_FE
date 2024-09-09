@@ -41,6 +41,7 @@ const MyShareContent: React.FC<MyShareContentProps> = ({ userSid }) => {
               imgUrl={data.imgUrl}
               title={data.title}
               minPrice={data.minPrice}
+              minDays={data.minDays}
               createdAt={data.createdAt}
               nickname={data.nickname}
               brand={data.brand}

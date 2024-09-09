@@ -21,7 +21,7 @@ const Checkbox = (props: CheckBoxProps) => {
     value,
     label,
     text,
-    checked,
+    checked = false,
     onChange,
     checkboxType = "checkbox",
     essential,
@@ -35,12 +35,11 @@ const Checkbox = (props: CheckBoxProps) => {
   }
 
   return (
-    <CheckBoxLayout className={checkboxClassName} checked={checked}>
+    <CheckBoxLayout className={checkboxClassName} $checked={checked}>
       <CheckboxContainer
         className={checkboxClassName}
-        essential={essential ? true : false}
-        checked={checked}
-        labelFontSize={labelFontSize}
+        $essential={essential ? true : false}
+        $labelFontSize={labelFontSize}
       >
         <CheckboxInput
           value={value}
@@ -65,7 +64,7 @@ const Checkbox = (props: CheckBoxProps) => {
 
 export default Checkbox;
 
-const CheckBoxLayout = styled.div<CheckBoxProps>`
+const CheckBoxLayout = styled.div<{ $checked: boolean }>`
   display: flex;
   align-items: center;
 
@@ -87,13 +86,16 @@ const CheckBoxLayout = styled.div<CheckBoxProps>`
       display: none;
     }
     border: ${(props) =>
-      props.checked
+      props.$checked
         ? `1px solid ${theme.colors.primary300}`
         : `1px solid transparent`};
   }
 `;
 
-const CheckboxContainer = styled.label<CheckBoxProps>`
+const CheckboxContainer = styled.label<{
+  $essential: boolean;
+  $labelFontSize: string;
+}>`
   display: flex;
   align-items: center;
   flex-grow: 1;
@@ -101,11 +103,11 @@ const CheckboxContainer = styled.label<CheckBoxProps>`
   cursor: pointer;
 
   div {
-    ${({ theme, labelFontSize }) =>
-      labelFontSize &&
-      theme.fonts[labelFontSize] &&
+    ${({ theme, $labelFontSize }) =>
+      $labelFontSize &&
+      theme.fonts[$labelFontSize] &&
       `
-        ${theme.fonts[labelFontSize]};
+        ${theme.fonts[$labelFontSize]};
       `}
   }
 
@@ -115,7 +117,7 @@ const CheckboxContainer = styled.label<CheckBoxProps>`
     margin-left: 8px;
     ${({ theme }) => theme.fonts.c1_medium};
     color: ${(props) =>
-      props.essential ? theme.colors.primary500 : theme.colors.b100};
+      props.$essential ? theme.colors.primary500 : theme.colors.b100};
 
     /* color */
     &.purple {

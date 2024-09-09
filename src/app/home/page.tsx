@@ -32,6 +32,7 @@ interface PostList {
   nickname: string;
   title: string;
   minPrice: number;
+  minDays: number;
   createdAt: string;
 }
 
@@ -126,7 +127,7 @@ const Home = () => {
         const data = response.data.result;
         console.log("쿼리 응답 성공");
         setPostList(data);
-        console.log(response.data.message);
+        console.log(response.data);
       } catch (error) {
         console.log(error);
       } finally {
@@ -233,6 +234,7 @@ const Home = () => {
                       imgUrl={data.imgUrl}
                       title={data.title}
                       minPrice={data.minPrice}
+                      minDays={data.minDays}
                       createdAt={data.createdAt}
                       nickname={data.nickname}
                     />
