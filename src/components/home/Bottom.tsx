@@ -96,7 +96,7 @@ const Bottom: React.FC<BottomProps> = ({
     setPricePop(false);
   };
 
-  const minPrice = prices?.sort((a, b) => b.days - a.days)[0];
+  const minPrices = prices?.sort((a, b) => a.days - b.days);
 
   return (
     <StyledBottom>
@@ -112,7 +112,7 @@ const Bottom: React.FC<BottomProps> = ({
               <PricePopup>
                 가격표
                 <Table>
-                  {prices?.map((data, index) => (
+                  {minPrices?.map((data, index) => (
                     <Set key={index}>
                       <DaysPopup>{data.days}일 :</DaysPopup>
                       <PricesPopup>{data.price}원</PricesPopup>
