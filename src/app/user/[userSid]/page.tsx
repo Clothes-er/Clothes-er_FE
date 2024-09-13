@@ -142,12 +142,12 @@ const MyCloset = () => {
                     <InfoTop>
                       <Title>옷장점수</Title>
                       <Comment>
-                        {getLevelMessage(profileInfo?.level || 0)}
+                        {getLevelMessage(profileInfo?.closetScore || 0)}
                       </Comment>
                       <Score>{profileInfo?.closetScore}점</Score>
                     </InfoTop>
                     <ScoreBar
-                      recentScore={profileInfo?.level || 0}
+                      recentScore={profileInfo?.closetScore || 0}
                       nickname={profileInfo?.nickname}
                     />
                     <MoreReview
