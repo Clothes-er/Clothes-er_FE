@@ -59,23 +59,32 @@ const Bottom: React.FC<BottomProps> = ({
           if (
             (type === "rental" &&
               // 순서대로 대여글 작성자, 유예,  대여글 없음, 채팅방 중복의 경우
-              error.response.data.code === 2300) ||
-            error.response.data.code === 2131 ||
-            error.response.data.code === 3200 ||
-            error.response.data.code === 2301 ||
+              (error.response.data.code === 2300 ||
+                error.response.data.code === 2131 ||
+                error.response.data.code === 3200 ||
+                error.response.data.code === 2301)) ||
             (type === "user" &&
               // 순서대로 대여글 작성자, 유예, 회원 없음(탈퇴), 채팅방 중복의 경우
-              error.response.data.code === 2131) ||
-            error.response.data.code === 2305 ||
-            error.response.data.code === 3100 ||
-            error.response.data.code === 2304
+              (error.response.data.code === 2131 ||
+                error.response.data.code === 2305 ||
+                error.response.data.code === 3100 ||
+                error.response.data.code === 2304))
           ) {
-            console.log(error.response.data.code);
-            showToast({
-              text: `${error.response.data.message}`,
-              icon: "❌",
-              type: "error",
-            });
+            if (
+              (type === "rental" && error.response.data.code === 2301) ||
+              (type === "user" && error.response.data.code === 2304)
+            ) {
+              router.push(
+                `/chat/${error.response.data.result.roomId}?type=${type}`
+              );
+            } else {
+              console.log(error.response.data.code);
+              showToast({
+                text: `${error.response.data.message}`,
+                icon: "❌",
+                type: "error",
+              });
+            }
           } else {
             console.log(error.response.data.message);
           }
@@ -94,8 +103,8 @@ const Bottom: React.FC<BottomProps> = ({
       {bottomType === "share" && (
         <div>
           <Price>
-            {prices ? minPrice?.price : "N/A"}원~
-            <Days>{minPrice?.days}days</Days>
+            {prices ? prices[0]?.price : "N/A"}원~
+            <Days>{prices && prices[0]?.days}days</Days>
           </Price>
           <MorePrice onClick={handleShowPrice}>가격표 보기</MorePrice>
           {pricePop && (
