@@ -11,7 +11,7 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
   const [heart, setHeart] = useState<boolean>(false);
 
   const handleMorePost = (id: number) => {
-    router.push(nickname ? `/closet/${id}` : `mycloset/${id}`);
+    router.push(nickname ? `/closet/${id}` : `/mycloset/${id}`);
   };
 
   const handleMoreProfile = (userSid: string) => {
