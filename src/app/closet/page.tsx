@@ -23,6 +23,12 @@ const ClosetPage = () => {
 
   const sort = useSelector((state: RootState) => state.filter.selectedSort);
   const gender = useSelector((state: RootState) => state.filter.selectedGender);
+  const minHeight = useSelector(
+    (state: RootState) => state.filter.selectedMinHeight
+  );
+  const maxHeight = useSelector(
+    (state: RootState) => state.filter.selectedMaxHeight
+  );
   const age = useSelector((state: RootState) => state.filter.selectedAge);
   const category = useSelector(
     (state: RootState) => state.filter.selectedCategory
@@ -36,6 +42,10 @@ const ClosetPage = () => {
     if (search) params.append("search", search);
     if (sort) params.append("sort", sort);
     if (gender.length > 0) params.append("gender", gender.join(","));
+    if (minHeight !== 130 || maxHeight !== 200) {
+      params.append("minHeight", String(minHeight));
+      params.append("maxHeight", String(maxHeight));
+    }
     if (age.length > 0)
       params.append("age", age.map((a) => a.replace(/\s+/g, "")).join(","));
     if (category.length > 0)
@@ -52,6 +62,8 @@ const ClosetPage = () => {
   /* 보유글 목록 조회(검색, 필터링) */
   useEffect(() => {
     const queryString = buildQueryString(); // Query String 생성
+
+    console.log(queryString);
     AuthAxios.get(`/api/v1/clothes?${queryString}`)
       .then((response) => {
         const data = response.data.result;
