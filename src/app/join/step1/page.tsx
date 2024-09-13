@@ -49,7 +49,7 @@ const Step1 = () => {
   const [correctCode, setCorrectCode] = useState(false);
 
   /* 타이머 */
-  const [timer, setTimer] = useState<number>(180);
+  const [timer, setTimer] = useState<number>(300);
   const [timerColor, setTimerColor] = useState<string>(theme.colors.purple500);
 
   /* redux 업데이트 */
