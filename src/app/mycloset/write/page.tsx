@@ -140,7 +140,7 @@ const MyClosetWrite = () => {
             brand: inputs.brand,
             size: inputs.size,
             shoppingUrl: inputs.shoppingUrl,
-            rentalId: null,
+            rentalId: rentalId || null,
           }),
         ],
         { type: "application/json" }
