@@ -24,6 +24,7 @@ interface ProfileInfo {
   gender: string;
   level: number;
   rentalCount: number;
+  closetScore: number;
   height: number;
   weight: number;
   shoeSize: number;
@@ -181,7 +182,7 @@ const MyCloset = () => {
                 <InfoTop>
                   <Title>옷장점수</Title>
                   <Comment>{getLevelMessage(profileInfo?.level || 0)}</Comment>
-                  <Score>{profileInfo?.level}점</Score>
+                  <Score>{profileInfo?.closetScore}점</Score>
                 </InfoTop>
                 <ScoreBar recentScore={profileInfo?.level || 0} />
                 <MoreReview onClick={() => router.push("/mycloset/review")}>
