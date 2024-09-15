@@ -295,9 +295,10 @@ const ChatDetail = () => {
   /* 체크리스트 등록 */
   const handleRecordCheck = () => {
     AuthAxios.post(`/api/v1/rentals/${id}/check`, {
-      checkList: checkGet.checkList,
+      checkList: checkGet.checkList.filter((item) => item.length !== 0),
     })
       .then((response) => {
+        console.log(checkGet.checkList.filter((item) => item.length !== 0));
         const data = response.data.result;
         setCheckGet(data);
         setChecked(false);
