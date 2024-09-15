@@ -1,6 +1,6 @@
 import { theme } from "@/styles/theme";
-import React from "react";
-import styled from "styled-components";
+import React, { useEffect, useRef, useState } from "react";
+import styled, { css } from "styled-components";
 
 interface ScoreBarProps {
   recentScore: number;
@@ -9,6 +9,14 @@ interface ScoreBarProps {
 
 const ScoreBar: React.FC<ScoreBarProps> = (props) => {
   const { recentScore, nickname } = props;
+  const locationRef = useRef<HTMLDivElement>(null);
+  const [locationWidth, setLocationWidth] = useState<number>(0);
+
+  useEffect(() => {
+    if (locationRef.current) {
+      setLocationWidth(locationRef.current.offsetWidth);
+    }
+  }, [nickname, recentScore]);
 
   return (
     <Bar>
@@ -20,7 +28,15 @@ const ScoreBar: React.FC<ScoreBarProps> = (props) => {
           </Column>
         ))}
       </Dots>
-      <Location $recentScore={recentScore}>{nickname || "나"}의 옷장</Location>
+      <LocationWrapper>
+        <Location
+          ref={locationRef}
+          $recentScore={recentScore}
+          $locationWidth={locationWidth}
+        >
+          {nickname || "나"}의 옷장
+        </Location>
+      </LocationWrapper>
     </Bar>
   );
 };
@@ -43,6 +59,7 @@ const Bar = styled.div`
   );
   background-color: red;
   position: relative;
+  overflow: visible;
 `;
 
 const Dots = styled.div`
@@ -57,8 +74,10 @@ const Dots = styled.div`
 `;
 
 const Column = styled.div`
+  width: 12px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
 `;
 
@@ -69,12 +88,17 @@ const WhiteDot = styled.div`
   background: ${theme.colors.white};
 `;
 
+const LocationWrapper = styled.div`
+  width: calc(100% - 16px);
+  position: relative;
+`;
+
 const Score = styled.div`
   color: ${theme.colors.b100};
   ${(props) => props.theme.fonts.c3_medium};
 `;
 
-const Location = styled.div<{ $recentScore: number }>`
+const Location = styled.div<{ $recentScore: number; $locationWidth: number }>`
   height: 20px;
   padding: 4px 8px;
   border-radius: 10px;
@@ -86,7 +110,10 @@ const Location = styled.div<{ $recentScore: number }>`
   ${(props) => props.theme.fonts.c3_medium};
   position: absolute;
   top: -25px;
-  left: calc(${({ $recentScore }) => (100 * $recentScore) / 20}% - 28px);
+  ${({ $recentScore, $locationWidth }) => css`
+    left: calc(${(100 * $recentScore) / 20}% - ${$locationWidth / 2 - 12}px);
+  `}
+
   white-space: nowrap;
 
   &:after {

@@ -146,10 +146,12 @@ const MyCloset = () => {
                       </Comment>
                       <Score>{profileInfo?.closetScore}점</Score>
                     </InfoTop>
-                    <ScoreBar
-                      recentScore={profileInfo?.closetScore || 0}
-                      nickname={profileInfo?.nickname}
-                    />
+                    <ScoreBarWrapper>
+                      <ScoreBar
+                        recentScore={profileInfo?.closetScore || 0}
+                        nickname={profileInfo?.nickname}
+                      />
+                    </ScoreBarWrapper>
                     <MoreReview
                       onClick={() => router.push(`/user/${userSid}/review`)}
                     >
@@ -410,6 +412,15 @@ const Comment = styled.div`
 const Score = styled.div`
   color: ${theme.colors.purple500};
   ${(props) => props.theme.fonts.c3_bold};
+`;
+
+const ScoreBarWrapper = styled.div`
+  width: calc(100% - 40px);
+  position: absolute;
+  top: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
 `;
 
 const MoreReview = styled.button`
