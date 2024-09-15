@@ -4,14 +4,24 @@ import styled from "styled-components";
 interface Profile {
   nickname: string;
   profileUrl: string;
+  isWithdrawn?: boolean;
   onClick: () => void;
 }
 
-const Profile: React.FC<Profile> = ({ nickname, profileUrl, onClick }) => {
+const Profile: React.FC<Profile> = ({
+  nickname,
+  profileUrl,
+  isWithdrawn,
+  onClick,
+}) => {
   return (
     <Div onClick={onClick}>
       <Image
-        src={profileUrl || "/assets/images/basic_profile.svg"}
+        src={
+          isWithdrawn
+            ? "/assets/images/withdraw_profile.svg"
+            : profileUrl || "/assets/images/basic_profile.svg"
+        }
         width={45}
         height={45}
         alt="profile"

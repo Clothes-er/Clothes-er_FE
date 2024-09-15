@@ -1,6 +1,6 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface ChipProps {
@@ -10,24 +10,32 @@ interface ChipProps {
 }
 
 const Chip: React.FC<ChipProps> = ({ label, value, onClick }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <StyledChip $hasValue={!!value} onClick={onClick}>
       {value || label}
-      {value ? (
-        <Image
-          src="/assets/icons/ic_chevron_down.svg"
-          width={10}
-          height={14}
-          alt="more"
-        />
-      ) : (
-        <Image
-          src="/assets/icons/ic_chevron_down_gray.svg"
-          width={10}
-          height={14}
-          alt="more"
-        />
-      )}
+      {isMounted ? (
+        value ? (
+          <Image
+            src="/assets/icons/ic_chevron_down.svg"
+            width={10}
+            height={14}
+            alt="more"
+          />
+        ) : (
+          <Image
+            src="/assets/icons/ic_chevron_down_gray.svg"
+            width={10}
+            height={14}
+            alt="more"
+          />
+        )
+      ) : null}
     </StyledChip>
   );
 };

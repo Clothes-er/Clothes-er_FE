@@ -135,96 +135,99 @@ const Page = () => {
             </Menu>
           </Top>
         </Head>
-        {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (
-          <ImageSlide>
-            <StyledSlider
-              dots={true}
-              infinite={true}
-              speed={500}
-              slidesToShow={1}
-              slidesToScroll={1}
-              prevArrow={
-                <Div>
-                  <PrevArrow />
-                </Div>
-              }
-              nextArrow={
-                <DivNext>
-                  <NextArrow />
-                </DivNext>
-              }
-            >
+        <Content>
+          {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (
+            <ImageSlide>
+              <StyledSlider
+                dots={true}
+                infinite={true}
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                prevArrow={
+                  <Div>
+                    <PrevArrow />
+                  </Div>
+                }
+                nextArrow={
+                  <DivNext>
+                    <NextArrow />
+                  </DivNext>
+                }
+              >
+                {postInfo?.imgUrls?.map((url, index) => (
+                  <ImageBox key={index}>
+                    <Image src={url} alt={`image-${index}`} layout="fill" />
+                  </ImageBox>
+                ))}
+              </StyledSlider>
+            </ImageSlide>
+          ) : (
+            <>
               {postInfo?.imgUrls?.map((url, index) => (
                 <ImageBox key={index}>
                   <Image src={url} alt={`image-${index}`} layout="fill" />
                 </ImageBox>
               ))}
-            </StyledSlider>
-          </ImageSlide>
-        ) : (
-          <>
-            {postInfo?.imgUrls?.map((url, index) => (
-              <ImageBox key={index}>
-                <Image src={url} alt={`image-${index}`} layout="fill" />
-              </ImageBox>
-            ))}
-          </>
-        )}
-        <Profile
-          nickname={
-            postInfo?.nickname
-              ? `${postInfo.nickname}${
-                  postInfo.isWithdrawn ? " (탈퇴한 회원)" : ""
-                }`
-              : ""
-          }
-          profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
-          onClick={() => router.push(`/user/${postInfo?.userSid}`)}
-        />
-        <Body>
-          <Title>{postInfo?.name}</Title>
-          <Category>
-            {postInfo?.gender && getGenderLabel(postInfo?.gender)}
-            {postInfo?.category && postInfo?.gender
-              ? ` / ${postInfo?.category}`
-              : postInfo?.category}
-            {postInfo?.style && (postInfo?.gender || postInfo?.category)
-              ? ` / ${postInfo?.style}`
-              : postInfo?.style}
-          </Category>
-          <Info>
-            <Row>
-              <Label>옷 정보</Label>
-              <div>
-                <ShoppingUrl
-                  href={postInfo?.shoppingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "inline-block",
-                    maxWidth: "80%",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    verticalAlign: "middle",
-                  }}
-                >
-                  {postInfo?.shoppingUrl}
-                </ShoppingUrl>
-              </div>
-            </Row>
-            <Row>
-              <Label>구매처</Label>
-              <div>{postInfo?.brand}</div>
-            </Row>
-            <Row>
-              <Label>구매 가격</Label>
-              <div>{postInfo?.price}원</div>
-            </Row>
-          </Info>
-          <div>옷 후기</div>
-          <Box>{postInfo?.description}</Box>
-        </Body>
+            </>
+          )}
+          <Profile
+            nickname={
+              postInfo?.nickname
+                ? `${postInfo.nickname}${
+                    postInfo.isWithdrawn ? " (탈퇴한 회원)" : ""
+                  }`
+                : ""
+            }
+            profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
+            isWithdrawn={postInfo?.isWithdrawn}
+            onClick={() => router.push(`/user/${postInfo?.userSid}`)}
+          />
+          <Body>
+            <Title>{postInfo?.name}</Title>
+            <Category>
+              {postInfo?.gender && getGenderLabel(postInfo?.gender)}
+              {postInfo?.category && postInfo?.gender
+                ? ` / ${postInfo?.category}`
+                : postInfo?.category}
+              {postInfo?.style && (postInfo?.gender || postInfo?.category)
+                ? ` / ${postInfo?.style}`
+                : postInfo?.style}
+            </Category>
+            <Info>
+              <Row>
+                <Label>옷 정보</Label>
+                <div>
+                  <ShoppingUrl
+                    href={postInfo?.shoppingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "inline-block",
+                      maxWidth: "80%",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      verticalAlign: "middle",
+                    }}
+                  >
+                    {postInfo?.shoppingUrl}
+                  </ShoppingUrl>
+                </div>
+              </Row>
+              <Row>
+                <Label>구매처</Label>
+                <div>{postInfo?.brand}</div>
+              </Row>
+              <Row>
+                <Label>구매 가격</Label>
+                <div>{postInfo?.price}원</div>
+              </Row>
+            </Info>
+            <div>옷 후기</div>
+            <Box>{postInfo?.description}</Box>
+          </Body>
+        </Content>
       </Layout>
       {postInfo && (
         <Bottom
@@ -258,7 +261,7 @@ export default Page;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   overflow-x: hidden;
   overflow-y: scroll;
   display: flex;
@@ -287,19 +290,30 @@ const Menu = styled.div`
   position: relative;
 `;
 
+const Content = styled.div`
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
 const ImageSlide = styled.div`
   width: 100%;
-  height: 400px;
-  border-radius: 7px;
+  height: 300px;
+  background-color: white;
   .slick-slide img {
-    width: 100%;
-    height: 400px;
+    width: auto;
+    height: 100%;
+    object-fit: contain; // 이미지 비율 유지하면서 전체 표시, 잘리지 않도록 설정
+    background-color: white;
     border-radius: 7px;
   }
 `;
 
 const StyledSlider = styled(Slider)`
-  height: 400px;
+  height: 300px;
   width: 100%;
   position: relative;
   .slick-prev::before,
@@ -335,8 +349,16 @@ const DivNext = styled.div`
 const ImageBox = styled.div`
   position: relative;
   width: 100%;
-  height: 400px;
+  min-height: 300px;
+  background-color: white;
+  img {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    background-color: white;
+  }
 `;
+
 const Body = styled.div`
   width: 100%;
   display: flex;
@@ -344,6 +366,7 @@ const Body = styled.div`
   align-items: flex-start;
   padding: 18px 48px;
   gap: 14px;
+  margin-bottom: 50px;
 `;
 
 const Title = styled.div`
@@ -384,9 +407,9 @@ const Box = styled.div`
   min-height: 150px;
   padding: 17px;
   border-radius: 7px;
-  border: 1px solid ${theme.colors.gray400};
+  border: 1px solid ${theme.colors.gray300};
   background: ${theme.colors.white};
-  box-shadow: 0px 4px 15px 5px rgba(149, 149, 149, 0.25);
+  box-shadow: 4px 4px 15px 3px rgba(247, 247, 247, 0.842);
   ${(props) => props.theme.fonts.b2_regular};
   color: ${theme.colors.b100};
 `;

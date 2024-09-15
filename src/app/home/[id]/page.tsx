@@ -142,87 +142,90 @@ const Page = () => {
             </Menu>
           </Top>
         </Head>
-        {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (
-          <ImageSlide>
-            <StyledSlider
-              dots={true}
-              infinite={true}
-              speed={500}
-              slidesToShow={1}
-              slidesToScroll={1}
-              prevArrow={
-                <Div>
-                  <PrevArrow />
-                </Div>
-              }
-              nextArrow={
-                <DivNext>
-                  <NextArrow />
-                </DivNext>
-              }
-            >
+        <Content>
+          {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (
+            <ImageSlide>
+              <StyledSlider
+                dots={true}
+                infinite={true}
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                prevArrow={
+                  <Div>
+                    <PrevArrow />
+                  </Div>
+                }
+                nextArrow={
+                  <DivNext>
+                    <NextArrow />
+                  </DivNext>
+                }
+              >
+                {postInfo?.imgUrls?.map((url, index) => (
+                  <ImageBox key={index}>
+                    <Image src={url} alt={`image-${index}`} layout="fill" />
+                  </ImageBox>
+                ))}
+              </StyledSlider>
+            </ImageSlide>
+          ) : (
+            <>
               {postInfo?.imgUrls?.map((url, index) => (
                 <ImageBox key={index}>
                   <Image src={url} alt={`image-${index}`} layout="fill" />
                 </ImageBox>
               ))}
-            </StyledSlider>
-          </ImageSlide>
-        ) : (
-          <>
-            {postInfo?.imgUrls?.map((url, index) => (
-              <ImageBox key={index}>
-                <Image src={url} alt={`image-${index}`} layout="fill" />
-              </ImageBox>
-            ))}
-          </>
-        )}
-        <Profile
-          nickname={
-            postInfo?.nickname
-              ? `${postInfo.nickname}${
-                  postInfo.isWithdrawn
-                    ? " (탈퇴한 회원"
-                    : postInfo.isSuspended || postInfo.isRestricted
-                    ? " (신고된 유저)"
-                    : ""
-                }`
-              : ""
-          }
-          profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
-          onClick={() => {
-            if (!postInfo?.isRestricted) {
-              router.push(`/user/${postInfo?.userSid}`);
+            </>
+          )}
+          <Profile
+            nickname={
+              postInfo?.nickname
+                ? `${postInfo.nickname}${
+                    postInfo.isWithdrawn
+                      ? " (탈퇴한 회원"
+                      : postInfo.isSuspended || postInfo.isRestricted
+                      ? " (신고된 유저)"
+                      : ""
+                  }`
+                : ""
             }
-          }}
-        />
-        <Body>
-          <Title>{postInfo?.title}</Title>
-          <Category>
-            {postInfo?.gender && getGenderLabel(postInfo?.gender)}
-            {postInfo?.category && postInfo?.gender
-              ? ` / ${postInfo?.category}`
-              : postInfo?.category}
-            {postInfo?.style && (postInfo?.gender || postInfo?.category)
-              ? ` / ${postInfo?.style}`
-              : postInfo?.style}
-          </Category>
-          <Info>
-            <Row>
-              <div>브랜드</div>
-              <div>{postInfo?.brand ? postInfo.brand : "없음"}</div>
-            </Row>
-            <Row>
-              <div>사이즈</div>
-              <div>{postInfo?.size ? postInfo.size : "없음"}</div>
-            </Row>
-            <Row>
-              <div>핏</div>
-              <div>{postInfo?.fit ? postInfo.fit : "없음"}</div>
-            </Row>
-          </Info>
-          <Box>{postInfo?.description}</Box>
-        </Body>
+            profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
+            isWithdrawn={postInfo?.isWithdrawn}
+            onClick={() => {
+              if (!postInfo?.isRestricted) {
+                router.push(`/user/${postInfo?.userSid}`);
+              }
+            }}
+          />
+          <Body>
+            <Title>{postInfo?.title}</Title>
+            <Category>
+              {postInfo?.gender && getGenderLabel(postInfo?.gender)}
+              {postInfo?.category && postInfo?.gender
+                ? ` / ${postInfo?.category}`
+                : postInfo?.category}
+              {postInfo?.style && (postInfo?.gender || postInfo?.category)
+                ? ` / ${postInfo?.style}`
+                : postInfo?.style}
+            </Category>
+            <Info>
+              <Row>
+                <div>브랜드</div>
+                <div>{postInfo?.brand ? postInfo.brand : "없음"}</div>
+              </Row>
+              <Row>
+                <div>사이즈</div>
+                <div>{postInfo?.size ? postInfo.size : "없음"}</div>
+              </Row>
+              <Row>
+                <div>핏</div>
+                <div>{postInfo?.fit ? postInfo.fit : "없음"}</div>
+              </Row>
+            </Info>
+            <Box>{postInfo?.description}</Box>
+          </Body>
+        </Content>
       </Layout>
       {postInfo && (
         <Bottom
@@ -255,7 +258,7 @@ export default Page;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   overflow-x: hidden;
   overflow-y: scroll;
   display: flex;
@@ -284,23 +287,30 @@ const Menu = styled.div`
   position: relative;
 `;
 
+const Content = styled.div`
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
 const ImageSlide = styled.div`
   width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  height: 100%;
+  height: 300px;
+  background-color: white;
   .slick-slide img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    border-radius: 7px;
+    width: auto;
+    height: 100%;
+    object-fit: contain; // 이미지 비율 유지하면서 전체 표시, 잘리지 않도록 설정
+    background-color: white;
   }
 `;
 
 const StyledSlider = styled(Slider)`
+  height: 300px;
   width: 100%;
-  /* height: auto; */
-  aspect-ratio: 1 / 1;
   position: relative;
   .slick-prev::before,
   .slick-next::before {
@@ -335,12 +345,14 @@ const DivNext = styled.div`
 const ImageBox = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
-  aspect-ratio: 1 / 1;
-  background-color: ${theme.colors.white};
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  min-height: 300px;
+  background-color: white;
+  img {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    background-color: white;
+  }
 `;
 
 const Body = styled.div`
@@ -350,6 +362,7 @@ const Body = styled.div`
   align-items: flex-start;
   padding: 18px 48px;
   gap: 14px;
+  margin-bottom: 50px;
 `;
 
 const Title = styled.div`
@@ -378,9 +391,9 @@ const Box = styled.div`
   min-height: 150px;
   padding: 17px;
   border-radius: 7px;
-  border: 1px solid ${theme.colors.gray400};
+  border: 1px solid ${theme.colors.gray300};
   background: ${theme.colors.white};
-  box-shadow: 0px 4px 15px 5px rgba(149, 149, 149, 0.25);
+  box-shadow: 4px 4px 15px 3px rgba(247, 247, 247, 0.842);
   ${(props) => props.theme.fonts.b2_regular};
   color: ${theme.colors.b100};
 `;

@@ -10,8 +10,17 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
   const { id, userSid, nickname, imgUrl, name, brand, createdAt } = props;
   const [heart, setHeart] = useState<boolean>(false);
 
+  const currentPath =
+    typeof window !== "undefined" ? window.location.pathname : "";
+
   const handleMorePost = (id: number) => {
-    router.push(nickname ? `/closet/${id}` : `/mycloset/${id}`);
+    if (currentPath.startsWith("/user")) {
+      router.push(`/closet/${id}`);
+    } else if (currentPath.startsWith("/mycloset")) {
+      router.push(`/mycloset/${id}`);
+    } else {
+      router.push(nickname ? `/closet/${id}` : `/mycloset/${id}`);
+    }
   };
 
   const handleMoreProfile = (userSid: string) => {

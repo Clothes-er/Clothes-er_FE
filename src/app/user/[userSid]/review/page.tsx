@@ -62,8 +62,7 @@ export default UserReview;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100vh;
-  overflow-y: scroll;
+  height: 100%;
   padding: 42px 20px;
   display: flex;
   flex-direction: column;
@@ -88,6 +87,8 @@ const Background = styled.div`
 
 const Content = styled.div`
   display: flex;
+  height: 100%;
+  overflow-y: scroll;
   padding: 35px;
   flex-direction: column;
   align-items: flex-start;

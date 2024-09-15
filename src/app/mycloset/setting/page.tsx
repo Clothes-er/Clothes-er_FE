@@ -1,6 +1,7 @@
 "use client";
 
 import AuthAxios from "@/api/authAxios";
+import Modal from "@/components/common/Modal";
 import Topbar from "@/components/common/Topbar";
 import { showToast } from "@/hooks/showToast";
 import { clearUser } from "@/redux/slices/userSlice";
@@ -16,6 +17,7 @@ const Setting = () => {
   const dispatch = useDispatch();
 
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const [confirmWithdraw, setConfirmWithdraw] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -104,8 +106,28 @@ const Setting = () => {
           <Div>자주 묻는 질문</Div>
           <Div>약관 및 정책</Div>
           <Div onClick={handleLogout}>로그아웃</Div>
-          <Div onClick={handleWithdrawal}>탈퇴하기</Div>
+          <Div
+            onClick={() => {
+              setConfirmWithdraw(true);
+            }}
+          >
+            탈퇴하기
+          </Div>
         </Content>
+        {confirmWithdraw && (
+          <Modal
+            title={`정말 탈퇴하시겠습니까?`}
+            text={`계정 탈퇴 시 복구가 어렵습니다.\n\n또한 탈퇴 후 모든 정보들은\nClothes:er에서 관리되며,\n사용자들에게 노출될 수 있습니다.`}
+            onClose={() => {
+              setConfirmWithdraw(false);
+            }}
+            onCheck={handleWithdrawal}
+            no="아니요"
+            yes="네"
+            width="300px"
+            height="240px"
+          />
+        )}
       </Layout>
     </>
   );

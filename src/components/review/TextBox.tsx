@@ -3,13 +3,18 @@ import Image from "next/image";
 import React from "react";
 import styled from "styled-components";
 import { TextProps } from "./ReviewPage";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 const TextBox: React.FC<TextProps> = ({
   nickname,
   profileUrl,
+  userSid,
   content,
   createdAt,
 }) => {
+  const router = useRouter();
+
   return (
     <Box>
       <Image
@@ -18,10 +23,19 @@ const TextBox: React.FC<TextProps> = ({
         height={45}
         alt="user"
         style={{ borderRadius: "50%" }}
+        onClick={() => {
+          router.push(`/user/${userSid}`);
+        }}
       />
       <Right>
         <Top>
-          <Nickname>{nickname}</Nickname>
+          <Nickname
+            onClick={() => {
+              router.push(`/user/${userSid}`);
+            }}
+          >
+            {nickname}
+          </Nickname>
           <Time>{createdAt}</Time>
         </Top>
         <Content>{content}</Content>
@@ -44,7 +58,7 @@ const Box = styled.div`
 `;
 
 const Right = styled.div`
-  width: 100%;
+  width: calc(100% - 63px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -57,6 +71,7 @@ const Top = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   color: ${theme.colors.purple500};
 `;
 
@@ -68,6 +83,7 @@ const Nickname = styled.div`
 const Time = styled.div`
   color: ${theme.colors.gray950};
   ${(props) => props.theme.fonts.c1_regular};
+  white-space: nowrap;
 `;
 
 const Content = styled.div`

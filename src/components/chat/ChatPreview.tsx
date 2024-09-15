@@ -41,7 +41,11 @@ const ChatPreview: React.FC<ChatList> = ({
       <Left>
         <ProfileImage
           type={type}
-          src={profileImgUrl || `/assets/images/basic_profile.svg`}
+          src={
+            isWithdrawn
+              ? `/assets/images/withdraw_profile.svg`
+              : profileImgUrl || `/assets/images/basic_profile.svg`
+          }
           width={56}
           height={56}
           alt="profile"
