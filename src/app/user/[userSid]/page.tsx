@@ -263,7 +263,7 @@ export default MyCloset;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow-y: scroll;
   padding: 42px 20px;
   display: flex;
