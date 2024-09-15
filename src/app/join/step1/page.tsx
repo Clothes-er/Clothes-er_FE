@@ -152,7 +152,7 @@ const Step1 = () => {
       .then((response) => {
         console.log("이메일 전송 성공", response.data);
         setEmailSent(true);
-        setTimer(180);
+        setTimer(300);
         setSuccess({ ...success, email: "인증번호가 전송되었습니다." });
         setCorrectCode(false);
         setInputs({ ...inputs, emailAuth: "" });
