@@ -24,6 +24,7 @@ const Box = styled.div`
   justify-content: space-between;
   gap: 5px;
   ${(props) => props.theme.fonts.b2_regular};
+  white-space: nowrap;
 `;
 
 const Count = styled.div`

@@ -44,7 +44,7 @@ const Box = styled.div`
 `;
 
 const Right = styled.div`
-  width: 100%;
+  width: calc(100% - 63px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -57,6 +57,7 @@ const Top = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   color: ${theme.colors.purple500};
 `;
 
@@ -68,6 +69,7 @@ const Nickname = styled.div`
 const Time = styled.div`
   color: ${theme.colors.gray950};
   ${(props) => props.theme.fonts.c1_regular};
+  white-space: nowrap;
 `;
 
 const Content = styled.div`
