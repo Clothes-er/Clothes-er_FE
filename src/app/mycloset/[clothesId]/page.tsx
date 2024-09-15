@@ -166,6 +166,7 @@ const Page = () => {
           <Profile
             nickname={postInfo?.nickname ? postInfo.nickname : ""}
             profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
+            isWithdrawn={postInfo?.isWithdrawn}
             onClick={() => router.push(`/user/${postInfo?.userSid}`)}
           />
           <Body>

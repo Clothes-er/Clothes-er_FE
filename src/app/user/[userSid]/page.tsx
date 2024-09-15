@@ -100,9 +100,9 @@ const MyCloset = () => {
           <ProfileImage>
             <Image
               src={
-                profileInfo && profileInfo.profileUrl
-                  ? profileInfo.profileUrl
-                  : "/assets/images/basic_profile.svg"
+                profileInfo
+                  ? profileInfo.profileUrl || "/assets/images/basic_profile.svg"
+                  : "/assets/images/withdraw_profile.svg"
               }
               layout="fill"
               objectFit="cover"

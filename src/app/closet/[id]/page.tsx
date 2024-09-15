@@ -180,6 +180,7 @@ const Page = () => {
                 : ""
             }
             profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
+            isWithdrawn={postInfo?.isWithdrawn}
             onClick={() => router.push(`/user/${postInfo?.userSid}`)}
           />
           <Body>

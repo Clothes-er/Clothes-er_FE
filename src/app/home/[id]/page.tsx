@@ -191,6 +191,7 @@ const Page = () => {
                 : ""
             }
             profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
+            isWithdrawn={postInfo?.isWithdrawn}
             onClick={() => {
               if (!postInfo?.isRestricted) {
                 router.push(`/user/${postInfo?.userSid}`);
