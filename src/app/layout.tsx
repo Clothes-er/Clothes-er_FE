@@ -17,6 +17,7 @@ export default function RootLayout({
   return (
     <html>
       <head>
+        <title>클로저 Clothes:er</title>
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon-192x192.png"></link>
         <meta name="theme-color" content="#796EF2" />
