@@ -49,8 +49,13 @@ export const signInSlice = createSlice({
     setStep3: (state, action: PayloadAction<SignInState['step3']>) => {
       state.step3 = action.payload;
     },
+    clearSignIn: (state) => {
+      state.step1 = initialState.step1;
+      state.step2 = initialState.step2;
+      state.step3 = initialState.step3;
+    },
   },
 });
 
-export const { setStep1, setStep2, setStep3 } = signInSlice.actions;
+export const { setStep1, setStep2, setStep3, clearSignIn } = signInSlice.actions;
 export default signInSlice.reducer;

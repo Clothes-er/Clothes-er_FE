@@ -63,7 +63,12 @@ const Step1 = () => {
       Axios.get(`/api/v1/users/check-nickname/${inputs.nickname}`)
         .then((response) => {
           console.log("닉네임 중복확인 성공", response.data);
-          setSuccess({ ...success, nickname: "사용가능한 닉네임입니다." });
+          if (inputs.nickname.length >= 2 && inputs.nickname.length <= 10) {
+            setSuccess({ ...success, nickname: "사용가능한 닉네임입니다." });
+          } else {
+            setSuccess({ ...success, nickname: "" });
+            validateNickname(inputs.nickname);
+          }
         })
         .catch((error) => {
           if (error.response && error.response.status === 409) {
@@ -80,6 +85,8 @@ const Step1 = () => {
   const validateName = (name: string) => {
     if (name.length === 0) {
       setErrors({ ...errors, name: "이름을 입력해주세요." });
+    } else if (name.length < 2 || name.length > 10) {
+      setErrors({ ...errors, name: "이름은 2~10자입니다." });
     } else {
       setErrors({ ...errors, name: "" });
     }
@@ -88,6 +95,8 @@ const Step1 = () => {
   const validateNickname = (nickname: string) => {
     if (nickname.length === 0) {
       setErrors({ ...errors, nickname: "닉네임을 입력해주세요." });
+    } else if (nickname.length < 2 || nickname.length > 10) {
+      setErrors({ ...errors, nickname: "닉네임은 2~10자입니다." });
     } else {
       setErrors({ ...errors, nickname: "" });
     }

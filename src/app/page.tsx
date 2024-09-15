@@ -4,13 +4,14 @@ import Axios from "@/api/axios";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Tabbar from "@/components/common/Tabbar";
+import { clearSignIn } from "@/redux/slices/signInSlice";
 import { setUser } from "@/redux/slices/userSlice";
-import { useAppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 interface SaveProps {
@@ -19,12 +20,16 @@ interface SaveProps {
 
 export default function Home() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [save, setSave] = useState(false);
   const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    dispatch(clearSignIn());
+  }, []);
 
   const handleSave = () => {
     setSave(!save);
