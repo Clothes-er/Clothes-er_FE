@@ -167,17 +167,23 @@ const ChatDetail = () => {
     }
   }, [chatMsg, dispatch]);
 
-  useEffect(() => {
-    // 표준 WebSocket 객체 생성
-    // const socket = new WebSocket("ws://13.209.137.34:8080/ws");
+  const [accessToken, setAccessToken] = useState<string>("");
 
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      setAccessToken(token);
+    }
+  }, []);
+
+  useEffect(() => {
     const socketUrl = process.env.NEXT_PUBLIC_SOCKET || "";
     const socket = new WebSocket(socketUrl);
 
     const client = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
-        Authorization: `Bearer ${getToken()}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       debug: (str) => {
         console.log(str);
@@ -225,6 +231,7 @@ const ChatDetail = () => {
     if (msg?.trim()) {
       const destination = `/pub/chats/${id}`;
       if (stompClient && stompClient.connected) {
+        console.log(`Sending message: ${msg}`);
         stompClient.publish({
           destination,
           body: JSON.stringify({
@@ -467,14 +474,14 @@ const ChatDetail = () => {
         {chatMsg?.opponentNickname === chatMsg?.buyerNickname && (
           <State>
             <StateBox
-              check={chatMsg?.rentalState === "RENTED"}
+              $check={chatMsg?.rentalState === "RENTED"}
               onClick={() => setRentaling(true)}
               disabled={chatMsg?.rentalState === "RENTED"}
             >
               대여중
             </StateBox>
             <StateBox
-              check={chatMsg?.rentalState === "RETURNED"}
+              $check={chatMsg?.rentalState === "RETURNED"}
               onClick={() => setRentaled(true)}
               disabled={chatMsg?.rentalState === "RETURNED"}
             >
@@ -500,7 +507,7 @@ const ChatDetail = () => {
         {chatMsg?.opponentNickname === chatMsg?.lenderNickname && chatMsg && (
           <State>
             <StateBox
-              check={chatMsg.isChecked}
+              $check={chatMsg.isChecked}
               onClick={
                 chatMsg.isChecked
                   ? () => {
@@ -523,7 +530,7 @@ const ChatDetail = () => {
               />
             </StateBox>
             <StateBox
-              check={chatMsg?.rentalState === "RETURNED"}
+              $check={chatMsg?.rentalState === "RETURNED"}
               onClick={() => setRentaled(true)}
               disabled={chatMsg?.rentalState === "RETURNED"}
             >
@@ -771,6 +778,7 @@ const InputMsgBox = styled.div`
 `;
 
 const InputMessage = styled.input`
+  width: 100%;
   color: ${theme.colors.b100};
   ${(props) => props.theme.fonts.b2_regular};
   border: none;
@@ -778,15 +786,15 @@ const InputMessage = styled.input`
   outline: none;
 `;
 
-const StateBox = styled.button<{ check: boolean }>`
+const StateBox = styled.button<{ $check: boolean }>`
   width: auto;
   height: 37px;
   padding: 6px 15px;
   border-radius: 20px;
   background: ${(props) =>
-    props.check ? props.theme.colors.purple100 : props.theme.colors.gray100};
+    props.$check ? props.theme.colors.purple100 : props.theme.colors.gray100};
   color: ${(props) =>
-    props.check ? props.theme.colors.purple300 : props.theme.colors.b100};
+    props.$check ? props.theme.colors.purple300 : props.theme.colors.b100};
   ${(props) => props.theme.fonts.b3_bold};
   display: flex;
   align-items: center;
