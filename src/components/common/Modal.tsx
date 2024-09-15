@@ -106,20 +106,20 @@ const StyledButton = styled.div`
   width: 116px;
   height: 40px;
   border-radius: 10px;
-  color: ${theme.colors.purple300};
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.h2_bold};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   &:hover {
-    background: ${theme.colors.purple100};
+    background: ${theme.colors.gray100};
   }
 
   &.yes {
-    color: ${theme.colors.gray700};
+    color: ${theme.colors.purple300};
     &:hover {
-      background: ${theme.colors.gray100};
+      background: ${theme.colors.purple100};
     }
   }
 `;
