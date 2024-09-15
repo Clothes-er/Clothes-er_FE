@@ -13,6 +13,7 @@ export interface KeywordProps {
 export interface TextProps {
   nickname: string;
   profileUrl: string;
+  userSid: string;
   content: string;
   createdAt: string;
 }
@@ -58,6 +59,7 @@ const ReviewPage: React.FC<ReviewProps> = ({
               key={index}
               nickname={item.nickname}
               profileUrl={item.profileUrl}
+              userSid={item.userSid}
               content={item.content}
               createdAt={item.createdAt}
             />

@@ -3,13 +3,18 @@ import Image from "next/image";
 import React from "react";
 import styled from "styled-components";
 import { TextProps } from "./ReviewPage";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 const TextBox: React.FC<TextProps> = ({
   nickname,
   profileUrl,
+  userSid,
   content,
   createdAt,
 }) => {
+  const router = useRouter();
+
   return (
     <Box>
       <Image
@@ -18,10 +23,19 @@ const TextBox: React.FC<TextProps> = ({
         height={45}
         alt="user"
         style={{ borderRadius: "50%" }}
+        onClick={() => {
+          router.push(`/user/${userSid}`);
+        }}
       />
       <Right>
         <Top>
-          <Nickname>{nickname}</Nickname>
+          <Nickname
+            onClick={() => {
+              router.push(`/user/${userSid}`);
+            }}
+          >
+            {nickname}
+          </Nickname>
           <Time>{createdAt}</Time>
         </Top>
         <Content>{content}</Content>
