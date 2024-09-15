@@ -53,6 +53,7 @@ const Modify = () => {
     brand: string;
     size: string;
     shoppingUrl: string;
+    rentalId: number | null;
   }>({
     name: "",
     description: "",
@@ -64,6 +65,7 @@ const Modify = () => {
     brand: "",
     size: "",
     shoppingUrl: "",
+    rentalId: null,
   });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +127,7 @@ const Modify = () => {
             brand: inputs.brand,
             size: inputs.size,
             shoppingUrl: inputs.shoppingUrl,
-            rentalId: null,
+            rentalId: inputs.rentalId,
           }),
         ],
         { type: "application/json" }
@@ -170,7 +172,7 @@ const Modify = () => {
           onClick={() => router.push("/home")}
           style={{ cursor: "pointer" }}
         />
-        <Topbar text="대여 글 수정" icon={true} align="center" />
+        <Topbar text="보유 글 수정" icon={true} align="center" />
         <Content>
           <ColumnMargin>
             <Photo>
