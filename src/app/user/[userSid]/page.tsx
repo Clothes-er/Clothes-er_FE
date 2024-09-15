@@ -69,7 +69,9 @@ const MyCloset = () => {
         left: scrollLeft,
         behavior: "smooth",
       });
-      setCurrentSlide(slideIndex);
+      setTimeout(() => {
+        setCurrentSlide(slideIndex);
+      }, 120);
     }
   };
 
@@ -146,12 +148,14 @@ const MyCloset = () => {
                       </Comment>
                       <Score>{profileInfo?.closetScore}점</Score>
                     </InfoTop>
-                    <ScoreBarWrapper>
-                      <ScoreBar
-                        recentScore={profileInfo?.closetScore || 0}
-                        nickname={profileInfo?.nickname}
-                      />
-                    </ScoreBarWrapper>
+                    {currentSlide === 0 && (
+                      <ScoreBarWrapper>
+                        <ScoreBar
+                          recentScore={profileInfo?.closetScore || 0}
+                          nickname={profileInfo?.nickname}
+                        />
+                      </ScoreBarWrapper>
+                    )}
                     <MoreReview
                       onClick={() => router.push(`/user/${userSid}/review`)}
                     >

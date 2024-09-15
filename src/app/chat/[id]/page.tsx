@@ -386,7 +386,9 @@ const ChatDetail = () => {
           />
           <Nickname
             onClick={() => {
-              router.push(`/user/${chatMsg?.opponentSid}`);
+              if (!chatMsg?.isRestricted) {
+                router.push(`/user/${chatMsg?.opponentSid}`);
+              }
             }}
           >
             {chatMsg?.opponentNickname}

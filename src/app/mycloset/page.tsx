@@ -81,7 +81,9 @@ const MyCloset = () => {
         left: scrollLeft,
         behavior: "smooth",
       });
-      setCurrentSlide(slideIndex);
+      setTimeout(() => {
+        setCurrentSlide(slideIndex);
+      }, 120);
     }
   };
 
@@ -186,9 +188,11 @@ const MyCloset = () => {
                   </Comment>
                   <Score>{profileInfo?.closetScore}점</Score>
                 </InfoTop>
-                <ScoreBarWrapper>
-                  <ScoreBar recentScore={profileInfo?.closetScore || 0} />
-                </ScoreBarWrapper>
+                {currentSlide === 0 && (
+                  <ScoreBarWrapper>
+                    <ScoreBar recentScore={profileInfo?.closetScore || 0} />
+                  </ScoreBarWrapper>
+                )}
                 <MoreReview onClick={() => router.push("/mycloset/review")}>
                   거래 후기 확인하기
                 </MoreReview>
