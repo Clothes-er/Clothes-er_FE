@@ -167,15 +167,6 @@ const ChatDetail = () => {
     }
   }, [chatMsg, dispatch]);
 
-  const [accessToken, setAccessToken] = useState<string>("");
-
-  useEffect(() => {
-    const token = getToken();
-    if (token) {
-      setAccessToken(token);
-    }
-  }, []);
-
   useEffect(() => {
     const socketUrl = process.env.NEXT_PUBLIC_SOCKET || "";
     const socket = new WebSocket(socketUrl);
@@ -183,7 +174,7 @@ const ChatDetail = () => {
     const client = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${getToken()}`,
       },
       debug: (str) => {
         console.log(str);
@@ -207,7 +198,8 @@ const ChatDetail = () => {
     };
 
     client.onStompError = (frame) => {
-      console.error("Broker reported error: " + frame.headers["message"]);
+      // console.error("Broker reported error: " + frame.headers["message"]);
+      console.error("Broker reported error: " + frame);
       console.error("Additional details: " + frame.body);
     };
 
