@@ -230,15 +230,17 @@ const FilterPage = () => {
                   {Object.keys(categories).map((category) => (
                     <SameCategory key={category}>
                       {category}
-                      {categories[category].map((data) => (
-                        <FilterChip
-                          key={data}
-                          label={data}
-                          value={data}
-                          onClick={handleCategorySelect}
-                          selected={localCategory.includes(data)}
-                        />
-                      ))}
+                      <CategoryRow>
+                        {categories[category].map((data) => (
+                          <FilterChip
+                            key={data}
+                            label={data}
+                            value={data}
+                            onClick={handleCategorySelect}
+                            selected={localCategory.includes(data)}
+                          />
+                        ))}
+                      </CategoryRow>
                     </SameCategory>
                   ))}
                 </CategoryGrid>
@@ -290,7 +292,6 @@ const Layout = styled.div`
 
 const Content = styled.div`
   width: 100%;
-  height: 980px;
   padding: 20px;
   background-color: ${theme.colors.white};
   border-radius: 8px;
@@ -298,11 +299,6 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-bottom: 100px;
-
-  @media screen and (max-width: 400px) {
-    height: 1200px;
-  }
 `;
 
 const OptionsList = styled.div`
@@ -339,8 +335,10 @@ const CategoryGrid = styled.div`
   align-items: flex-start;
 
   @media screen and (max-width: 400px) {
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 30px;
+    /* grid-template-columns: repeat(3, 1fr);
+    column-gap: 30px; */
+    display: flex;
+    flex-direction: column;
   }
 `;
 
@@ -352,6 +350,19 @@ const SameCategory = styled.div`
   gap: 8px;
 `;
 
+const CategoryRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+
+  @media screen and (max-width: 400px) {
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+`;
 const SameStyle = styled.div`
   display: flex;
   flex-wrap: wrap;
