@@ -175,6 +175,7 @@ const ChatDetail = () => {
       webSocketFactory: () => socket,
       connectHeaders: {
         Authorization: `Bearer ${getToken()}`,
+        // Authorization: `${getToken()}`,
       },
       debug: (str) => {
         console.log(str);
@@ -389,17 +390,23 @@ const ChatDetail = () => {
               : (chatMsg?.isRestricted || chatMsg?.isSuspended) &&
                 " (신고된 유저)"}
           </Nickname>
-          <Menu>
-            <Image
-              src="/assets/icons/ic_more_vertical.svg"
-              width={24}
-              height={24}
-              alt="more"
-              onClick={handleMoreMenu}
-              style={{ cursor: "pointer" }}
-            />
-            {menu && <MoreBox type="other" reportOnClick={handleReportClick} />}
-          </Menu>
+          {chatMsg?.isWithdrawn ? (
+            <div />
+          ) : (
+            <Menu>
+              <Image
+                src="/assets/icons/ic_more_vertical.svg"
+                width={24}
+                height={24}
+                alt="more"
+                onClick={handleMoreMenu}
+                style={{ cursor: "pointer" }}
+              />
+              {menu && (
+                <MoreBox type="other" reportOnClick={handleReportClick} />
+              )}
+            </Menu>
+          )}
         </Top>
         {type === "rental" && chatMsg && (
           <Post

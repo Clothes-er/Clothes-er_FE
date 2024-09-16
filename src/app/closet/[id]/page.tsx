@@ -115,24 +115,28 @@ const Page = () => {
               style={{ cursor: "pointer" }}
             />
             옷장 구경
-            <Menu>
-              <Image
-                src="/assets/icons/ic_more_vertical.svg"
-                width={24}
-                height={24}
-                alt="more"
-                onClick={handleMoreMenu}
-                style={{ cursor: "pointer" }}
-              />
-              {menu && (
-                <MoreBox
-                  type={postInfo?.isWriter ? "me" : "other"}
-                  modifyOnClick={handleModifyClick}
-                  deleteOnClick={handleDeleteClick}
-                  reportOnClick={handleReportClick}
+            {postInfo?.isWithdrawn ? (
+              <div />
+            ) : (
+              <Menu>
+                <Image
+                  src="/assets/icons/ic_more_vertical.svg"
+                  width={24}
+                  height={24}
+                  alt="more"
+                  onClick={handleMoreMenu}
+                  style={{ cursor: "pointer" }}
                 />
-              )}
-            </Menu>
+                {menu && (
+                  <MoreBox
+                    type={postInfo?.isWriter ? "me" : "other"}
+                    modifyOnClick={handleModifyClick}
+                    deleteOnClick={handleDeleteClick}
+                    reportOnClick={handleReportClick}
+                  />
+                )}
+              </Menu>
+            )}
           </Top>
         </Head>
         <Content>
