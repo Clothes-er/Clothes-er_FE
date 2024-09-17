@@ -106,6 +106,7 @@ const ReviewPage = () => {
             <Post
               title={chatPost.title || ""}
               minPrice={chatPost.minPrice || undefined}
+              minDays={chatPost.minDays || undefined}
               imgUrl={chatPost.imgUrl}
               id={chatPost.id || undefined}
               isDeleted={chatPost.isDeleted}

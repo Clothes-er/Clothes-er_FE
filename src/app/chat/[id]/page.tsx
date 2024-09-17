@@ -100,6 +100,15 @@ const ChatDetail = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
+  const [isSuspended, setIsSuspended] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const suspended = localStorage.getItem("isSuspended");
+      setIsSuspended(suspended);
+    }
+  }, []);
+
   const [menu, setMenu] = useState<boolean>(false);
 
   const handleMoreMenu = () => {
@@ -141,11 +150,11 @@ const ChatDetail = () => {
   };
 
   /* 새 메시지가 들어올 때 스크롤 하단 */
-  useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [chatMsgList]);
+  // useEffect(() => {
+  //   if (bottomRef.current) {
+  //     bottomRef.current.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // }, [chatMsgList]);
 
   /* chatPost 정보 리덕스 업데이트 */
   useEffect(() => {
@@ -154,6 +163,7 @@ const ChatDetail = () => {
         setChatPost({
           title: chatMsg.title,
           minPrice: chatMsg.minPrice,
+          minDays: chatMsg.minDays,
           imgUrl: chatMsg.rentalImgUrl,
           id: chatMsg.rentalId,
           isDeleted: chatMsg.isDeleted,
@@ -175,7 +185,6 @@ const ChatDetail = () => {
       webSocketFactory: () => socket,
       connectHeaders: {
         Authorization: `Bearer ${getToken()}`,
-        // Authorization: `${getToken()}`,
       },
       debug: (str) => {
         console.log(str);
@@ -199,7 +208,6 @@ const ChatDetail = () => {
     };
 
     client.onStompError = (frame) => {
-      // console.error("Broker reported error: " + frame.headers["message"]);
       console.error("Broker reported error: " + frame);
       console.error("Additional details: " + frame.body);
     };
@@ -390,7 +398,7 @@ const ChatDetail = () => {
               : (chatMsg?.isRestricted || chatMsg?.isSuspended) &&
                 " (신고된 유저)"}
           </Nickname>
-          {chatMsg?.isWithdrawn ? (
+          {isSuspended === "true" || chatMsg?.isWithdrawn ? (
             <div />
           ) : (
             <Menu>

@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface ChatPostState {
   title: string | null;
   minPrice: number | null;
+  minDays: number | null;
   imgUrl: string | null;
   id: number | null;
   isDeleted: boolean;
@@ -16,6 +17,7 @@ interface ChatPostState {
 const initialState: ChatPostState = {
   title: null,
   minPrice: null,
+  minDays: null,
   imgUrl: null,
   id: null,
   isDeleted: false,
