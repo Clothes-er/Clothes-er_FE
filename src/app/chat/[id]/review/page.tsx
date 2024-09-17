@@ -120,7 +120,7 @@ const ReviewPage = () => {
             {checkListData.map((item) => (
               <Checkbox
                 key={item.id}
-                text={item.description}
+                label={item.description}
                 checked={selectedCheckList?.includes(item.keyword)}
                 onChange={() => handleKeywordSelect(item.keyword)}
                 labelFontSize={
