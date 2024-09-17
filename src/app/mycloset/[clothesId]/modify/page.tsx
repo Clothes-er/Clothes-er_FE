@@ -9,6 +9,7 @@ import Topbar from "@/components/common/Topbar";
 import { getToken } from "@/hooks/getToken";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
+import { formatPrice, removeCommas } from "@/lib/formatPrice";
 import {
   clearCategory,
   setSelectedCategory,
@@ -89,7 +90,11 @@ const Modify = () => {
     AuthAxios.get(`/api/v1/clothes/${clothesId}`)
       .then(async (response) => {
         const data = response.data.result;
-        setInputs(data);
+        setInputs((prevInputs) => ({
+          ...prevInputs,
+          ...data,
+          price: formatPrice(data.price),
+        }));
         dispatch(setSelectedGender(data.gender));
         dispatch(setSelectedCategory(data.category));
         dispatch(setSelectedStyle(data.style));
@@ -109,8 +114,8 @@ const Modify = () => {
   }, []);
 
   /* 수정하기 */
-  const handleModifyPost = async () => {
-    const priceWithoutCommas = inputs.price.replace(/,/g, "");
+  const handleModifyPost = () => {
+    const priceWithoutCommas = removeCommas(inputs.price as string);
 
     const formData = new FormData();
 
