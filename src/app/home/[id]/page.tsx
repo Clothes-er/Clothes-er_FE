@@ -177,7 +177,7 @@ const Page = () => {
               >
                 {postInfo?.imgUrls?.map((url, index) => (
                   <ImageBox key={index}>
-                    <Image src={url} alt={`image-${index}`} layout="fill" />
+                    <Image src={url} alt={`image-${index}`} fill priority />
                   </ImageBox>
                 ))}
               </StyledSlider>
@@ -186,7 +186,7 @@ const Page = () => {
             <>
               {postInfo?.imgUrls?.map((url, index) => (
                 <ImageBox key={index}>
-                  <Image src={url} alt={`image-${index}`} layout="fill" />
+                  <Image src={url} alt={`image-${index}`} fill priority />
                 </ImageBox>
               ))}
             </>

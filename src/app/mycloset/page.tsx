@@ -42,7 +42,7 @@ const MyCloset = () => {
 
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>();
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentslide, setCurrentslide] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const [stylePopup, setStylePopup] = useState<boolean>(false);
@@ -92,7 +92,7 @@ const MyCloset = () => {
         behavior: "smooth",
       });
       setTimeout(() => {
-        setCurrentSlide(slideIndex);
+        setCurrentslide(slideIndex);
       }, 120);
     }
   };
@@ -168,7 +168,7 @@ const MyCloset = () => {
                   src={
                     profileInfo.profileUrl || "/assets/images/basic_profile.svg"
                   }
-                  layout="fill"
+                  fill
                   objectFit="cover"
                   alt="profile"
                 />
@@ -209,7 +209,7 @@ const MyCloset = () => {
                   </Comment>
                   <Score>{profileInfo?.closetScore}점</Score>
                 </InfoTop>
-                {currentSlide === 0 && (
+                {currentslide === 0 && (
                   <ScoreBarWrapper>
                     <ScoreBar recentScore={profileInfo?.closetScore || 0} />
                   </ScoreBarWrapper>
@@ -304,13 +304,13 @@ const MyCloset = () => {
           <IndicatorContainer>
             <Indicator
               onClick={() => goToSlide(0)}
-              $active={currentSlide === 0}
+              $active={currentslide === 0}
             >
               {/* 스코어 박스 */}
             </Indicator>
             <Indicator
               onClick={() => goToSlide(1)}
-              $active={currentSlide === 1}
+              $active={currentslide === 1}
             >
               {/* 스타일 박스 */}
             </Indicator>

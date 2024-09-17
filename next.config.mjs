@@ -39,6 +39,11 @@ const nextConfig = {
         hostname: "clotheser-s3-bucket.s3.ap-northeast-2.amazonaws.com",
         pathname: "/closet/**",
       },
+      {
+        protocol: "https",
+        hostname: "clotheser-s3-bucket.s3.ap-northeast-2.amazonaws.com",
+        pathname: "/mycloset/**",
+      },
     ],
   },
 };

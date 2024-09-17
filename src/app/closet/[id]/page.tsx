@@ -172,7 +172,7 @@ const Page = () => {
               >
                 {postInfo?.imgUrls?.map((url, index) => (
                   <ImageBox key={index}>
-                    <Image src={url} alt={`image-${index}`} layout="fill" />
+                    <Image src={url} alt={`image-${index}`} fill priority />
                   </ImageBox>
                 ))}
               </StyledSlider>
@@ -181,7 +181,7 @@ const Page = () => {
             <>
               {postInfo?.imgUrls?.map((url, index) => (
                 <ImageBox key={index}>
-                  <Image src={url} alt={`image-${index}`} layout="fill" />
+                  <Image src={url} alt={`image-${index}`} fill priority />
                 </ImageBox>
               ))}
             </>
@@ -216,23 +216,21 @@ const Page = () => {
             <Info>
               <Row>
                 <Label>옷 정보</Label>
-                <div>
-                  <ShoppingUrl
-                    href={postInfo?.shoppingUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "inline-block",
-                      maxWidth: "80%",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      verticalAlign: "middle",
-                    }}
-                  >
-                    {postInfo?.shoppingUrl}
-                  </ShoppingUrl>
-                </div>
+                <ShoppingUrl
+                  href={postInfo?.shoppingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-block",
+                    maxWidth: "80%",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  {postInfo?.shoppingUrl}
+                </ShoppingUrl>
               </Row>
               <Row>
                 <Label>구매처</Label>

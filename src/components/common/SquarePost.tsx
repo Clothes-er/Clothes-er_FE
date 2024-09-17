@@ -32,7 +32,7 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
       <ImageBox>
         <StyledImage
           src={imgUrl || "/assets/images/noImage.svg"}
-          layout="fill"
+          fill
           alt="image"
         />
         {/* <HeartImage
