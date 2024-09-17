@@ -106,6 +106,7 @@ const ReviewPage = () => {
             <Post
               title={chatPost.title || ""}
               minPrice={chatPost.minPrice || undefined}
+              minDays={chatPost.minDays || undefined}
               imgUrl={chatPost.imgUrl}
               id={chatPost.id || undefined}
               isDeleted={chatPost.isDeleted}
@@ -119,7 +120,7 @@ const ReviewPage = () => {
             {checkListData.map((item) => (
               <Checkbox
                 key={item.id}
-                text={item.description}
+                label={item.description}
                 checked={selectedCheckList?.includes(item.keyword)}
                 onChange={() => handleKeywordSelect(item.keyword)}
                 labelFontSize={

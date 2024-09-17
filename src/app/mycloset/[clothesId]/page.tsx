@@ -50,6 +50,15 @@ const Page = () => {
   const [postInfo, setPostInfo] = useState<PostInfo>();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
+  const [isSuspended, setIsSuspended] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const suspended = localStorage.getItem("isSuspended");
+      setIsSuspended(suspended);
+    }
+  }, []);
+
   const handleBackButtonClick = () => {
     router.back();
   };
@@ -108,23 +117,27 @@ const Page = () => {
               style={{ cursor: "pointer" }}
             />
             나의 옷장
-            <Menu>
-              <Image
-                src="/assets/icons/ic_more_vertical.svg"
-                width={24}
-                height={24}
-                alt="more"
-                onClick={handleMoreMenu}
-                style={{ cursor: "pointer" }}
-              />
-              {menu && (
-                <MoreBox
-                  type="me"
-                  modifyOnClick={handleModifyClick}
-                  deleteOnClick={handleDeleteClick}
+            {isSuspended === "true" ? (
+              <div />
+            ) : (
+              <Menu>
+                <Image
+                  src="/assets/icons/ic_more_vertical.svg"
+                  width={24}
+                  height={24}
+                  alt="more"
+                  onClick={handleMoreMenu}
+                  style={{ cursor: "pointer" }}
                 />
-              )}
-            </Menu>
+                {menu && (
+                  <MoreBox
+                    type="me"
+                    modifyOnClick={handleModifyClick}
+                    deleteOnClick={handleDeleteClick}
+                  />
+                )}
+              </Menu>
+            )}
           </Top>
         </Head>
         <Content>
@@ -149,7 +162,7 @@ const Page = () => {
               >
                 {postInfo?.imgUrls?.map((url, index) => (
                   <ImageBox key={index}>
-                    <Image src={url} alt={`image-${index}`} layout="fill" />
+                    <Image src={url} alt={`image-${index}`} fill priority />
                   </ImageBox>
                 ))}
               </StyledSlider>
@@ -158,7 +171,7 @@ const Page = () => {
             <>
               {postInfo?.imgUrls?.map((url, index) => (
                 <ImageBox key={index}>
-                  <Image src={url} alt={`image-${index}`} layout="fill" />
+                  <Image src={url} alt={`image-${index}`} fill priority />
                 </ImageBox>
               ))}
             </>
@@ -183,23 +196,21 @@ const Page = () => {
             <Info>
               <Row>
                 <Label>옷 정보</Label>
-                <div>
-                  <ShoppingUrl
-                    href={postInfo?.shoppingUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "inline-block",
-                      maxWidth: "80%",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      verticalAlign: "middle",
-                    }}
-                  >
-                    {postInfo?.shoppingUrl}
-                  </ShoppingUrl>
-                </div>
+                <ShoppingUrl
+                  href={postInfo?.shoppingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-block",
+                    maxWidth: "80%",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  {postInfo?.shoppingUrl}
+                </ShoppingUrl>
               </Row>
               <Row>
                 <Label>구매처</Label>
@@ -289,7 +300,6 @@ const ImageSlide = styled.div`
 
 const StyledSlider = styled(Slider)`
   height: 300px;
-  /* min-height: 300px; */
   width: 100%;
   position: relative;
   .slick-prev::before,
@@ -373,6 +383,7 @@ const Label = styled.div`
 `;
 
 const ShoppingUrl = styled.a`
+  width: auto;
   :hover {
     text-decoration: underline;
   }

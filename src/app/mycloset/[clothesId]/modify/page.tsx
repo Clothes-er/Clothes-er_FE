@@ -9,6 +9,7 @@ import Topbar from "@/components/common/Topbar";
 import { getToken } from "@/hooks/getToken";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
+import { formatPrice, removeCommas } from "@/lib/formatPrice";
 import {
   clearCategory,
   setSelectedCategory,
@@ -89,7 +90,11 @@ const Modify = () => {
     AuthAxios.get(`/api/v1/clothes/${clothesId}`)
       .then(async (response) => {
         const data = response.data.result;
-        setInputs(data);
+        setInputs((prevInputs) => ({
+          ...prevInputs,
+          ...data,
+          price: formatPrice(data.price),
+        }));
         dispatch(setSelectedGender(data.gender));
         dispatch(setSelectedCategory(data.category));
         dispatch(setSelectedStyle(data.style));
@@ -109,7 +114,9 @@ const Modify = () => {
   }, []);
 
   /* 수정하기 */
-  const handleModifyPost = async () => {
+  const handleModifyPost = () => {
+    const priceWithoutCommas = removeCommas(inputs.price as string);
+
     const formData = new FormData();
 
     formData.append(
@@ -123,7 +130,7 @@ const Modify = () => {
             category: selectedCategory,
             style: selectedStyle,
             isPublic: inputs.isPublic,
-            price: inputs.price,
+            price: priceWithoutCommas,
             brand: inputs.brand,
             size: inputs.size,
             shoppingUrl: inputs.shoppingUrl,
@@ -241,9 +248,13 @@ const Modify = () => {
                 inputType="write"
                 size="small"
                 value={inputs.price}
-                placeholder="3,000 원"
+                placeholder="가격"
                 onChange={(value: string) => {
-                  setInputs({ ...inputs, price: value });
+                  const numericValue = value.replace(/[^0-9]/g, "");
+                  const formattedValue = numericValue
+                    ? new Intl.NumberFormat().format(Number(numericValue))
+                    : "";
+                  setInputs({ ...inputs, price: formattedValue });
                 }}
               />
             </Column>
@@ -316,7 +327,9 @@ const Modify = () => {
         size="large"
         text="수정 완료"
         onClick={handleModifyPost}
-        // disabled
+        disabled={
+          !inputs.name || inputs.isPublic === null || !inputs.description
+        }
       />
     </Layout>
   );

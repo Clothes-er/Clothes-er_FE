@@ -9,6 +9,7 @@ interface UserState {
   birth: string;
   token: string; // accessToken
   isFirstLogin: boolean;
+  isSuspended: boolean;
 }
 
 const initialState: UserState = {
@@ -20,6 +21,7 @@ const initialState: UserState = {
   birth: '',
   token: '',
   isFirstLogin: true,
+  isSuspended: false,
 };
 
 const userSlice = createSlice({
@@ -35,6 +37,7 @@ const userSlice = createSlice({
       state.birth = action.payload.birth;
       state.token = action.payload.token;
       state.isFirstLogin = action.payload.isFirstLogin;
+      state.isSuspended = action.payload.isSuspended;
     },
     clearUser: (state) => {
       state.name = '';
@@ -45,6 +48,7 @@ const userSlice = createSlice({
       state.birth = '';
       state.token = '';
       state.isFirstLogin = true;
+      state.isSuspended = false;
     },
   },
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import Topbar from "@/components/common/Topbar";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
@@ -24,7 +24,9 @@ import {
   SkeletonBox,
   SkeletonDiv,
 } from "@/components/common/Skeleton";
-import { getToken } from "@/hooks/getToken";
+import { getIsSuspended, getToken } from "@/hooks/getToken";
+import { showToast } from "@/hooks/showToast";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 interface PostList {
   id: number;
@@ -64,6 +66,15 @@ const Home = () => {
   const situation = searchParams.get("situation");
 
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
+
+  const [isSuspended, setIsSuspended] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const suspended = localStorage.getItem("isSuspended");
+      setIsSuspended(suspended);
+    }
+  }, []);
 
   /* Query String 생성 함수 */
   const buildQueryString = () => {
@@ -151,6 +162,18 @@ const Home = () => {
     situation,
   ]);
 
+  const handleMoveLocation = () => {
+    if (isSuspended === "true") {
+      showToast({
+        text: `신고 접수로 주소 변경이 불가합니다.`,
+        icon: "❌",
+        type: "error",
+      });
+    } else {
+      router.push("/home/location");
+    }
+  };
+
   const handleCardClick = (params: string) => {
     if (selectedCard === params) {
       setSelectedCard(null);
@@ -161,19 +184,42 @@ const Home = () => {
     }
   };
 
+  const handleWritePost = () => {
+    if (isSuspended === "true") {
+      showToast({
+        text: `신고 접수로 글 작성이 불가합니다.`,
+        icon: "❌",
+        type: "error",
+      });
+    } else {
+      router.push("/home/write/choice");
+    }
+  };
   return (
     <>
       <Contain>
         <Layout>
           <Header />
           <Topbar text="홈" align="left" />
-          <Location onClick={() => router.push("/home/location")}>
-            <Image
-              src="/assets/icons/ic_pin.svg"
-              width={24}
-              height={24}
-              alt="pin"
-            />
+          <Location
+            $isSuspended={isSuspended || ""}
+            onClick={handleMoveLocation}
+          >
+            {isSuspended === "true" ? (
+              <Image
+                src="/assets/icons/ic_pin_gray.svg"
+                width={24}
+                height={24}
+                alt="pin"
+              />
+            ) : (
+              <Image
+                src="/assets/icons/ic_pin.svg"
+                width={24}
+                height={24}
+                alt="pin"
+              />
+            )}
             {loading ? "Loading..." : location || "위치를 설정해 주세요"}
           </Location>
           <Content>
@@ -261,7 +307,7 @@ const Home = () => {
             )}
           </Content>
         </Layout>
-        <Edit onClick={() => router.push("/home/write/choice")}>
+        <Edit $isSuspended={isSuspended || ""} onClick={handleWritePost}>
           <Image
             src="/assets/icons/ic_edit.svg"
             width={48}
@@ -277,7 +323,7 @@ const Home = () => {
 
 export default function HomePaging() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <Home />
     </Suspense>
   );
@@ -297,12 +343,17 @@ const Layout = styled.div`
   align-items: flex-start;
 `;
 
-const Location = styled.div`
+const Location = styled.div<{ $isSuspended?: string }>`
   display: flex;
   align-items: center;
   gap: 4px;
   ${(props) => props.theme.fonts.b2_medium};
   cursor: pointer;
+  ${({ $isSuspended }) =>
+    $isSuspended === "true" &&
+    css`
+      color: ${theme.colors.gray900};
+    `}
 `;
 
 const Content = styled.div`
@@ -367,7 +418,7 @@ const Divider = styled.div`
   background-color: rgba(219, 219, 219, 0.7);
 `;
 
-const Edit = styled.div`
+const Edit = styled.div<{ $isSuspended?: string }>`
   width: 68px;
   height: 68px;
   border-radius: 50px;
@@ -381,6 +432,11 @@ const Edit = styled.div`
   justify-content: center;
   z-index: 150;
   cursor: pointer;
+  ${({ $isSuspended }) =>
+    $isSuspended === "true" &&
+    css`
+      background: ${theme.colors.gray700};
+    `}
 `;
 
 const NoData = styled.div`

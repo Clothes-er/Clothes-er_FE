@@ -41,6 +41,7 @@ const Setting = () => {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           localStorage.removeItem("isFirstLogin");
+          localStorage.removeItem("isSuspended");
           dispatch(clearUser());
           router.push("/");
         })

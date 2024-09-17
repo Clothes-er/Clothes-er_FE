@@ -173,7 +173,7 @@ const UserInfo = () => {
                     ? URL.createObjectURL(image)
                     : "/assets/images/basic_profile.svg"
                 }
-                layout="fill"
+                fill
                 objectFit="cover"
                 alt="profile"
                 style={{ borderRadius: "100px", background: "white" }}

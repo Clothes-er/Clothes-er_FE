@@ -26,6 +26,8 @@ interface PostInfo {
   profileUrl: string;
   nickname: string;
   isWriter: boolean;
+  isSuspended: boolean;
+  isRestricted: boolean;
   isWithdrawn: boolean;
   imgUrls: string[];
   name: string;
@@ -49,6 +51,15 @@ const Page = () => {
   const [menu, setMenu] = useState<boolean>(false);
   const [postInfo, setPostInfo] = useState<PostInfo>();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
+
+  const [isSuspended, setIsSuspended] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const suspended = localStorage.getItem("isSuspended");
+      setIsSuspended(suspended);
+    }
+  }, []);
 
   const handleBackButtonClick = () => {
     router.back();
@@ -115,24 +126,28 @@ const Page = () => {
               style={{ cursor: "pointer" }}
             />
             옷장 구경
-            <Menu>
-              <Image
-                src="/assets/icons/ic_more_vertical.svg"
-                width={24}
-                height={24}
-                alt="more"
-                onClick={handleMoreMenu}
-                style={{ cursor: "pointer" }}
-              />
-              {menu && (
-                <MoreBox
-                  type={postInfo?.isWriter ? "me" : "other"}
-                  modifyOnClick={handleModifyClick}
-                  deleteOnClick={handleDeleteClick}
-                  reportOnClick={handleReportClick}
+            {isSuspended === "true" || postInfo?.isWithdrawn ? (
+              <div />
+            ) : (
+              <Menu>
+                <Image
+                  src="/assets/icons/ic_more_vertical.svg"
+                  width={24}
+                  height={24}
+                  alt="more"
+                  onClick={handleMoreMenu}
+                  style={{ cursor: "pointer" }}
                 />
-              )}
-            </Menu>
+                {menu && (
+                  <MoreBox
+                    type={postInfo?.isWriter ? "me" : "other"}
+                    modifyOnClick={handleModifyClick}
+                    deleteOnClick={handleDeleteClick}
+                    reportOnClick={handleReportClick}
+                  />
+                )}
+              </Menu>
+            )}
           </Top>
         </Head>
         <Content>
@@ -157,7 +172,7 @@ const Page = () => {
               >
                 {postInfo?.imgUrls?.map((url, index) => (
                   <ImageBox key={index}>
-                    <Image src={url} alt={`image-${index}`} layout="fill" />
+                    <Image src={url} alt={`image-${index}`} fill priority />
                   </ImageBox>
                 ))}
               </StyledSlider>
@@ -166,7 +181,7 @@ const Page = () => {
             <>
               {postInfo?.imgUrls?.map((url, index) => (
                 <ImageBox key={index}>
-                  <Image src={url} alt={`image-${index}`} layout="fill" />
+                  <Image src={url} alt={`image-${index}`} fill priority />
                 </ImageBox>
               ))}
             </>
@@ -175,7 +190,11 @@ const Page = () => {
             nickname={
               postInfo?.nickname
                 ? `${postInfo.nickname}${
-                    postInfo.isWithdrawn ? " (탈퇴한 회원)" : ""
+                    postInfo.isWithdrawn
+                      ? " (탈퇴한 회원)"
+                      : postInfo.isSuspended || postInfo.isRestricted
+                      ? " (신고된 유저)"
+                      : ""
                   }`
                 : ""
             }
@@ -197,23 +216,21 @@ const Page = () => {
             <Info>
               <Row>
                 <Label>옷 정보</Label>
-                <div>
-                  <ShoppingUrl
-                    href={postInfo?.shoppingUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "inline-block",
-                      maxWidth: "80%",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      verticalAlign: "middle",
-                    }}
-                  >
-                    {postInfo?.shoppingUrl}
-                  </ShoppingUrl>
-                </div>
+                <ShoppingUrl
+                  href={postInfo?.shoppingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-block",
+                    maxWidth: "80%",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  {postInfo?.shoppingUrl}
+                </ShoppingUrl>
               </Row>
               <Row>
                 <Label>구매처</Label>

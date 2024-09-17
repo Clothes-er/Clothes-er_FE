@@ -130,6 +130,11 @@ const Modify = () => {
 
   /* 수정하기 */
   const handleModifyPost = async () => {
+    const formattedPrices = inputs.prices.map((price) => ({
+      days: price.days,
+      price: price.price !== null ? Number(price.price) : null,
+    }));
+
     const formData = new FormData();
 
     formData.append(
@@ -142,7 +147,7 @@ const Modify = () => {
             gender: selectedGender,
             category: selectedCategory,
             style: selectedStyle,
-            prices: inputs.prices,
+            prices: formattedPrices,
             brand: inputs.brand,
             size: inputs.size,
             fit: inputs.fit,
@@ -267,30 +272,36 @@ const Modify = () => {
               </AddPrice>
             </Label>
             <PriceBoxList>
-              {inputs.prices.map((price, index) => (
-                <PriceBox key={index}>
-                  <Input
-                    inputType="write"
-                    size="small"
-                    value={price.days}
-                    // value={price.days ? `${price.days}일` : ""}
-                    placeholder="날짜"
-                    onChange={(value: string) =>
-                      handlePriceChange(index, "days", value)
-                    }
-                    disabled={price.days === 5 || price.days === 10}
-                  />
-                  <Input
-                    inputType="write"
-                    size="small"
-                    value={price.price}
-                    placeholder="가격"
-                    onChange={(value: string) =>
-                      handlePriceChange(index, "price", value)
-                    }
-                  />
-                </PriceBox>
-              ))}
+              {inputs.prices.map((price, index) => {
+                const formattedPrice = price.price
+                  ? new Intl.NumberFormat().format(Number(price.price))
+                  : "";
+
+                return (
+                  <PriceBox key={index}>
+                    <Input
+                      inputType="write"
+                      size="small"
+                      value={price.days}
+                      placeholder="날짜"
+                      onChange={(value: string) =>
+                        handlePriceChange(index, "days", value)
+                      }
+                      disabled={price.days === 5 || price.days === 10}
+                    />
+                    <Input
+                      inputType="write"
+                      size="small"
+                      value={formattedPrice}
+                      placeholder="가격"
+                      onChange={(value: string) => {
+                        const numericValue = value.replace(/[^0-9]/g, "");
+                        handlePriceChange(index, "price", numericValue);
+                      }}
+                    />
+                  </PriceBox>
+                );
+              })}
             </PriceBoxList>
           </Column>
           <Row>
@@ -350,7 +361,7 @@ const Modify = () => {
         size="large"
         text="수정 완료"
         onClick={handleModifyPost}
-        // disabled
+        disabled={!inputs.title || !inputs.prices || !inputs.description}
       />
     </Layout>
   );
