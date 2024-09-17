@@ -2,7 +2,7 @@ import { PostList } from "@/type/post";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 
 const Post: React.FC<PostList> = ({
@@ -31,6 +31,15 @@ const Post: React.FC<PostList> = ({
 }) => {
   const router = useRouter();
 
+  const [isMeSuspended, setIsMeSuspended] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const suspended = localStorage.getItem("isSuspended");
+      setIsMeSuspended(suspended);
+    }
+  }, []);
+
   const handleDetail = () => {
     if (onClickChoice && id !== undefined) {
       onClickChoice(id);
@@ -55,7 +64,7 @@ const Post: React.FC<PostList> = ({
       onClick={handleDetail}
       size={size}
       $isSelected={isSelected}
-      disabled={isDeleted}
+      $isDeleted={isDeleted}
     >
       <Image
         src={`${imgUrl ? imgUrl : "/assets/images/noImage.svg"}`}
@@ -79,7 +88,7 @@ const Post: React.FC<PostList> = ({
               {isDeleted ? "" : postType !== "choice" && `${minDays}day`}
             </Days>
           </Bottom>
-          {showReviewed && (
+          {isMeSuspended !== "true" && showReviewed && (
             <ReviewButton
               onClick={handleReviewButtonClick}
               disabled={isReviewed}
@@ -125,7 +134,11 @@ const Post: React.FC<PostList> = ({
 
 export default Post;
 
-const Container = styled.button<{ size: string; $isSelected: boolean }>`
+const Container = styled.div<{
+  size: string;
+  $isSelected: boolean;
+  $isDeleted: boolean;
+}>`
   display: flex;
   width: 100%;
   height: 100px;
@@ -145,9 +158,12 @@ const Container = styled.button<{ size: string; $isSelected: boolean }>`
       background-color: ${theme.colors.purple10};
     `}
 
-  &:disabled {
-    opacity: 0.7;
-  }
+  ${(props) =>
+    props.$isDeleted &&
+    css`
+      opacity: 0.7;
+      pointer-events: none;
+    `}
 `;
 
 const Box = styled.div`
