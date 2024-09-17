@@ -110,6 +110,8 @@ const Modify = () => {
 
   /* 수정하기 */
   const handleModifyPost = async () => {
+    const priceWithoutCommas = inputs.price.replace(/,/g, "");
+
     const formData = new FormData();
 
     formData.append(
@@ -123,7 +125,7 @@ const Modify = () => {
             category: selectedCategory,
             style: selectedStyle,
             isPublic: inputs.isPublic,
-            price: inputs.price,
+            price: priceWithoutCommas,
             brand: inputs.brand,
             size: inputs.size,
             shoppingUrl: inputs.shoppingUrl,
@@ -241,9 +243,13 @@ const Modify = () => {
                 inputType="write"
                 size="small"
                 value={inputs.price}
-                placeholder="3,000 원"
+                placeholder="가격"
                 onChange={(value: string) => {
-                  setInputs({ ...inputs, price: value });
+                  const numericValue = value.replace(/[^0-9]/g, "");
+                  const formattedValue = numericValue
+                    ? new Intl.NumberFormat().format(Number(numericValue))
+                    : "";
+                  setInputs({ ...inputs, price: formattedValue });
                 }}
               />
             </Column>
