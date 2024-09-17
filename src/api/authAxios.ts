@@ -37,7 +37,8 @@ AuthAxios.interceptors.response.use(
             localStorage.setItem("refreshToken", response.data.result.refreshToken);
 
             originalRequest.headers.Authorization = `Bearer ${response.data.result.accessToken}`;
-
+            
+            console.log("토큰 재발급 완료", response.data);
             return AuthAxios(originalRequest);
           }
         } catch (tokenRefreshError:any) {
