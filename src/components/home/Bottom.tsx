@@ -106,15 +106,16 @@ const Bottom: React.FC<BottomProps> = ({
     setPricePop(false);
   };
 
-  const minPrices = prices?.sort((a, b) => a.days - b.days);
+  const sortedByPrice = prices?.slice().sort((a, b) => a.price - b.price);
+  const sortedByDays = prices?.slice().sort((a, b) => a.days - b.days);
 
   return (
     <StyledBottom>
       {bottomType === "share" && (
         <div>
           <Price>
-            {prices ? prices[0]?.price : "N/A"}원~
-            <Days>{prices && prices[0]?.days}days</Days>
+            {sortedByPrice ? sortedByPrice[0]?.price : "N/A"}원~
+            <Days>{sortedByPrice && sortedByPrice[0]?.days}일</Days>
           </Price>
           <MorePrice onClick={handleShowPrice}>가격표 보기</MorePrice>
           {pricePop && (
@@ -122,7 +123,7 @@ const Bottom: React.FC<BottomProps> = ({
               <PricePopup>
                 가격표
                 <Table>
-                  {minPrices?.map((data, index) => (
+                  {sortedByDays?.map((data, index) => (
                     <Set key={index}>
                       <DaysPopup>{data.days}일 :</DaysPopup>
                       <PricesPopup>{data.price}원</PricesPopup>
