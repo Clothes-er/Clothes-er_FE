@@ -387,7 +387,7 @@ const WritePost = () => {
           size="large"
           text="작성 완료"
           onClick={handleNewPost}
-          // disabled
+          disabled={!inputs.title || !inputs.prices || !inputs.description}
         />
       </SubmitButton>
     </Layout>

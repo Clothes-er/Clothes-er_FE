@@ -328,7 +328,9 @@ const MyClosetWrite = () => {
           size="large"
           text="작성 완료"
           onClick={handleNewPost}
-          // disabled
+          disabled={
+            !inputs.name || inputs.isPublic === null || !inputs.description
+          }
         />
       </SubmitButton>
     </Layout>

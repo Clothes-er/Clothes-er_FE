@@ -327,7 +327,9 @@ const Modify = () => {
         size="large"
         text="수정 완료"
         onClick={handleModifyPost}
-        // disabled
+        disabled={
+          !inputs.name || inputs.isPublic === null || !inputs.description
+        }
       />
     </Layout>
   );
