@@ -26,6 +26,7 @@ import {
 } from "@/components/common/Skeleton";
 import { getIsSuspended, getToken } from "@/hooks/getToken";
 import { showToast } from "@/hooks/showToast";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 interface PostList {
   id: number;
@@ -322,7 +323,7 @@ const Home = () => {
 
 export default function HomePaging() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <Home />
     </Suspense>
   );

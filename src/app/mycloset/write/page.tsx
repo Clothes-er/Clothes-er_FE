@@ -24,6 +24,7 @@ import Toggle from "@/components/common/Toggle";
 import AuthAxios from "@/api/authAxios";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import Topbar from "@/components/common/Topbar";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 const MyClosetWrite = () => {
   useRequireAuth();
@@ -339,7 +340,7 @@ const MyClosetWrite = () => {
 
 export default function MyClosetWritePaging() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <MyClosetWrite />
     </Suspense>
   );
