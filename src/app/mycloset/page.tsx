@@ -9,6 +9,7 @@ import Topbar from "@/components/common/Topbar";
 import ScoreBar from "@/components/myCloset/ScoreBar";
 import { sizeOptions, styleOptions } from "@/constants/options";
 import { getLevelText } from "@/data/levelData";
+import { showToast } from "@/hooks/showToast";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { getGenderLabel } from "@/interface/Gender";
 import { theme } from "@/styles/theme";
@@ -16,7 +17,7 @@ import { getLevelMessage } from "@/util/custom";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface ProfileInfo {
   nickname: string;
@@ -52,6 +53,15 @@ const MyCloset = () => {
   const [body, setBody] = useState<string[]>([]);
   const [category, setCategory] = useState<string[]>([]);
   const [style, setStyle] = useState<string[]>([]);
+
+  const [isSuspended, setIsSuspended] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const suspended = localStorage.getItem("isSuspended");
+      setIsSuspended(suspended);
+    }
+  }, []);
 
   useEffect(() => {
     AuthAxios.get("/api/v1/users/profile")
@@ -116,6 +126,17 @@ const MyCloset = () => {
     );
   };
 
+  const handleAddCloth = () => {
+    if (isSuspended === "true") {
+      showToast({
+        text: `신고 접수로 글 작성이 불가합니다.`,
+        icon: "❌",
+        type: "error",
+      });
+    } else {
+      router.push("/mycloset/write/choice");
+    }
+  };
   return (
     <>
       <Layout>
@@ -297,9 +318,14 @@ const MyCloset = () => {
         </SliderContainer>
         <Parent>
           <ListTab listType="me" />
-          <WriteButton onClick={() => router.push("/mycloset/write/choice")}>
+          <WriteButton
+            $isSuspended={isSuspended || ""}
+            onClick={handleAddCloth}
+          >
             <Image
-              src="/assets/icons/ic_plus_purple.svg"
+              src={`/assets/icons/ic_plus_${
+                isSuspended === "true" ? "gray" : "purple"
+              }.svg`}
               width={16}
               height={16}
               alt="plus"
@@ -695,7 +721,7 @@ const Parent = styled.div`
   position: relative;
 `;
 
-const WriteButton = styled.button`
+const WriteButton = styled.button<{ $isSuspended?: string }>`
   width: 90px;
   height: 23px;
   padding: 0 10px;
@@ -719,4 +745,18 @@ const WriteButton = styled.button`
   &:active {
     background: ${theme.colors.purple150};
   }
+
+  ${({ $isSuspended }) =>
+    $isSuspended === "true" &&
+    css`
+      color: ${theme.colors.gray900};
+      background: ${theme.colors.gray100};
+
+      &:hover {
+        background: ${theme.colors.gray300};
+      }
+      &:active {
+        background: ${theme.colors.gray300};
+      }
+    `}
 `;

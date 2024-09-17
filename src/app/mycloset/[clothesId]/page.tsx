@@ -50,6 +50,15 @@ const Page = () => {
   const [postInfo, setPostInfo] = useState<PostInfo>();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
+  const [isSuspended, setIsSuspended] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const suspended = localStorage.getItem("isSuspended");
+      setIsSuspended(suspended);
+    }
+  }, []);
+
   const handleBackButtonClick = () => {
     router.back();
   };
@@ -108,23 +117,27 @@ const Page = () => {
               style={{ cursor: "pointer" }}
             />
             나의 옷장
-            <Menu>
-              <Image
-                src="/assets/icons/ic_more_vertical.svg"
-                width={24}
-                height={24}
-                alt="more"
-                onClick={handleMoreMenu}
-                style={{ cursor: "pointer" }}
-              />
-              {menu && (
-                <MoreBox
-                  type="me"
-                  modifyOnClick={handleModifyClick}
-                  deleteOnClick={handleDeleteClick}
+            {isSuspended ? (
+              <div />
+            ) : (
+              <Menu>
+                <Image
+                  src="/assets/icons/ic_more_vertical.svg"
+                  width={24}
+                  height={24}
+                  alt="more"
+                  onClick={handleMoreMenu}
+                  style={{ cursor: "pointer" }}
                 />
-              )}
-            </Menu>
+                {menu && (
+                  <MoreBox
+                    type="me"
+                    modifyOnClick={handleModifyClick}
+                    deleteOnClick={handleDeleteClick}
+                  />
+                )}
+              </Menu>
+            )}
           </Top>
         </Head>
         <Content>

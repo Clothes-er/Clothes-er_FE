@@ -26,6 +26,8 @@ interface PostInfo {
   profileUrl: string;
   nickname: string;
   isWriter: boolean;
+  isSuspended: boolean;
+  isRestricted: boolean;
   isWithdrawn: boolean;
   imgUrls: string[];
   name: string;
@@ -49,6 +51,15 @@ const Page = () => {
   const [menu, setMenu] = useState<boolean>(false);
   const [postInfo, setPostInfo] = useState<PostInfo>();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
+
+  const [isSuspended, setIsSuspended] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const suspended = localStorage.getItem("isSuspended");
+      setIsSuspended(suspended);
+    }
+  }, []);
 
   const handleBackButtonClick = () => {
     router.back();
@@ -115,7 +126,7 @@ const Page = () => {
               style={{ cursor: "pointer" }}
             />
             옷장 구경
-            {postInfo?.isWithdrawn ? (
+            {isSuspended === "true" || postInfo?.isWithdrawn ? (
               <div />
             ) : (
               <Menu>
@@ -179,7 +190,11 @@ const Page = () => {
             nickname={
               postInfo?.nickname
                 ? `${postInfo.nickname}${
-                    postInfo.isWithdrawn ? " (탈퇴한 회원)" : ""
+                    postInfo.isWithdrawn
+                      ? " (탈퇴한 회원)"
+                      : postInfo.isSuspended || postInfo.isRestricted
+                      ? " (신고된 유저)"
+                      : ""
                   }`
                 : ""
             }

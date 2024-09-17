@@ -1,7 +1,7 @@
 import AuthAxios from "@/api/authAxios";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { chatListType } from "@/type/chat";
 import { showToast } from "@/hooks/showToast";
@@ -36,6 +36,16 @@ const Bottom: React.FC<BottomProps> = ({
 }) => {
   const router = useRouter();
   const [pricePop, setPricePop] = useState<boolean>(false);
+
+  const [isSuspended, setIsSuspended] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const suspended = localStorage.getItem("isSuspended");
+      setIsSuspended(suspended);
+    }
+  }, []);
+
   const handleShowPrice = () => {
     setPricePop(true);
   };
@@ -139,7 +149,10 @@ const Bottom: React.FC<BottomProps> = ({
           </div>
         ))}
       {!isWriter && (
-        <Chat onClick={handleNewChat} disabled={isWithdrawn}>
+        <Chat
+          onClick={handleNewChat}
+          disabled={isSuspended === "true" || isWithdrawn}
+        >
           문의하기
         </Chat>
       )}

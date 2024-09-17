@@ -58,6 +58,15 @@ const Page = () => {
   const [postInfo, setPostInfo] = useState<PostInfo>();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
+  const [isSuspended, setIsSuspended] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const suspended = localStorage.getItem("isSuspended");
+      setIsSuspended(suspended);
+    }
+  }, []);
+
   const handleBackButtonClick = () => {
     router.back();
   };
@@ -122,7 +131,7 @@ const Page = () => {
               style={{ cursor: "pointer" }}
             />
             공유 옷장
-            {postInfo?.isWithdrawn ? (
+            {isSuspended === "true" || postInfo?.isWithdrawn ? (
               <div />
             ) : (
               <Menu>
