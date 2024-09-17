@@ -51,6 +51,7 @@ export default function Home() {
           birth: "",
           token: response.data.result.token.accessToken,
           isFirstLogin: response.data.result.isFirstLogin,
+          isSuspended: response.data.result.isSuspended,
         };
         dispatch(setUser(userData));
         localStorage.setItem(
@@ -62,6 +63,7 @@ export default function Home() {
           response.data.result.token.refreshToken
         );
         localStorage.setItem("isFirstLogin", userData.isFirstLogin);
+        localStorage.setItem("isSuspended", userData.isSuspended);
 
         if (userData.isFirstLogin) {
           router.push("/first/step1");
