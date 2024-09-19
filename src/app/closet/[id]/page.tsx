@@ -18,6 +18,7 @@ import PrevArrow from "@/components/common/PrevArrow";
 import { useRequireAuth } from "@/hooks/useAuth";
 import MoreBox from "@/components/common/MoreBox";
 import Modal from "@/components/common/Modal";
+import { formatPrice } from "@/lib/formatPrice";
 
 interface PostInfo {
   id: number;
@@ -229,16 +230,20 @@ const Page = () => {
                     verticalAlign: "middle",
                   }}
                 >
-                  {postInfo?.shoppingUrl}
+                  {postInfo?.shoppingUrl ? postInfo.shoppingUrl : "없음"}
                 </ShoppingUrl>
               </Row>
               <Row>
                 <Label>구매처</Label>
-                <div>{postInfo?.brand}</div>
+                <div>{postInfo?.brand ? postInfo.brand : "없음"}</div>
               </Row>
               <Row>
                 <Label>구매 가격</Label>
-                <div>{postInfo?.price}원</div>
+                <div>
+                  {postInfo?.price
+                    ? `${formatPrice(postInfo?.price || 0)}원`
+                    : "없음"}
+                </div>
               </Row>
             </Info>
             <div>옷 후기</div>

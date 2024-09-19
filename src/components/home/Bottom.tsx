@@ -231,7 +231,7 @@ const PricePopup = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 200;
+  z-index: 1000;
 `;
 
 const Table = styled.div`
@@ -265,7 +265,7 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  z-index: 100;
+  z-index: 900;
 `;
 
 const Span = styled.span`
