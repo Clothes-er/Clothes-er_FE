@@ -4,7 +4,12 @@ export const convertURLtoFile = async (url: string) => {
 
   // url에서 파일 확장자와 파일명 추출 (기본값 제공)
   const ext = url.split(".").pop() || "jpg";
-  const filename = url.split("/").pop() || "filename.jpg";
+  let filename = url.split("/").pop() || "filename.jpg";
+
+  // 파일명에서 언더바가 존재하면 언더바 전까지 추출
+  if (filename.includes("_")) {
+    filename = filename.split("_")[0];
+  }
 
   // MIME 타입 설정
   const metadata = { type: `image/${ext}` };

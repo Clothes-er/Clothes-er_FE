@@ -51,7 +51,7 @@ const WritePost = () => {
   const [inputs, setInputs] = useState<{
     title: string;
     description: string;
-    gender: string;
+    gender: string | null;
     category: string;
     style: string;
     prices: Price[];
@@ -61,7 +61,7 @@ const WritePost = () => {
   }>({
     title: "",
     description: "",
-    gender: selectedGender || "",
+    gender: selectedGender || null,
     category: selectedCategory || "",
     style: selectedStyle || "",
     prices: [
@@ -127,13 +127,13 @@ const WritePost = () => {
   };
 
   const handleNewPost = () => {
+    console.log("성별", selectedGender);
     const formattedPrices = inputs.prices.map((price) => ({
       days: price.days,
       price: price.price !== null ? Number(price.price) : null,
     }));
 
     const formData = new FormData();
-
     formData.append(
       "post",
       new Blob(
@@ -141,7 +141,7 @@ const WritePost = () => {
           JSON.stringify({
             title: inputs.title,
             description: inputs.description,
-            gender: selectedGender,
+            gender: selectedGender === "" ? null : selectedGender,
             category: selectedCategory,
             style: selectedStyle,
             prices: formattedPrices,

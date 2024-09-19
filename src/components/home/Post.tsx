@@ -81,7 +81,7 @@ const Post: React.FC<PostList> = ({
               {isDeleted
                 ? "삭제된 게시물입니다"
                 : postType === "choice"
-                ? `구매가 ${minPrice}원`
+                ? `구매가 ${minPrice ? `${minPrice}원` : "미기재"}`
                 : `${minPrice}원~`}
             </Price>
             <Days>
