@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { chatListType } from "@/type/chat";
 import { showToast } from "@/hooks/showToast";
+import { formatPrice } from "@/lib/formatPrice";
 
 type bottomType = "share" | "closet";
 
@@ -114,7 +115,7 @@ const Bottom: React.FC<BottomProps> = ({
       {bottomType === "share" && (
         <div>
           <Price>
-            {sortedByPrice ? sortedByPrice[0]?.price : "N/A"}원~
+            {sortedByPrice ? formatPrice(sortedByPrice[0]?.price) : "N/A"}원~
             <Days>{sortedByPrice && sortedByPrice[0]?.days}일</Days>
           </Price>
           <MorePrice onClick={handleShowPrice}>가격표 보기</MorePrice>
@@ -126,7 +127,9 @@ const Bottom: React.FC<BottomProps> = ({
                   {sortedByDays?.map((data, index) => (
                     <Set key={index}>
                       <DaysPopup>{data.days}일 :</DaysPopup>
-                      <PricesPopup>{data.price}원</PricesPopup>
+                      <PricesPopup>
+                        {formatPrice(data.price || 0)}원
+                      </PricesPopup>
                     </Set>
                   ))}
                 </Table>
@@ -231,7 +234,7 @@ const PricePopup = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 200;
+  z-index: 1000;
 `;
 
 const Table = styled.div`
@@ -265,7 +268,7 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  z-index: 100;
+  z-index: 900;
 `;
 
 const Span = styled.span`

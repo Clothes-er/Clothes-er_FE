@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
+import { formatPrice } from "@/lib/formatPrice";
 
 const Post: React.FC<PostList> = ({
   id,
@@ -81,8 +82,10 @@ const Post: React.FC<PostList> = ({
               {isDeleted
                 ? "삭제된 게시물입니다"
                 : postType === "choice"
-                ? `구매가 ${minPrice ? `${minPrice}원` : "미기재"}`
-                : `${minPrice}원~`}
+                ? `구매가 ${
+                    minPrice ? `${formatPrice(minPrice || 0)}원` : "미기재"
+                  }`
+                : `${formatPrice(minPrice || 0)}원~`}
             </Price>
             <Days>
               {isDeleted ? "" : postType !== "choice" && `${minDays}day`}

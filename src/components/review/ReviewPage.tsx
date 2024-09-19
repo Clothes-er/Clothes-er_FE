@@ -43,29 +43,43 @@ const ReviewPage: React.FC<ReviewProps> = ({
         />
         <Label>{nickname} 님</Label>
       </Profile>
-      <div>
-        <Label>받은 키워드 후기</Label>
-        <Keywords>
-          {keywordReviews.map((item, index) => (
-            <KeywordBox key={index} keyword={item.keyword} count={item.count} />
-          ))}
-        </Keywords>
-      </div>
-      <div>
-        <Label>받은 텍스트 후기</Label>
-        <Texts>
-          {textReviews.map((item, index) => (
-            <TextBox
-              key={index}
-              nickname={item.nickname}
-              profileUrl={item.profileUrl}
-              userSid={item.userSid}
-              content={item.content}
-              createdAt={item.createdAt}
-            />
-          ))}
-        </Texts>
-      </div>
+      <Left>
+        <div>
+          <Label>받은 키워드 후기</Label>
+          <Keywords>
+            {keywordReviews ? (
+              keywordReviews.map((item, index) => (
+                <KeywordBox
+                  key={index}
+                  keyword={item.keyword}
+                  count={item.count}
+                />
+              ))
+            ) : (
+              <NoData>아직 받은 키워드 후기가 없네요!</NoData>
+            )}
+          </Keywords>
+        </div>
+        <div>
+          <Label>받은 텍스트 후기</Label>
+          <Texts>
+            {textReviews ? (
+              textReviews.map((item, index) => (
+                <TextBox
+                  key={index}
+                  nickname={item.nickname}
+                  profileUrl={item.profileUrl}
+                  userSid={item.userSid}
+                  content={item.content}
+                  createdAt={item.createdAt}
+                />
+              ))
+            ) : (
+              <NoData>아직 받은 텍스트 후기가 없네요!</NoData>
+            )}
+          </Texts>
+        </div>
+      </Left>
     </Container>
   );
 };
@@ -74,6 +88,7 @@ export default ReviewPage;
 
 const Container = styled.div`
   display: flex;
+  width: 100%;
   height: 100%;
   flex-direction: column;
   align-items: center;
@@ -81,11 +96,21 @@ const Container = styled.div`
 `;
 
 const Profile = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
 `;
+
+const Left = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 50px;
+`;
+
 const Label = styled.div`
   color: ${theme.colors.b500};
   ${(props) => props.theme.fonts.b2_bold};
@@ -104,4 +129,20 @@ const Texts = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: auto;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b2_regular}
+
+  @media screen and (max-width: 400px) {
+    ${(props) => props.theme.fonts.b3_regular}
+  }
 `;
