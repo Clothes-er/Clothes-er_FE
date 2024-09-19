@@ -18,7 +18,7 @@ const Box = styled.div`
   height: 29px;
   padding: 5px 14px;
   border-radius: 15px;
-  background: ${theme.colors.gray100};
+  background: ${theme.colors.purple100};
   display: flex;
   align-items: center;
   justify-content: space-between;
