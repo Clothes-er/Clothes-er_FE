@@ -224,15 +224,15 @@ const Page = () => {
             </Category>
             <Info>
               <Row>
-                <div>브랜드</div>
+                <Label>브랜드</Label>
                 <div>{postInfo?.brand ? postInfo.brand : "없음"}</div>
               </Row>
               <Row>
-                <div>사이즈</div>
+                <Label>사이즈</Label>
                 <div>{postInfo?.size ? postInfo.size : "없음"}</div>
               </Row>
               <Row>
-                <div>핏</div>
+                <Label>핏</Label>
                 <div>{postInfo?.fit ? postInfo.fit : "없음"}</div>
               </Row>
             </Info>
@@ -394,9 +394,14 @@ const Info = styled.div`
 `;
 
 const Row = styled.div`
-  width: 160px;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+`;
+
+const Label = styled.div`
+  min-width: 105px;
+  white-space: nowrap;
 `;
 
 const Box = styled.div`
