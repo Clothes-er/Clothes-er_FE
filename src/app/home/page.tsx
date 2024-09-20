@@ -26,7 +26,7 @@ import {
 } from "@/components/common/Skeleton";
 import { getIsSuspended, getToken } from "@/hooks/getToken";
 import { showToast } from "@/hooks/showToast";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import Loading from "@/components/common/Loading";
 
 interface PostList {
   id: number;
@@ -246,27 +246,15 @@ const Home = () => {
             {loading ? (
               // 로딩 중일 때 스켈레톤 UI 표시
               <>
-                <SkeletonPost>
-                  <SkeletonCircle />
-                  <SkeletonDiv>
-                    <SkeletonText width="60%" />
-                    <SkeletonText width="40%" />
-                  </SkeletonDiv>
-                </SkeletonPost>
-                <SkeletonPost>
-                  <SkeletonCircle />
-                  <SkeletonDiv>
-                    <SkeletonText width="60%" />
-                    <SkeletonText width="40%" />
-                  </SkeletonDiv>
-                </SkeletonPost>
-                <SkeletonPost>
-                  <SkeletonCircle />
-                  <SkeletonDiv>
-                    <SkeletonText width="60%" />
-                    <SkeletonText width="40%" />
-                  </SkeletonDiv>
-                </SkeletonPost>
+                {Array.from({ length: 7 }, (_, index) => (
+                  <SkeletonPost key={index}>
+                    <SkeletonCircle borderRadius="10px" />
+                    <SkeletonDiv>
+                      <SkeletonText width="60%" />
+                      <SkeletonText width="40%" />
+                    </SkeletonDiv>
+                  </SkeletonPost>
+                ))}
               </>
             ) : // 로딩 완료 후 실제 데이터 표시
             postList && postList.length > 0 ? (
@@ -323,7 +311,7 @@ const Home = () => {
 
 export default function HomePaging() {
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<Loading />}>
       <Home />
     </Suspense>
   );

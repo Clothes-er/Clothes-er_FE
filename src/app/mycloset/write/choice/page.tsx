@@ -44,7 +44,7 @@ const WriteChoice = () => {
 
   return (
     <Layout>
-      <div>
+      <Container>
         <Image
           src="/assets/images/logo_black.svg"
           width={101}
@@ -56,26 +56,30 @@ const WriteChoice = () => {
         <Topbar text="보유 글 작성" icon={true} align="center" />
         <Sub>대여 목록 중 보유 글 작성할 옷을 선택해주세요.</Sub>
         <Content>
-          <Posts>
-            {postList?.map((data, index) => (
-              <PostContainer key={data.id}>
-                <Post
-                  key={data.id}
-                  id={data.id}
-                  imgUrl={data.imgUrl}
-                  title={data.title}
-                  minPrice={data.minPrice}
-                  minDays={data.minDays}
-                  createdAt={data.createdAt}
-                  onClickChoice={handleClickChoice}
-                  isSelected={rentalId === data.id}
-                />
-                {index < postList.length - 1 && <Divider />}
-              </PostContainer>
-            ))}
-          </Posts>
+          {postList && postList.length > 0 ? (
+            <Posts>
+              {postList?.map((data, index) => (
+                <PostContainer key={data.id}>
+                  <Post
+                    key={data.id}
+                    id={data.id}
+                    imgUrl={data.imgUrl}
+                    title={data.title}
+                    minPrice={data.minPrice}
+                    minDays={data.minDays}
+                    createdAt={data.createdAt}
+                    onClickChoice={handleClickChoice}
+                    isSelected={rentalId === data.id}
+                  />
+                  {index < postList.length - 1 && <Divider />}
+                </PostContainer>
+              ))}
+            </Posts>
+          ) : (
+            <NoData>선택 가능한 대여 옷이 없습니다!</NoData>
+          )}
         </Content>
-      </div>
+      </Container>
       <SubmitButton>
         <Button
           buttonType="primary"
@@ -99,6 +103,13 @@ const Layout = styled.div`
   flex-direction: column;
   justify-content: space-between;
   position: relative;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 `;
 
 const Sub = styled.div`
@@ -134,4 +145,20 @@ const SubmitButton = styled.div`
   position: sticky;
   bottom: 20px;
   left: 50%;
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b2_regular}
+
+  @media screen and (max-width: 400px) {
+    ${(props) => props.theme.fonts.b3_regular}
+  }
 `;

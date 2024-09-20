@@ -195,7 +195,7 @@ const Bottom = styled(Row)`
 
 const Price = styled.div`
   color: ${theme.colors.purple400};
-  ${(props) => props.theme.fonts.b2_bold};
+  ${(props) => props.theme.fonts.b2_semiBold};
 `;
 
 const Days = styled.div`

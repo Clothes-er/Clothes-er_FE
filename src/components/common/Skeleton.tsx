@@ -5,6 +5,7 @@ interface SkeletonProps {
   width?: string;
   size?: string;
   marginBottom?: string;
+  borderRadius?: string;
 }
 
 const shimmer = keyframes`
@@ -31,14 +32,18 @@ const SkeletonWrapper = styled.div`
 
 export const SkeletonBox = styled(SkeletonWrapper)<SkeletonProps>`
   width: 100%;
-  height: ${(props) => props.height || "20px"};
-  margin-bottom: ${(props) => props.marginBottom || "10px"};
+  height: ${(props) => props.height || "100px"};
+  width: 100%;
+  padding: 24px 8px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 `;
 
 export const SkeletonCircle = styled(SkeletonWrapper)<SkeletonProps>`
-  width: ${(props) => props.size || "50px"};
-  height: ${(props) => props.size || "50px"};
-  border-radius: 50%;
+  width: ${(props) => props.width || "76px"};
+  height: ${(props) => props.height || "76px"};
+  border-radius: ${(props) => props.borderRadius || "50%"};
 `;
 
 export const SkeletonText = styled(SkeletonWrapper)<SkeletonProps>`
@@ -53,6 +58,16 @@ export const SkeletonPost = styled.div`
   align-items: center;
   gap: 20px;
   margin-bottom: 20px;
+`;
+
+export const SkeletonProfile = styled.div`
+  width: 100%;
+  height: 73px;
+  padding: 14px 48px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 29px;
 `;
 
 export const SkeletonDiv = styled.div`

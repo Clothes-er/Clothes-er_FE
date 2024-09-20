@@ -24,7 +24,7 @@ import AuthAxios from "@/api/authAxios";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import Topbar from "@/components/common/Topbar";
 import { showToast } from "@/hooks/showToast";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import Loading from "@/components/common/Loading";
 
 interface Price {
   days: number | null;
@@ -397,7 +397,7 @@ const WritePost = () => {
 
 export default function WritePostPaging() {
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<Loading />}>
       <WritePost />
     </Suspense>
   );

@@ -52,7 +52,7 @@ const WriteChoice = () => {
 
   return (
     <Layout>
-      <div>
+      <Container>
         <Image
           src="/assets/images/logo_black.svg"
           width={101}
@@ -64,26 +64,30 @@ const WriteChoice = () => {
         <Topbar text="대여 글 작성" align="center" icon={true} />
         <Sub>보유 목록 중 대여 글 작성할 옷을 선택해주세요.</Sub>
         <Content>
-          <Posts>
-            {postList?.map((data, index) => (
-              <PostContainer key={data.id}>
-                <Post
-                  postType="choice"
-                  key={data.id}
-                  id={data.id}
-                  imgUrl={data.imgUrl}
-                  title={data.name || ""}
-                  minPrice={data.price}
-                  createdAt={data.createdAt}
-                  onClickChoice={handleClickChoice}
-                  isSelected={clothesId === data.id}
-                />
-                {index < postList.length - 1 && <Divider />}
-              </PostContainer>
-            ))}
-          </Posts>
+          {postList && postList.length > 0 ? (
+            <Posts>
+              {postList?.map((data, index) => (
+                <PostContainer key={data.id}>
+                  <Post
+                    postType="choice"
+                    key={data.id}
+                    id={data.id}
+                    imgUrl={data.imgUrl}
+                    title={data.name || ""}
+                    minPrice={data.price}
+                    createdAt={data.createdAt}
+                    onClickChoice={handleClickChoice}
+                    isSelected={clothesId === data.id}
+                  />
+                  {index < postList.length - 1 && <Divider />}
+                </PostContainer>
+              ))}
+            </Posts>
+          ) : (
+            <NoData>선택 가능한 보유 옷이 없습니다!</NoData>
+          )}
         </Content>
-      </div>
+      </Container>
       <SubmitButton>
         <Button
           buttonType="primary"
@@ -109,14 +113,11 @@ const Layout = styled.div`
   position: relative;
 `;
 
-const Top = styled.div`
-  width: calc(50% + 60px);
+const Container = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 18px;
-  margin-bottom: 15px;
-  ${(props) => props.theme.fonts.h2_bold};
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 `;
 
 const Sub = styled.div`
@@ -129,6 +130,7 @@ const Sub = styled.div`
 
 const Content = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -152,4 +154,20 @@ const SubmitButton = styled.div`
   position: sticky;
   bottom: 20px;
   left: 50%;
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.b2_regular}
+
+  @media screen and (max-width: 400px) {
+    ${(props) => props.theme.fonts.b3_regular}
+  }
 `;

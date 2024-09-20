@@ -3,7 +3,7 @@
 import AuthAxios from "@/api/authAxios";
 import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import Loading from "@/components/common/Loading";
 import Topbar from "@/components/common/Topbar";
 import {
   REPORT_REASON_CHAT,
@@ -119,7 +119,7 @@ const ReportPage = () => {
 
 export default function ReportPaging() {
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<Loading />}>
       <ReportPage />
     </Suspense>
   );

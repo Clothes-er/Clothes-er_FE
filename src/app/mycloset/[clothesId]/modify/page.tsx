@@ -115,7 +115,9 @@ const Modify = () => {
 
   /* 수정하기 */
   const handleModifyPost = () => {
-    const priceWithoutCommas = removeCommas(inputs.price as string);
+    const priceWithoutCommas = inputs.price
+      ? removeCommas(inputs.price as string)
+      : null;
 
     const formData = new FormData();
 

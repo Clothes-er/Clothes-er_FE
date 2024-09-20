@@ -18,6 +18,14 @@ import PrevArrow from "@/components/common/PrevArrow";
 import { useRequireAuth } from "@/hooks/useAuth";
 import MoreBox from "@/components/common/MoreBox";
 import Modal from "@/components/common/Modal";
+import Loading from "@/components/common/Loading";
+import {
+  SkeletonText,
+  SkeletonCircle,
+  SkeletonBox,
+  SkeletonDiv,
+  SkeletonProfile,
+} from "@/components/common/Skeleton";
 
 interface Price {
   days: number;
@@ -54,6 +62,7 @@ const Page = () => {
   useRequireAuth();
   const router = useRouter();
   const { id } = useParams();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [menu, setMenu] = useState<boolean>(false);
   const [postInfo, setPostInfo] = useState<PostInfo>();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
@@ -76,6 +85,7 @@ const Page = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     AuthAxios.get(`/api/v1/rentals/${id}`)
       .then((response) => {
         const data = response.data.result;
@@ -85,8 +95,13 @@ const Page = () => {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 200);
       });
-  }, []);
+  }, [id]);
 
   const handleModifyClick = () => {
     router.push(`/home/${id}/modify`);
@@ -119,150 +134,177 @@ const Page = () => {
   return (
     <>
       <Layout>
-        <Head>
-          <Header />
-          <Top>
-            <Image
-              src="/assets/icons/ic_arrow.svg"
-              width={24}
-              height={24}
-              alt="back"
-              onClick={handleBackButtonClick}
-              style={{ cursor: "pointer" }}
-            />
-            공유 옷장
-            {isSuspended === "true" || postInfo?.isWithdrawn ? (
-              <div />
-            ) : (
-              <Menu>
-                <Image
-                  src="/assets/icons/ic_more_vertical.svg"
-                  width={24}
-                  height={24}
-                  alt="more"
-                  onClick={handleMoreMenu}
-                  style={{ cursor: "pointer" }}
-                />
-                {menu && (
-                  <MoreBox
-                    type={postInfo?.isWriter ? "me" : "other"}
-                    modifyOnClick={handleModifyClick}
-                    deleteOnClick={handleDeleteClick}
-                    reportOnClick={handleReportClick}
+        {isLoading && (
+          <LoadingOverlay>
+            <Overlay />
+            <Loading />
+          </LoadingOverlay>
+        )}
+        <Container>
+          <Head>
+            <Header />
+            <Top>
+              <Image
+                src="/assets/icons/ic_arrow.svg"
+                width={24}
+                height={24}
+                alt="back"
+                onClick={handleBackButtonClick}
+                style={{ cursor: "pointer" }}
+              />
+              공유 옷장
+              {isSuspended === "true" || postInfo?.isWithdrawn ? (
+                <div />
+              ) : (
+                <Menu>
+                  <Image
+                    src="/assets/icons/ic_more_vertical.svg"
+                    width={24}
+                    height={24}
+                    alt="more"
+                    onClick={handleMoreMenu}
+                    style={{ cursor: "pointer" }}
                   />
+                  {menu && (
+                    <MoreBox
+                      type={postInfo?.isWriter ? "me" : "other"}
+                      modifyOnClick={handleModifyClick}
+                      deleteOnClick={handleDeleteClick}
+                      reportOnClick={handleReportClick}
+                    />
+                  )}
+                </Menu>
+              )}
+            </Top>
+          </Head>
+          <Content>
+            {!isLoading ? (
+              <>
+                {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (
+                  <ImageSlide>
+                    <StyledSlider
+                      dots={true}
+                      infinite={true}
+                      speed={500}
+                      slidesToShow={1}
+                      slidesToScroll={1}
+                      prevArrow={
+                        <Div>
+                          <PrevArrow />
+                        </Div>
+                      }
+                      nextArrow={
+                        <DivNext>
+                          <NextArrow />
+                        </DivNext>
+                      }
+                    >
+                      {postInfo?.imgUrls?.map((url, index) => (
+                        <ImageBox key={index}>
+                          <Image
+                            src={url}
+                            alt={`image-${index}`}
+                            fill
+                            priority
+                          />
+                        </ImageBox>
+                      ))}
+                    </StyledSlider>
+                  </ImageSlide>
+                ) : (
+                  <>
+                    {postInfo?.imgUrls?.map((url, index) => (
+                      <ImageBox key={index}>
+                        <Image src={url} alt={`image-${index}`} fill priority />
+                      </ImageBox>
+                    ))}
+                  </>
                 )}
-              </Menu>
-            )}
-          </Top>
-        </Head>
-        <Content>
-          {postInfo?.imgUrls && postInfo?.imgUrls?.length > 1 ? (
-            <ImageSlide>
-              <StyledSlider
-                dots={true}
-                infinite={true}
-                speed={500}
-                slidesToShow={1}
-                slidesToScroll={1}
-                prevArrow={
-                  <Div>
-                    <PrevArrow />
-                  </Div>
-                }
-                nextArrow={
-                  <DivNext>
-                    <NextArrow />
-                  </DivNext>
-                }
-              >
-                {postInfo?.imgUrls?.map((url, index) => (
-                  <ImageBox key={index}>
-                    <Image src={url} alt={`image-${index}`} fill priority />
-                  </ImageBox>
-                ))}
-              </StyledSlider>
-            </ImageSlide>
-          ) : (
-            <>
-              {postInfo?.imgUrls?.map((url, index) => (
-                <ImageBox key={index}>
-                  <Image src={url} alt={`image-${index}`} fill priority />
-                </ImageBox>
-              ))}
-            </>
-          )}
-          <Profile
-            nickname={
-              postInfo?.nickname
-                ? `${postInfo.nickname}${
-                    postInfo.isWithdrawn
-                      ? " (탈퇴한 회원"
-                      : postInfo.isSuspended || postInfo.isRestricted
-                      ? " (신고된 유저)"
+                <Profile
+                  nickname={
+                    postInfo?.nickname
+                      ? `${postInfo.nickname}${
+                          postInfo.isWithdrawn
+                            ? " (탈퇴한 회원"
+                            : postInfo.isSuspended || postInfo.isRestricted
+                            ? " (신고된 유저)"
+                            : ""
+                        }`
                       : ""
-                  }`
-                : ""
-            }
-            profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
-            isWithdrawn={postInfo?.isWithdrawn}
-            onClick={() => {
-              if (!postInfo?.isRestricted) {
-                router.push(`/user/${postInfo?.userSid}`);
-              }
-            }}
-          />
-          <Body>
-            <Title>{postInfo?.title}</Title>
-            <Category>
-              {postInfo?.gender && getGenderLabel(postInfo?.gender)}
-              {postInfo?.category && postInfo?.gender
-                ? ` / ${postInfo?.category}`
-                : postInfo?.category}
-              {postInfo?.style && (postInfo?.gender || postInfo?.category)
-                ? ` / ${postInfo?.style}`
-                : postInfo?.style}
-            </Category>
-            <Info>
-              <Row>
-                <div>브랜드</div>
-                <div>{postInfo?.brand ? postInfo.brand : "없음"}</div>
-              </Row>
-              <Row>
-                <div>사이즈</div>
-                <div>{postInfo?.size ? postInfo.size : "없음"}</div>
-              </Row>
-              <Row>
-                <div>핏</div>
-                <div>{postInfo?.fit ? postInfo.fit : "없음"}</div>
-              </Row>
-            </Info>
-            <Box>{postInfo?.description}</Box>
-          </Body>
-        </Content>
+                  }
+                  profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
+                  isWithdrawn={postInfo?.isWithdrawn}
+                  onClick={() => {
+                    if (!postInfo?.isRestricted) {
+                      router.push(`/user/${postInfo?.userSid}`);
+                    }
+                  }}
+                />
+                <Body>
+                  <Title>{postInfo?.title}</Title>
+                  <Category>
+                    {postInfo?.gender && getGenderLabel(postInfo?.gender)}
+                    {postInfo?.category && postInfo?.gender
+                      ? ` / ${postInfo?.category}`
+                      : postInfo?.category}
+                    {postInfo?.style && (postInfo?.gender || postInfo?.category)
+                      ? ` / ${postInfo?.style}`
+                      : postInfo?.style}
+                  </Category>
+                  <Info>
+                    <Row>
+                      <Label>브랜드</Label>
+                      <div>{postInfo?.brand ? postInfo.brand : "없음"}</div>
+                    </Row>
+                    <Row>
+                      <Label>사이즈</Label>
+                      <div>{postInfo?.size ? postInfo.size : "없음"}</div>
+                    </Row>
+                    <Row>
+                      <Label>핏</Label>
+                      <div>{postInfo?.fit ? postInfo.fit : "없음"}</div>
+                    </Row>
+                  </Info>
+                  <Box>{postInfo?.description}</Box>
+                </Body>
+              </>
+            ) : (
+              <>
+                <SkeletonBox height="300px" />
+                <SkeletonProfile>
+                  <SkeletonCircle width="45px" height="45px" />
+                  <SkeletonDiv>
+                    <SkeletonText width="60%" />
+                  </SkeletonDiv>
+                </SkeletonProfile>
+              </>
+            )}
+          </Content>
+          {postInfo && (
+            <Bottom
+              type="rental"
+              id={postInfo.id}
+              bottomType="share"
+              prices={postInfo.prices}
+              isWriter={postInfo.isWriter}
+              isWithdrawn={postInfo.isWithdrawn}
+            />
+          )}
+          {/* 삭제하기 모달 */}
+          {deleteModal && (
+            <Modal
+              title="정말 삭제하시겠습니까?"
+              text="채팅 중인 글의 경우, 삭제를 주의해주세요."
+              no="취소"
+              yes="삭제"
+              onClose={() => setDeleteModal(false)}
+              onCheck={handleSubmitDelete}
+              width="305px"
+              height="170px"
+            />
+          )}
+        </Container>
       </Layout>
-      {postInfo && (
-        <Bottom
-          type="rental"
-          id={postInfo.id}
-          bottomType="share"
-          prices={postInfo.prices}
-          isWriter={postInfo.isWriter}
-          isWithdrawn={postInfo.isWithdrawn}
-        />
-      )}
-      {/* 삭제하기 모달 */}
-      {deleteModal && (
-        <Modal
-          title="정말 삭제하시겠습니까?"
-          text="채팅 중인 글의 경우, 삭제를 주의해주세요."
-          no="취소"
-          yes="삭제"
-          onClose={() => setDeleteModal(false)}
-          onCheck={handleSubmitDelete}
-          width="305px"
-          height="170px"
-        />
-      )}
     </>
   );
 };
@@ -271,13 +313,39 @@ export default Page;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
+  position: relative;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  position: relative;
+`;
+
+const LoadingOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(95, 95, 95, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1000;
 `;
 
 const Head = styled.div`
@@ -394,9 +462,14 @@ const Info = styled.div`
 `;
 
 const Row = styled.div`
-  width: 160px;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+`;
+
+const Label = styled.div`
+  min-width: 105px;
+  white-space: nowrap;
 `;
 
 const Box = styled.div`
