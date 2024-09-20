@@ -26,7 +26,7 @@ import {
 } from "@/components/common/Skeleton";
 import { getIsSuspended, getToken } from "@/hooks/getToken";
 import { showToast } from "@/hooks/showToast";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import Loading from "@/components/common/Loading";
 
 interface PostList {
   id: number;
@@ -248,7 +248,7 @@ const Home = () => {
               <>
                 {Array.from({ length: 7 }, (_, index) => (
                   <SkeletonPost key={index}>
-                    <SkeletonCircle />
+                    <SkeletonCircle borderRadius="10px" />
                     <SkeletonDiv>
                       <SkeletonText width="60%" />
                       <SkeletonText width="40%" />
@@ -311,7 +311,7 @@ const Home = () => {
 
 export default function HomePaging() {
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<Loading />}>
       <Home />
     </Suspense>
   );
