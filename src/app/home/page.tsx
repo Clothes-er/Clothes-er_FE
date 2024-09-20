@@ -246,27 +246,15 @@ const Home = () => {
             {loading ? (
               // 로딩 중일 때 스켈레톤 UI 표시
               <>
-                <SkeletonPost>
-                  <SkeletonCircle />
-                  <SkeletonDiv>
-                    <SkeletonText width="60%" />
-                    <SkeletonText width="40%" />
-                  </SkeletonDiv>
-                </SkeletonPost>
-                <SkeletonPost>
-                  <SkeletonCircle />
-                  <SkeletonDiv>
-                    <SkeletonText width="60%" />
-                    <SkeletonText width="40%" />
-                  </SkeletonDiv>
-                </SkeletonPost>
-                <SkeletonPost>
-                  <SkeletonCircle />
-                  <SkeletonDiv>
-                    <SkeletonText width="60%" />
-                    <SkeletonText width="40%" />
-                  </SkeletonDiv>
-                </SkeletonPost>
+                {Array.from({ length: 7 }, (_, index) => (
+                  <SkeletonPost key={index}>
+                    <SkeletonCircle />
+                    <SkeletonDiv>
+                      <SkeletonText width="60%" />
+                      <SkeletonText width="40%" />
+                    </SkeletonDiv>
+                  </SkeletonPost>
+                ))}
               </>
             ) : // 로딩 완료 후 실제 데이터 표시
             postList && postList.length > 0 ? (

@@ -31,14 +31,19 @@ const SkeletonWrapper = styled.div`
 
 export const SkeletonBox = styled(SkeletonWrapper)<SkeletonProps>`
   width: 100%;
-  height: ${(props) => props.height || "20px"};
-  margin-bottom: ${(props) => props.marginBottom || "10px"};
+  height: ${(props) => props.height || "100px"};
+  width: 100%;
+  height: 100px;
+  padding: 24px 8px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 `;
 
 export const SkeletonCircle = styled(SkeletonWrapper)<SkeletonProps>`
-  width: ${(props) => props.size || "50px"};
-  height: ${(props) => props.size || "50px"};
-  border-radius: 50%;
+  width: ${(props) => props.size || "76px"};
+  height: ${(props) => props.size || "76px"};
+  border-radius: 10px;
 `;
 
 export const SkeletonText = styled(SkeletonWrapper)<SkeletonProps>`
