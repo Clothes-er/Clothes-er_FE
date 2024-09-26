@@ -94,7 +94,7 @@ const Page = () => {
       .finally(() => {
         setTimeout(() => {
           setIsLoading(false);
-        }, 200);
+        }, 500);
       });
   }, [id]);
 
@@ -132,7 +132,7 @@ const Page = () => {
       <Layout>
         {isLoading && (
           <LoadingOverlay>
-            <Overlay />
+            {/* <Overlay /> */}
             <Loading />
           </LoadingOverlay>
         )}
