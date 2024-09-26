@@ -480,7 +480,7 @@ const Text = styled.div`
   width: calc(100% - 105px);
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 5px;
   margin-left: 30px;
 `;
 
@@ -518,12 +518,12 @@ const Level = styled.div`
   display: flex;
   flex-direction: column;
   color: ${theme.colors.b500};
-  ${(props) => props.theme.fonts.b3_medium};
+  ${(props) => props.theme.fonts.b2_medium};
 `;
 
 const LevelText = styled.div`
   color: ${theme.colors.b200};
-  ${(props) => props.theme.fonts.c3_medium};
+  ${(props) => props.theme.fonts.c1_medium};
 `;
 
 /* 옷장점수 & 스펙, 취향 */
@@ -577,12 +577,12 @@ const Title = styled.div`
 
 const Comment = styled.div`
   color: ${theme.colors.purple300};
-  ${(props) => props.theme.fonts.c3_medium};
+  ${(props) => props.theme.fonts.c1_medium};
 `;
 
 const Score = styled.div`
   color: ${theme.colors.purple500};
-  ${(props) => props.theme.fonts.c3_bold};
+  ${(props) => props.theme.fonts.c1_bold};
 `;
 
 const ScoreBarWrapper = styled.div`
@@ -652,7 +652,7 @@ const Keyword = styled.div<{ type: number }>`
     if (type === 2) return theme.colors.purple500;
     return theme.colors.gray800;
   }};
-  ${(props) => props.theme.fonts.c3_semiBold};
+  ${(props) => props.theme.fonts.c2_semiBold};
   padding: 3px 6px;
   border: 1px solid
     ${({ type, theme }) => {
