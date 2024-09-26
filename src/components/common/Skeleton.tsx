@@ -22,11 +22,11 @@ const SkeletonWrapper = styled.div`
   background-image: linear-gradient(
     90deg,
     #e0e0e0 25%,
-    #f5f5f5 50%,
+    #f0f0f0 50%,
     #e0e0e0 75%
   );
-  background-size: 200px 100%;
-  animation: ${shimmer} 1.5s infinite linear;
+  background-size: 400px 100%;
+  animation: ${shimmer} 0.8s infinite linear;
   border-radius: 5px;
 `;
 
