@@ -72,7 +72,7 @@ const Tab = styled.button<TabProps>`
   cursor: pointer;
   text-align: center;
   color: ${({ selected, theme }) =>
-    selected ? theme.colors.purple800 : theme.colors.basic};
+    selected ? theme.colors.purple800 : "#B1B1B1"};
   ${(props) => props.theme.fonts.c3_regular}
   gap: 2px;
 `;

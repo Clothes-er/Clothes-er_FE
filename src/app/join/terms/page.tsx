@@ -3,6 +3,7 @@
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import { useNoRequireAuth } from "@/hooks/useNoAuth";
+import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -49,26 +50,28 @@ const Terms = () => {
   return (
     <TermsContainer>
       <Title>
-        Clothes:er를 사용하려면
+        Clothes:er 이용 전,
         <br />
         약관 동의가 필요해요
       </Title>
       <div>
         <Check>
-          <Checkbox
-            checkboxType="checkBtn"
-            label="약관 전체 동의"
-            text="선택사항 포함"
-            color="gray"
-            labelFontSize="b1_bold"
-            value={terms.all}
-            checked={terms.all}
-            onChange={onChangeAll}
-          />
+          <Column>
+            <Checkbox
+              checkboxType="checkBtn"
+              label="약관 전체 동의"
+              color="gray"
+              labelFontSize="b2_bold"
+              value={terms.all}
+              checked={terms.all}
+              onChange={onChangeAll}
+            />
+            <Div />
+          </Column>
           <Checkbox
             checkboxType="checkArrow"
             label="서비스 이용약관"
-            text="필수"
+            text="(필수)"
             color="purple"
             value={terms.service}
             checked={terms.service}
@@ -77,7 +80,7 @@ const Terms = () => {
           <Checkbox
             checkboxType="checkArrow"
             label="개인정보 수집 및 동의"
-            text="필수"
+            text="(필수)"
             color="purple"
             value={terms.private}
             checked={terms.private}
@@ -86,7 +89,7 @@ const Terms = () => {
           <Checkbox
             checkboxType="checkArrow"
             label="마케팅 수신 동의"
-            text="선택"
+            text="(선택)"
             color="gray"
             value={terms.marketing}
             checked={terms.marketing}
@@ -127,4 +130,16 @@ const Check = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 51px;
+`;
+
+const Div = styled.div`
+  width: 100%;
+  height: 1px;
+  background: ${theme.colors.purple100};
+`;
+
+const Column = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `;

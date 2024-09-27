@@ -47,16 +47,17 @@ const Checkbox = (props: CheckBoxProps) => {
           checked={checked}
           onChange={onChange}
         />
+        {text && <span className={color}>{text}</span>}
         <div>{label}</div>
-        <span className={color}>{text}</span>
       </CheckboxContainer>
       {checkboxType === "checkArrow" && (
-        <Image
-          src="/assets/icons/ic_chevron_right.svg"
-          alt="arrow"
-          width={20}
-          height={20}
-        />
+        // <Image
+        //   src="/assets/icons/ic_chevron_right.svg"
+        //   alt="arrow"
+        //   width={20}
+        //   height={20}
+        // />
+        <More>보기</More>
       )}
     </CheckBoxLayout>
   );
@@ -80,7 +81,6 @@ const CheckBoxLayout = styled.div<{ $checked: boolean }>`
   &.checkBtn {
     width: 100%;
     padding: 15px 12px;
-    background-color: rgba(178, 166, 255, 0.23);
     border-radius: 10px;
     img {
       display: none;
@@ -114,7 +114,7 @@ const CheckboxContainer = styled.label<{
   span {
     display: flex;
     align-items: center;
-    margin-left: 8px;
+    margin-right: 10px;
     ${({ theme }) => theme.fonts.c1_medium};
     color: ${(props) =>
       props.$essential ? theme.colors.primary500 : theme.colors.b100};
@@ -134,12 +134,10 @@ const CheckboxContainer = styled.label<{
 
 const CheckboxInput = styled.input<CheckBoxProps>`
   appearance: none;
-  width: 1.3rem;
-  height: 1.3rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border: 2px solid ${theme.colors.purple100};
-  background-color: ${theme.colors.purple100};
 
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iNCIgZmlsbD0iI0Q4RDFGRiIvPgo8cGF0aCBkPSJNMTQgN0w4LjUgMTIuNUw2IDEwIiBzdHJva2U9IiNBMjlBRkYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=");
   background-size: 100% 100%;
   background-position: 50%;
   border-radius: 0.35rem;
@@ -158,4 +156,9 @@ const CheckboxInput = styled.input<CheckBoxProps>`
     background-repeat: no-repeat;
     background-color: ${theme.colors.primary600};
   }
+`;
+
+const More = styled.div`
+  color: ${theme.colors.gray800};
+  ${({ theme }) => theme.fonts.c1_medium};
 `;
