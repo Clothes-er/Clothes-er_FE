@@ -207,8 +207,8 @@ const Step1 = () => {
     <Container>
       <Progressbar step={1} />
       <Hello>
-        Clothes:er에 오신 것을
-        <br /> 환영합니다!
+        Clothes:er를 <br />
+        함께 시작해볼까요?
       </Hello>
       <InputBox>
         <Input
