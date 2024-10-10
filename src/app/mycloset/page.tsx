@@ -318,7 +318,7 @@ const MyCloset = () => {
         </SliderContainer>
         <Parent>
           <ListTab listType="me" />
-          <WriteButton
+          {/* <WriteButton
             $isSuspended={isSuspended || ""}
             onClick={handleAddCloth}
           >
@@ -331,7 +331,7 @@ const MyCloset = () => {
               alt="plus"
             />
             옷장 채우기
-          </WriteButton>
+          </WriteButton> */}
         </Parent>
       </Layout>
       {stylePopup && (
