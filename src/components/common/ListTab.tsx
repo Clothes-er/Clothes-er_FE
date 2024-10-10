@@ -2,15 +2,14 @@ import { chatTabs, myClosetTabs } from "@/data/tabsData";
 import { theme } from "@/styles/theme";
 import { useState } from "react";
 import styled from "styled-components";
-import StorageContent from "../myCloset/StorageContent";
 import { useCurrentTab } from "@/hooks/useCurrentTab";
 import MyClosetContent from "../myCloset/MyClosetContent";
 import MyShareContent from "../myCloset/MyShareContent";
 import TransShareContent from "../myCloset/TransShareContent";
 import TransRentContent from "../myCloset/TransRentContent";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/router";
 import ChatListContent from "../chat/ChatListContent";
+import StorageClosetContent from "../myCloset/StorageClosetContent";
+import StorageRentalContent from "../myCloset/StorageRentalContent";
 
 type listType = "me" | "other" | "chat";
 
@@ -122,8 +121,10 @@ function ContentArea({
     return <TransShareContent />;
   } else if (currentTab === "transaction" && currentSubTab === "rental") {
     return <TransRentContent />;
-  } else if (currentTab === "storage") {
-    return <StorageContent />;
+  } else if (currentTab === "storage" && currentSubTab === "closet") {
+    return <StorageClosetContent />;
+  } else if (currentTab === "storage" && currentSubTab === "rental") {
+    return <StorageRentalContent />;
   } else if (currentTab === "rental") {
     return <ChatListContent type="rental" />;
   } else if (currentTab === "user") {

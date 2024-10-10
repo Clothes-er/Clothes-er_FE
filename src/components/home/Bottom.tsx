@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { chatListType } from "@/type/chat";
 import { showToast } from "@/hooks/showToast";
 import { formatPrice } from "@/lib/formatPrice";
+import Image from "next/image";
+import { deleteRentalLike, postRentalLike } from "@/api/like";
 
 type bottomType = "share" | "closet";
 
@@ -23,6 +25,8 @@ interface BottomProps {
   userSid?: string;
   isWriter: boolean;
   isWithdrawn?: boolean;
+  isLiked?: boolean;
+  likeCount?: number;
 }
 
 const Bottom: React.FC<BottomProps> = ({
@@ -34,11 +38,15 @@ const Bottom: React.FC<BottomProps> = ({
   userSid,
   isWriter,
   isWithdrawn,
+  isLiked = false,
+  likeCount,
 }) => {
   const router = useRouter();
   const [pricePop, setPricePop] = useState<boolean>(false);
 
   const [isSuspended, setIsSuspended] = useState<string | null>(null);
+  const [heart, setHeart] = useState<boolean>(isLiked);
+  const [heartCount, setHeartCount] = useState<number>(likeCount || 0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -46,6 +54,25 @@ const Bottom: React.FC<BottomProps> = ({
       setIsSuspended(suspended);
     }
   }, []);
+
+  const handlePickHeart = async () => {
+    // 찜하기 API
+    if (id) {
+      if (heart) {
+        await deleteRentalLike(id);
+        setHeart(false);
+        setHeartCount(heartCount - 1);
+      } else {
+        await postRentalLike(id);
+        setHeart(true);
+        setHeartCount(heartCount + 1);
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log("z");
+  }, [heart, heartCount]);
 
   const handleShowPrice = () => {
     setPricePop(true);
@@ -112,46 +139,60 @@ const Bottom: React.FC<BottomProps> = ({
 
   return (
     <StyledBottom>
-      {bottomType === "share" && (
-        <div>
-          <Price>
-            {sortedByPrice ? formatPrice(sortedByPrice[0]?.price) : "N/A"}원~
-            <Days>{sortedByPrice && sortedByPrice[0]?.days}일</Days>
-          </Price>
-          <MorePrice onClick={handleShowPrice}>가격표 보기</MorePrice>
-          {pricePop && (
+      <LeftDiv>
+        {!isWriter && (
+          <HeartWrapper $isLiked={heart}>
+            <Image
+              src={`/assets/icons/ic_heart${heart ? "_fill" : ""}.svg`}
+              width={20}
+              height={20}
+              alt="찜"
+              onClick={handlePickHeart}
+            />
+            {heartCount}
+          </HeartWrapper>
+        )}
+        {bottomType === "share" && (
+          <div>
+            <Price>
+              {sortedByPrice ? formatPrice(sortedByPrice[0]?.price) : "N/A"}원~
+              <Days>{sortedByPrice && sortedByPrice[0]?.days}일</Days>
+            </Price>
+            <MorePrice onClick={handleShowPrice}>가격표 보기</MorePrice>
+            {pricePop && (
+              <div>
+                <PricePopup>
+                  가격표
+                  <Table>
+                    {sortedByDays?.map((data, index) => (
+                      <Set key={index}>
+                        <DaysPopup>{data.days}일 :</DaysPopup>
+                        <PricesPopup>
+                          {formatPrice(data.price || 0)}원
+                        </PricesPopup>
+                      </Set>
+                    ))}
+                  </Table>
+                </PricePopup>
+                <Overlay onClick={onClose} />
+              </div>
+            )}
+          </div>
+        )}
+        {bottomType === "closet" &&
+          (rentalId ? (
             <div>
-              <PricePopup>
-                가격표
-                <Table>
-                  {sortedByDays?.map((data, index) => (
-                    <Set key={index}>
-                      <DaysPopup>{data.days}일 :</DaysPopup>
-                      <PricesPopup>
-                        {formatPrice(data.price || 0)}원
-                      </PricesPopup>
-                    </Set>
-                  ))}
-                </Table>
-              </PricePopup>
-              <Overlay onClick={onClose} />
+              현재 <Span>대여글</Span>이 있어요! <br />
+              <Move onClick={() => router.push(`/home/${rentalId}`)}>
+                대여글로 이동
+              </Move>
             </div>
-          )}
-        </div>
-      )}
-      {bottomType === "closet" &&
-        (rentalId ? (
-          <div>
-            현재 <Span>대여글</Span>이 올라와있어요! <br />
-            <Move onClick={() => router.push(`/home/${rentalId}`)}>
-              대여글로 이동
-            </Move>
-          </div>
-        ) : (
-          <div>
-            <Span>궁금한 정보</Span>를 <Span>문의</Span>해보세요!
-          </div>
-        ))}
+          ) : (
+            <div>
+              <Span>궁금한 정보</Span>를 <Span>문의</Span>해보세요!
+            </div>
+          ))}
+      </LeftDiv>
       {!isWriter && (
         <Chat
           onClick={handleNewChat}
@@ -179,6 +220,22 @@ const StyledBottom = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+const LeftDiv = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+`;
+
+const HeartWrapper = styled.div<{ $isLiked: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: ${({ $isLiked }) => ($isLiked ? "#f64b54" : "#A9A9A9")};
+  ${theme.fonts.b3_regular}
 `;
 
 const Price = styled.div`

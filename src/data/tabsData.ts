@@ -22,10 +22,14 @@ export const myClosetTabs = [
       { subTab: "대여", key: "rental" }
     ]
   },
-  // { 
-  //   tab: "찜", 
-  //   key: "storage"
-  // }
+  { 
+    tab: "찜", 
+    key: "storage",
+    sub: [
+      { subTab: "옷장", key: "closet" },
+      { subTab: "대여", key: "rental" }
+    ]
+  }
 ];
 
 export const chatTabs = [
