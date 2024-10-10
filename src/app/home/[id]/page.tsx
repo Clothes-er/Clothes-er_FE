@@ -54,6 +54,7 @@ interface PostInfo {
   brand: string;
   size: string;
   fit: string;
+  isLiked: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -288,6 +289,7 @@ const Page = () => {
               prices={postInfo.prices}
               isWriter={postInfo.isWriter}
               isWithdrawn={postInfo.isWithdrawn}
+              isLiked={postInfo.isLiked}
             />
           )}
           {/* 삭제하기 모달 */}
