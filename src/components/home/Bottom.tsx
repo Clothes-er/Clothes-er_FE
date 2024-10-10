@@ -7,7 +7,7 @@ import { chatListType } from "@/type/chat";
 import { showToast } from "@/hooks/showToast";
 import { formatPrice } from "@/lib/formatPrice";
 import Image from "next/image";
-import { deleteHomeLike, postHomeLike } from "@/api/like";
+import { deleteRentalLike, postRentalLike } from "@/api/like";
 
 type bottomType = "share" | "closet";
 
@@ -26,6 +26,7 @@ interface BottomProps {
   isWriter: boolean;
   isWithdrawn?: boolean;
   isLiked?: boolean;
+  likeCount?: number;
 }
 
 const Bottom: React.FC<BottomProps> = ({
@@ -38,12 +39,14 @@ const Bottom: React.FC<BottomProps> = ({
   isWriter,
   isWithdrawn,
   isLiked = false,
+  likeCount,
 }) => {
   const router = useRouter();
   const [pricePop, setPricePop] = useState<boolean>(false);
 
   const [isSuspended, setIsSuspended] = useState<string | null>(null);
   const [heart, setHeart] = useState<boolean>(isLiked);
+  const [heartCount, setHeartCount] = useState<number>(likeCount || 0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -56,14 +59,20 @@ const Bottom: React.FC<BottomProps> = ({
     // 찜하기 API
     if (id) {
       if (heart) {
-        await deleteHomeLike(id);
+        await deleteRentalLike(id);
         setHeart(false);
+        setHeartCount(heartCount - 1);
       } else {
-        await postHomeLike(id);
+        await postRentalLike(id);
         setHeart(true);
+        setHeartCount(heartCount + 1);
       }
     }
   };
+
+  useEffect(() => {
+    console.log("z");
+  }, [heart, heartCount]);
 
   const handleShowPrice = () => {
     setPricePop(true);
@@ -132,13 +141,16 @@ const Bottom: React.FC<BottomProps> = ({
     <StyledBottom>
       <LeftDiv>
         {!isWriter && (
-          <Image
-            src={`/assets/icons/ic_heart${heart ? "_fill" : ""}.svg`}
-            width={20}
-            height={20}
-            alt="찜"
-            onClick={handlePickHeart}
-          />
+          <HeartWrapper $isLiked={heart}>
+            <Image
+              src={`/assets/icons/ic_heart${heart ? "_fill" : ""}.svg`}
+              width={20}
+              height={20}
+              alt="찜"
+              onClick={handlePickHeart}
+            />
+            {heartCount}
+          </HeartWrapper>
         )}
         {bottomType === "share" && (
           <div>
@@ -215,6 +227,15 @@ const LeftDiv = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 20px;
+`;
+
+const HeartWrapper = styled.div<{ $isLiked: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: ${({ $isLiked }) => ($isLiked ? "#f64b54" : "#A9A9A9")};
+  ${theme.fonts.b3_regular}
 `;
 
 const Price = styled.div`

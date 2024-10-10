@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { formatPrice } from "@/lib/formatPrice";
+import { deleteRentalLike, postRentalLike } from "@/api/like";
 
 const Post: React.FC<PostList> = ({
   id,
@@ -29,10 +30,13 @@ const Post: React.FC<PostList> = ({
   size = "normal",
   isSelected = false,
   roomId,
+  isLikeList = false,
+  isLiked = false,
 }) => {
   const router = useRouter();
 
   const [isMeSuspended, setIsMeSuspended] = useState<string | null>(null);
+  const [heart, setHeart] = useState<boolean>(isLiked);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -48,6 +52,20 @@ const Post: React.FC<PostList> = ({
       router.push(`/chat/${roomId}?type=rental`);
     } else if (!isDeleted) {
       router.push(`/home/${id}`);
+    }
+  };
+
+  const handlePickHeart = async (event: React.MouseEvent<HTMLImageElement>) => {
+    event.stopPropagation();
+    // 찜하기 API
+    if (id) {
+      if (heart) {
+        await deleteRentalLike(id);
+        setHeart(false);
+      } else {
+        await postRentalLike(id);
+        setHeart(true);
+      }
     }
   };
 
@@ -67,70 +85,82 @@ const Post: React.FC<PostList> = ({
       $isSelected={isSelected}
       $isDeleted={isDeleted}
     >
-      <Image
-        src={`${imgUrl ? imgUrl : "/assets/images/noImage.svg"}`}
-        width={size === "small" ? 60 : 76}
-        height={size === "small" ? 60 : 76}
-        alt="image"
-        style={{ borderRadius: "10px" }}
-      />
-      <Box>
-        <Title>{title}</Title>
-        <Row>
-          <Bottom>
-            <Price>
-              {isDeleted
-                ? "삭제된 게시물입니다"
-                : postType === "choice"
-                ? `구매가 ${
-                    minPrice ? `${formatPrice(minPrice || 0)}원` : "미기재"
-                  }`
-                : `${formatPrice(minPrice || 0)}원~`}
-            </Price>
-            <Days>
-              {isDeleted ? "" : postType !== "choice" && `${minDays}day`}
-            </Days>
-          </Bottom>
-          {isMeSuspended !== "true" && showReviewed && (
-            <ReviewButton
-              onClick={handleReviewButtonClick}
-              disabled={isReviewed}
-            >
-              <Image
-                src="/assets/icons/ic_review.svg"
-                width={12}
-                height={12}
-                alt="review"
-              />
-              {isReviewed ? "후기 작성 완료" : "후기 작성하기"}
-            </ReviewButton>
-          )}
-        </Row>
-        <Sub>
-          {(postType === "my" || postType === "choice") && (
-            <>
-              <Span $disabled={!brand}>{brand ? brand : "미기재"}</Span> | {` `}
-            </>
-          )}
-          {nickname && (
-            <>
-              {isWithdrawn ? (
-                "탈퇴한 회원"
-              ) : (
-                <>
-                  <Span>{nickname} </Span> 님
-                </>
-              )}{" "}
-              | {` `}
-            </>
-          )}
-          {postType === "rental" || postType === "transition"
-            ? `${startDate?.slice(2).replace(/-/g, "/")}~${endDate
-                ?.slice(2)
-                .replace(/-/g, "/")}`
-            : createdAt}
-        </Sub>
-      </Box>
+      <LeftDiv>
+        <Image
+          src={`${imgUrl ? imgUrl : "/assets/images/noImage.svg"}`}
+          width={size === "small" ? 60 : 76}
+          height={size === "small" ? 60 : 76}
+          alt="image"
+          style={{ borderRadius: "10px" }}
+        />
+        <Box>
+          <Title>{title}</Title>
+          <Row>
+            <Bottom>
+              <Price>
+                {isDeleted
+                  ? "삭제된 게시물입니다"
+                  : postType === "choice"
+                  ? `구매가 ${
+                      minPrice ? `${formatPrice(minPrice || 0)}원` : "미기재"
+                    }`
+                  : `${formatPrice(minPrice || 0)}원~`}
+              </Price>
+              <Days>
+                {isDeleted ? "" : postType !== "choice" && `${minDays}day`}
+              </Days>
+            </Bottom>
+            {isMeSuspended !== "true" && showReviewed && (
+              <ReviewButton
+                onClick={handleReviewButtonClick}
+                disabled={isReviewed}
+              >
+                <Image
+                  src="/assets/icons/ic_review.svg"
+                  width={12}
+                  height={12}
+                  alt="review"
+                />
+                {isReviewed ? "후기 작성 완료" : "후기 작성하기"}
+              </ReviewButton>
+            )}
+          </Row>
+          <Sub>
+            {(postType === "my" || postType === "choice") && (
+              <>
+                <Span $disabled={!brand}>{brand ? brand : "미기재"}</Span> |{" "}
+                {` `}
+              </>
+            )}
+            {nickname && (
+              <>
+                {isWithdrawn ? (
+                  "탈퇴한 회원"
+                ) : (
+                  <>
+                    <Span>{nickname} </Span> 님
+                  </>
+                )}{" "}
+                | {` `}
+              </>
+            )}
+            {postType === "rental" || postType === "transition"
+              ? `${startDate?.slice(2).replace(/-/g, "/")}~${endDate
+                  ?.slice(2)
+                  .replace(/-/g, "/")}`
+              : createdAt}
+          </Sub>
+        </Box>
+      </LeftDiv>
+      {isLikeList && (
+        <Image
+          src={`/assets/icons/ic_heart${heart ? "_fill" : ""}.svg`}
+          width={20}
+          height={20}
+          alt="찜"
+          onClick={handlePickHeart}
+        />
+      )}
     </Container>
   );
 };
@@ -146,7 +176,7 @@ const Container = styled.div<{
   width: 100%;
   height: 100px;
   padding: 24px 8px;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   gap: 19px;
   ${(props) =>
@@ -167,6 +197,13 @@ const Container = styled.div<{
       opacity: 0.7;
       pointer-events: none;
     `}
+`;
+
+const LeftDiv = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
 `;
 
 const Box = styled.div`

@@ -24,6 +24,8 @@ export interface PostList {
   size?: "normal" | "small";
   isSelected?: boolean;
   roomId?: number;
+  isLikeList?: boolean;
+  isLiked?: boolean;
 }
 
 export interface ClosetPostList {
