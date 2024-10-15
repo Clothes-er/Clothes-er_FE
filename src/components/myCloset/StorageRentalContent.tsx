@@ -31,16 +31,16 @@ const StorageRentalContent: React.FC<MyShareContentProps> = ({ userSid }) => {
         <ListContainer>
           {postList.map((data) => (
             <Post
-              key={data.userRentalListResponse.id}
+              key={data.rentalListResponse.id}
               postType="normal"
-              id={data.userRentalListResponse.id}
-              imgUrl={data.userRentalListResponse.imgUrl}
-              title={data.userRentalListResponse.title}
-              minPrice={data.userRentalListResponse.minPrice}
-              minDays={data.userRentalListResponse.minDays}
-              createdAt={data.userRentalListResponse.createdAt}
-              // nickname={data.userRentalListResponse.nickname}
-              brand={data.userRentalListResponse.brand}
+              id={data.rentalListResponse.id}
+              imgUrl={data.rentalListResponse.imgUrl}
+              title={data.rentalListResponse.title}
+              minPrice={data.rentalListResponse.minPrice}
+              minDays={data.rentalListResponse.minDays}
+              createdAt={data.rentalListResponse.createdAt}
+              nickname={data.rentalListResponse.nickname}
+              brand={data.rentalListResponse.brand}
               isLikeList={true}
               isLiked={data.isLiked}
             />
