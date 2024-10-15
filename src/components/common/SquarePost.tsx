@@ -91,10 +91,16 @@ const HeartImage = styled(Image)`
 `;
 
 const Title = styled.div`
+  width: 100%;
+  max-width: 210px;
+  min-width: 140px;
   margin-top: 10px;
   margin-bottom: 3px;
   color: #242029;
   ${(props) => props.theme.fonts.b3_semiBold};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Sub = styled.div`
