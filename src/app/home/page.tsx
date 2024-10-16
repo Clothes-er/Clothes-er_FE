@@ -106,7 +106,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true); // 로딩 시작
-      console.log("토큰", getToken());
+      console.log("accessToken", getToken());
       try {
         const response = await AuthAxios.get(`/api/v1/users/address`);
         const latitude = response.data.result.latitude;
@@ -220,7 +220,9 @@ const Home = () => {
                 alt="pin"
               />
             )}
-            {loading ? "Loading..." : location || "위치를 설정해 주세요"}
+            {loading
+              ? "주소를 찾고 있어요..."
+              : location || "위치를 설정해 주세요"}
           </Location>
           <Content>
             <SearchBox
