@@ -92,6 +92,8 @@ export default SquarePost;
 
 const Container = styled.div`
   width: 100%;
+  max-width: 210px;
+  min-width: 140px;
   height: 184px;
 `;
 
@@ -117,8 +119,6 @@ const HeartImage = styled(Image)`
 
 const Title = styled.div`
   width: 100%;
-  max-width: 210px;
-  min-width: 140px;
   margin-top: 10px;
   margin-bottom: 3px;
   color: #242029;
