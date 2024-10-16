@@ -23,9 +23,9 @@ AuthAxios.interceptors.response.use(
     
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshToken = localStorage.getItem("refreshToken");
-
-      if (refreshToken) {
+      const refreshToken = localStorage.getItem("refreshToken")?? "";
+      console.log("재발급할 때 보내지는 refreshToken", refreshToken);
+      if (refreshToken.length>0) {
         try {
           const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/reissue-token`,
@@ -41,7 +41,13 @@ AuthAxios.interceptors.response.use(
             console.log("토큰 재발급 완료", response.data);
             return AuthAxios(originalRequest);
           }
-        } catch (tokenRefreshError:any) {
+        } catch (tokenRefreshError: any) {
+            if (tokenRefreshError.response?.status === 400) {
+              console.error(
+                "400 에러: 유효하지 않은 리프레시 토큰입니다.",
+                tokenRefreshError.response.data
+              );
+            }
           if (tokenRefreshError.response?.status === 401) {
             console.error("토큰이 만료되었습니다. 재로그인을 해주세요.");
           }

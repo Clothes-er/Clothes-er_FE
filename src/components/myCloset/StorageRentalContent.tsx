@@ -3,16 +3,15 @@ import Post from "../home/Post";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { getRentalLikes } from "@/api/like";
-import { LikeList } from "@/type/like";
+import { RentalLikeList } from "@/type/like";
 
 interface MyShareContentProps {
   userSid?: string;
 }
 
 const StorageRentalContent: React.FC<MyShareContentProps> = ({ userSid }) => {
-  const [postList, setPostList] = useState<LikeList[]>();
+  const [postList, setPostList] = useState<RentalLikeList[]>();
 
-  /* 보유 > 공유 등록 목록 조회 */
   useEffect(() => {
     const fetchRentalLikes = async () => {
       try {

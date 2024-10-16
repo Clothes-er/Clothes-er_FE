@@ -7,7 +7,12 @@ import { chatListType } from "@/type/chat";
 import { showToast } from "@/hooks/showToast";
 import { formatPrice } from "@/lib/formatPrice";
 import Image from "next/image";
-import { deleteRentalLike, postRentalLike } from "@/api/like";
+import {
+  deleteClothesLike,
+  deleteRentalLike,
+  postClothesLike,
+  postRentalLike,
+} from "@/api/like";
 
 type bottomType = "share" | "closet";
 
@@ -59,11 +64,15 @@ const Bottom: React.FC<BottomProps> = ({
     // 찜하기 API
     if (id) {
       if (heart) {
-        await deleteRentalLike(id);
+        bottomType === "share"
+          ? await deleteRentalLike(id)
+          : await deleteClothesLike(id);
         setHeart(false);
         setHeartCount(heartCount - 1);
       } else {
-        await postRentalLike(id);
+        bottomType === "share"
+          ? await postRentalLike(id)
+          : await postClothesLike(id);
         setHeart(true);
         setHeartCount(heartCount + 1);
       }
@@ -189,7 +198,7 @@ const Bottom: React.FC<BottomProps> = ({
             </div>
           ) : (
             <div>
-              <Span>궁금한 정보</Span>를 <Span>문의</Span>해보세요!
+              <Span>궁금한 점</Span>을 <Span>물어</Span>보세요!
             </div>
           ))}
       </LeftDiv>

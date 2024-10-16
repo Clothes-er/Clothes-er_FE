@@ -3,6 +3,7 @@ import withPWA from "next-pwa";
 import typescript from "next-plugin-graphql";
 
 const nextConfig = {
+  reactStrictMode: false,
   compiler: {
     styledComponents: true,
   },

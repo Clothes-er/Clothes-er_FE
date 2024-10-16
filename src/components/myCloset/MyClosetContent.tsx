@@ -1,16 +1,21 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import SquarePost from "../common/SquarePost";
 import { useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
 import { ClosetPostList } from "@/type/post";
 import { theme } from "@/styles/theme";
+import Image from "next/image";
+import { showToast } from "@/hooks/showToast";
+import { useRouter } from "next/navigation";
 
 interface MyClosetContentProps {
   userSid?: string;
 }
 
 const MyClosetContent: React.FC<MyClosetContentProps> = ({ userSid }) => {
+  const router = useRouter();
   const [postList, setPostList] = useState<ClosetPostList[]>();
+  const [isSuspended, setIsSuspended] = useState<boolean>(false);
 
   /* 보유 > 옷장 등록 목록 조회 */
   useEffect(() => {
@@ -29,8 +34,40 @@ const MyClosetContent: React.FC<MyClosetContentProps> = ({ userSid }) => {
       });
   }, []);
 
+  useEffect(() => {
+    AuthAxios.get("/api/v1/users/profile")
+      .then((response) => {
+        const data = response.data.result;
+        setIsSuspended(data.isSuspended);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const handleAddCloth = () => {
+    if (isSuspended) {
+      showToast({
+        text: `신고 접수로 글 작성이 불가합니다.`,
+        icon: "❌",
+        type: "error",
+      });
+    } else {
+      router.push("/mycloset/write/choice");
+    }
+  };
+
   return (
     <>
+      <WriteButton $isSuspended={isSuspended + ""} onClick={handleAddCloth}>
+        <Image
+          src={`/assets/icons/ic_plus_${isSuspended ? "gray" : "purple"}.svg`}
+          width={16}
+          height={16}
+          alt="plus"
+        />
+        옷장 채우기
+      </WriteButton>
       {postList && postList.length > 0 ? (
         <GridContainer>
           {postList?.map((data) => (
@@ -81,4 +118,44 @@ const NoData = styled.div`
   @media screen and (max-width: 400px) {
     ${(props) => props.theme.fonts.b3_regular}
   }
+`;
+
+const WriteButton = styled.button<{ $isSuspended?: string }>`
+  width: 90px;
+  height: 23px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-radius: 20px;
+  background: ${theme.colors.purple50};
+  color: ${theme.colors.purple500};
+  ${(props) => props.theme.fonts.c2_bold};
+  position: absolute;
+  top: 40px;
+  right: 0;
+  white-space: nowrap;
+
+  transition: color 200ms, background-color 200ms;
+  &:hover {
+    background: ${theme.colors.purple150};
+  }
+  &:active {
+    background: ${theme.colors.purple150};
+  }
+
+  ${({ $isSuspended }) =>
+    $isSuspended === "true" &&
+    css`
+      color: ${theme.colors.gray900};
+      background: ${theme.colors.gray100};
+
+      &:hover {
+        background: ${theme.colors.gray300};
+      }
+      &:active {
+        background: ${theme.colors.gray300};
+      }
+    `}
 `;
