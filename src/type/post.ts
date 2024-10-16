@@ -29,11 +29,13 @@ export interface PostList {
 }
 
 export interface ClosetPostList {
-    id: number;
-    userSid: string;
-    nickname?: string;
-    imgUrl: string;
-    name?: string;
-    brand?: string;
-    createdAt: string;
-  }
+  id: number;
+  userSid: string;
+  nickname?: string;
+  imgUrl: string;
+  name?: string;
+  brand?: string;
+  createdAt: string;
+  isLikeList?: boolean;
+  isLiked?: boolean;
+}

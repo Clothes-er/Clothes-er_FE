@@ -1,3 +1,4 @@
+import { deleteClothesLike, postClothesLike } from "@/api/like";
 import { theme } from "@/styles/theme";
 import { ClosetPostList } from "@/type/post";
 import Image from "next/image";
@@ -7,8 +8,18 @@ import styled, { css } from "styled-components";
 
 const SquarePost: React.FC<ClosetPostList> = (props) => {
   const router = useRouter();
-  const { id, userSid, nickname, imgUrl, name, brand, createdAt } = props;
-  const [heart, setHeart] = useState<boolean>(false);
+  const {
+    id,
+    userSid,
+    nickname,
+    imgUrl,
+    name,
+    brand,
+    createdAt,
+    isLikeList = false,
+    isLiked = false,
+  } = props;
+  const [heart, setHeart] = useState<boolean>(isLiked);
 
   const currentPath =
     typeof window !== "undefined" ? window.location.pathname : "";
@@ -27,6 +38,20 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
     router.push(`/user/${id}`);
   };
 
+  const handlePickHeart = async (event: React.MouseEvent<HTMLImageElement>) => {
+    event.stopPropagation();
+    // 찜하기 API
+    if (id) {
+      if (heart) {
+        await deleteClothesLike(id);
+        setHeart(false);
+      } else {
+        await postClothesLike(id);
+        setHeart(true);
+      }
+    }
+  };
+
   return (
     <Container onClick={() => handleMorePost(id)}>
       <ImageBox>
@@ -35,15 +60,15 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
           fill
           alt="image"
         />
-        {/* <HeartImage
-          src={`/assets/icons/ic_heart${heart ? "_fill" : ""}.svg`}
-          width={20}
-          height={20}
-          alt="storage"
-          onClick={() => {
-            setHeart(!heart);
-          }}
-        /> */}
+        {isLikeList && (
+          <HeartImage
+            src={`/assets/icons/ic_heart${heart ? "_fill" : ""}.svg`}
+            width={20}
+            height={20}
+            alt="찜"
+            onClick={handlePickHeart}
+          />
+        )}
       </ImageBox>
       <Title>{name}</Title>
       <Sub>
