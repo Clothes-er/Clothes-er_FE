@@ -198,7 +198,7 @@ const Bottom: React.FC<BottomProps> = ({
             </div>
           ) : (
             <div>
-              <Span>궁금한 정보</Span>를 <Span>문의</Span>해보세요!
+              <Span>궁금한 점</Span>을 <Span>물어</Span>보세요!
             </div>
           ))}
       </LeftDiv>
