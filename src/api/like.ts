@@ -39,7 +39,7 @@ export const postClothesLike = async (clothesId: number) => {
     console.log("보유글 찜 생성 성공");
     return response.data;
   } catch (error) {
-    console.log("대여글 찜 생성 실패");
+    console.log("보유글 찜 생성 실패");
     throw error;
   }
 };
@@ -52,7 +52,7 @@ export const deleteClothesLike = async (clothesId: number) => {
     console.log("보유글 찜 삭제 성공");
     return response.data;
   } catch (error) {
-    console.log("대여글 찜 삭제 실패");
+    console.log("보유글 찜 삭제 실패");
     throw error;
   }
 };

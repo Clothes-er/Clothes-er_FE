@@ -25,7 +25,7 @@ const SquarePost: React.FC<ClosetPostList> = (props) => {
     typeof window !== "undefined" ? window.location.pathname : "";
 
   const handleMorePost = (id: number) => {
-    if (currentPath.startsWith("/user")) {
+    if (isLikeList || currentPath.startsWith("/user")) {
       router.push(`/closet/${id}`);
     } else if (currentPath.startsWith("/mycloset")) {
       router.push(`/mycloset/${id}`);
