@@ -7,8 +7,11 @@ import Header from "@/components/common/Header";
 import { Suspense, useEffect, useState } from "react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import Loading from "@/components/common/Loading";
-import AlertTest from "@/components/common/AlertTest";
+import dynamic from "next/dynamic";
 import NotiBox from "@/components/notification/NotiBox";
+const AlertTest = dynamic(() => import("@/components/common/AlertTest"), {
+  ssr: false,
+});
 
 interface NotiList {
   id: number;
@@ -47,7 +50,7 @@ const Notification = () => {
         <Layout>
           <Header />
           <Topbar text="알림" align="left" icon={true} />
-          <AlertTest />
+          <AlertTest /> {/* 클라이언트 전용 컴포넌트 */}
           <Content>
             {notiList && notiList.length > 0 ? (
               <Notis>
