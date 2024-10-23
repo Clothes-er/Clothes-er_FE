@@ -8,6 +8,7 @@ import { store } from "@/redux/store";
 import StyledJsxRegistry from "./registry";
 import { Toaster } from "react-hot-toast";
 import { HelmetProvider, Helmet } from "react-helmet-async";
+import "@/core/notification/settingFCM";
 
 export default function RootLayout({
   children,
