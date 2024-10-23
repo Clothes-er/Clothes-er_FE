@@ -22,7 +22,7 @@ const Header = () => {
           height={24}
           alt="검색"
           style={{ cursor: "pointer" }}
-        />
+        /> */}
         <Image
           src="/assets/icons/ic_bell.svg"
           width={24}
@@ -30,7 +30,7 @@ const Header = () => {
           alt="알림"
           onClick={() => router.push("/notification")}
           style={{ cursor: "pointer" }}
-        /> */}
+        />
       </Icon>
     </Container>
   );
