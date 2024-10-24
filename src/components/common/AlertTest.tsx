@@ -1,4 +1,4 @@
-import { getDeviceToken } from "@/api/deviceToken";
+import { getDeviceToken, patchDeviceToken } from "@/api/deviceToken";
 import { registerServiceWorker } from "@/util/notification";
 import React, { useEffect, useState } from "react";
 
@@ -19,7 +19,12 @@ const AlertTest = () => {
       if (permission === "granted") {
         console.log("알림 권한이 허용되었습니다.");
         setNotificationPermission(permission);
-        await getDeviceToken(); // Device token 가져오기
+        const token = await getDeviceToken(); // Device token 가져오기
+        if (token) {
+          await patchDeviceToken(token);
+        } else {
+          console.error("Failed to get device token");
+        }
       } else if (permission === "denied") {
         console.log("알림 권한이 거부되었습니다.");
       } else {
