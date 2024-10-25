@@ -21,6 +21,7 @@
     "dayjs": "^1.11.11",
     "firebase": "^10.14.1",
     "framer-motion": "^11.3.6",
+    "js-cookie": "^3.0.5",
     "next": "14.2.3",
     "next-compose-plugins": "^2.2.1",
     "next-plugin-graphql": "^0.0.2",
@@ -42,6 +43,7 @@
     "styled-components": "^6.1.9"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-datepicker": "^6.2.0",

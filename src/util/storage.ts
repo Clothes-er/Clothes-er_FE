@@ -1,99 +1,59 @@
-/* accessToken, refreshToken */
+import Cookies from "js-cookie";
+
+/* 액세스, 리프레시 토큰 */
 export const setTokens = (
   accessToken: string,
   refreshToken: string,
   isAutoLogin: string
 ) => {
-  if (typeof window !== "undefined") {
-    const storage =
-      isAutoLogin? localStorage : sessionStorage;
-    storage.setItem("accessToken", accessToken);
-    storage.setItem("refreshToken", refreshToken);
-    }
+  // 자동 로그인 시 7일, 아니면 1시간 유효
+  const options = isAutoLogin ? { expires: 7 } : { expires: 1 / 24 };
+  Cookies.set("accessToken", accessToken, options);
+  Cookies.set("refreshToken", refreshToken, options);
 };
 
 export const getAccessToken = () => {
-  if (typeof window !== "undefined") {
-    return (
-      localStorage.getItem("accessToken") ||
-      sessionStorage.getItem("accessToken")
-    );
-  }
-  return null;
+  return Cookies.get("accessToken") || null;
 };
 
 export const getRefreshToken = () => {
-  if (typeof window !== "undefined") {
-    return (
-      localStorage.getItem("refreshToken") ||
-      sessionStorage.getItem("refreshToken")
-    );
-  }
-  return null;
+  return Cookies.get("refreshToken") || null;
 };
 
 /* 자동 로그인 여부 */
 export const setIsAutoLogin = (isAutoLogin: string) => {
-    if (typeof window !== "undefined") {
-        localStorage.setItem("isAutoLogin", isAutoLogin);
-    }
+  Cookies.set("isAutoLogin", isAutoLogin, { expires: 7 });
 };
 
 export const getIsAutoLogin = () => {
-  if (typeof window !== "undefined") {
-    return (
-      localStorage.getItem("isAutoLogin")
-    );
-  }
-  return null;
+  return Cookies.get("isAutoLogin") || null;
 };
 
 /* 최초 로그인 여부 */
 export const setIsFirstLogin = (isFirstLogin: string, autoLogin: boolean) => {
-    if (typeof window !== "undefined") {
-        const storage = autoLogin ? localStorage : sessionStorage;
-        storage.setItem("isFirstLogin", isFirstLogin);
-    }
+  const options = autoLogin ? { expires: 7 } : { expires: 1 / 24 };
+  Cookies.set("isFirstLogin", isFirstLogin, options);
 };
 
 export const getIsFirstLogin = () => {
-  if (typeof window !== "undefined") {
-    return (
-      localStorage.getItem("isFirstLogin") ||
-      sessionStorage.getItem("isFirstLogin")
-    );
-  }
-  return null;
+  return Cookies.get("isFirstLogin") || null;
 };
 
 /* 유예 상태 여부 (기능 제한) */
 export const setIsSuspended = (isSuspended: string, autoLogin: boolean) => {
-    if (typeof window !== "undefined") {
-        const storage = autoLogin ? localStorage : sessionStorage;
-        storage.setItem("isSuspended", isSuspended);
-    }
+  const options = autoLogin ? { expires: 7 } : { expires: 1 / 24 };
+  Cookies.set("isSuspended", isSuspended, options);
 };
 
 export const getIsSuspended = () => {
-  if (typeof window !== "undefined") {
-    return (
-      localStorage.getItem("isSuspended") ||
-      sessionStorage.getItem("isSuspended")
-    );
-  }
-  return null;
+  return Cookies.get("isSuspended") || null;
 };
 
 /* 토큰 제거 */
 export const clearTokens = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-  localStorage.removeItem("isAutoLogin");
-  localStorage.removeItem("isFirstLogin");
-  localStorage.removeItem("isSuspended");
-  sessionStorage.removeItem("accessToken");
-  sessionStorage.removeItem("refreshToken");
-  sessionStorage.removeItem("isAutoLogin");
-  sessionStorage.removeItem("isFirstLogin");
-  sessionStorage.removeItem("isSuspended");
+  Cookies.remove("accessToken");
+  Cookies.remove("refreshToken");
+  Cookies.remove("isAutoLogin");
+  Cookies.remove("isFirstLogin");
+  Cookies.remove("isSuspended");
 };
