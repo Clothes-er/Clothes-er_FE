@@ -73,8 +73,6 @@ const ChatDetail = () => {
   });
   /* 전송 메세지 */
   const [msg, setMsg] = useState<string>("");
-  /* 수신 메세지 */
-  const [chatMsgList, setChatMsgList] = useState<Message[]>([]);
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
   /* 대여중, 반납완료 Modal */
@@ -128,12 +126,14 @@ const ChatDetail = () => {
     }
   };
 
-  useEffect(() => {}, [reviewButton]);
+  useEffect(() => {
+    console.log("chatMsg", chatMsg);
+  }, [reviewButton, chatMsg]);
 
   useEffect(() => {
     fetchChatMessages();
     console.log(checkGet);
-  }, [chatMsgList, checkGet.isChecked, rentalState]);
+  }, [checkGet.isChecked, rentalState]);
 
   const fetchChatMessages = () => {
     AuthAxios.get(`/api/v1/chats/${type}-rooms/${id}`)
@@ -196,14 +196,17 @@ const ChatDetail = () => {
       console.log("WebSocket 연결이 열렸습니다.");
 
       client.subscribe(`/sub/chats/${id}`, (frame) => {
-        try {
-          const messageBody = JSON.parse(frame.body);
+        const messageBody = JSON.parse(frame.body);
 
-          console.log(messageBody);
-          setChatMsgList((prevMessages) => [...prevMessages, messageBody]);
-        } catch (error) {
-          console.error("오류가 발생했습니다:", error);
-        }
+        /* 기존 messages 배열에 새로운 메시지를 추가 */
+        setChatMsg((prevChatMsg) => {
+          if (!prevChatMsg) return;
+
+          return {
+            ...prevChatMsg,
+            messages: [...prevChatMsg.messages, messageBody.body.result],
+          };
+        });
       });
     };
 
@@ -239,6 +242,10 @@ const ChatDetail = () => {
             message: msg,
           }),
         });
+
+        // fetchChatMessages();
+        // setTimeout(() => {
+        // }, 500);
       }
 
       setMsg("");

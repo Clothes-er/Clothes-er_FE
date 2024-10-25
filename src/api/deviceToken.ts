@@ -6,7 +6,7 @@ export async function getDeviceToken() {
    const token = await getToken(messaging, {
     vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
   })
-  alert("Device Token: " + token);
+  console.log("디바이스 토큰 가져오기 성공");
   console.log("Device Token: ", token);
   return token;
 }
