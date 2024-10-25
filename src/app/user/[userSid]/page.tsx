@@ -4,7 +4,6 @@ import ListTab from "@/components/common/ListTab";
 import Topbar from "@/components/common/Topbar";
 import ScoreBar from "@/components/myCloset/ScoreBar";
 import { getLevelText } from "@/data/levelData";
-import { useRequireAuth } from "@/hooks/useAuth";
 import { getGenderLabel } from "@/interface/Gender";
 import { theme } from "@/styles/theme";
 import { getLevelMessage } from "@/util/custom";
@@ -31,7 +30,6 @@ interface ProfileInfo {
 }
 
 const MyCloset = () => {
-  useRequireAuth();
   const router = useRouter();
   const { userSid } = useParams();
 
