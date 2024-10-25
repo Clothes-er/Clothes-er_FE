@@ -2,11 +2,11 @@
 export const setTokens = (
   accessToken: string,
   refreshToken: string,
-  isAutoLogin?: boolean
+  isAutoLogin: string
 ) => {
   if (typeof window !== "undefined") {
     const storage =
-      isAutoLogin || getIsAutoLogin() ? localStorage : sessionStorage;
+      isAutoLogin? localStorage : sessionStorage;
     storage.setItem("accessToken", accessToken);
     storage.setItem("refreshToken", refreshToken);
     }
