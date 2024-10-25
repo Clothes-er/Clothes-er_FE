@@ -4,6 +4,15 @@ export default function middleware(request: NextRequest) {
   const { nextUrl, cookies } = request;
   const accessToken = cookies.get("accessToken")?.value;
   const isFirstLogin = cookies.get("isFirstLogin")?.value;
+  
+  /* 정적 파일 요청인지 확인 */
+  if (
+    request.nextUrl.pathname.startsWith("/images") ||
+    request.nextUrl.pathname.endsWith(".svg") ||
+    request.nextUrl.pathname === "/manifest.json"
+  ) {
+    return NextResponse.next();
+  }
 
   /* 로그인 필요 없는 페이지 */
   if (
