@@ -2,10 +2,9 @@
 import AuthAxios from "@/api/authAxios";
 import Axios from "@/api/axios";
 import Input from "@/components/common/Input";
-import { getToken } from "@/hooks/getToken";
-import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import { theme } from "@/styles/theme";
+import { getAccessToken } from "@/util/storage";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
@@ -24,7 +23,6 @@ interface UserInfo {
 }
 
 const UserInfo = () => {
-  useRequireAuth();
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<UserInfo>();
 
@@ -126,7 +124,7 @@ const UserInfo = () => {
       .patch("/api/v1/users/profile", formData, {
         baseURL: process.env.NEXT_PUBLIC_BASE_URL,
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       })
       .then((response) => {

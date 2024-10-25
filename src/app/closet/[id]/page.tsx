@@ -15,7 +15,6 @@ import "../../../styles/slick.css";
 import "../../../styles/slick-theme.css";
 import NextArrow from "@/components/common/NextArrow";
 import PrevArrow from "@/components/common/PrevArrow";
-import { useRequireAuth } from "@/hooks/useAuth";
 import MoreBox from "@/components/common/MoreBox";
 import Modal from "@/components/common/Modal";
 import { formatPrice } from "@/lib/formatPrice";
@@ -27,6 +26,7 @@ import {
   SkeletonDiv,
   SkeletonProfile,
 } from "@/components/common/Skeleton";
+import { getIsSuspended } from "@/util/storage";
 
 interface PostInfo {
   id: number;
@@ -56,7 +56,6 @@ interface PostInfo {
 }
 
 const Page = () => {
-  useRequireAuth();
   const router = useRouter();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -68,7 +67,7 @@ const Page = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const suspended = localStorage.getItem("isSuspended");
+      const suspended = getIsSuspended();
       setIsSuspended(suspended);
     }
   }, []);

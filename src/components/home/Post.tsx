@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { formatPrice } from "@/lib/formatPrice";
 import { deleteRentalLike, postRentalLike } from "@/api/like";
+import { getIsSuspended } from "@/util/storage";
 
 const Post: React.FC<PostList> = ({
   id,
@@ -40,7 +41,7 @@ const Post: React.FC<PostList> = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const suspended = localStorage.getItem("isSuspended");
+      const suspended = getIsSuspended();
       setIsMeSuspended(suspended);
     }
   }, []);

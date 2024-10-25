@@ -7,7 +7,6 @@ import Header from "@/components/common/Header";
 import Filter from "@/components/common/Filter";
 import Tabbar from "@/components/common/Tabbar";
 import { useRouter } from "next/navigation";
-import { useRequireAuth } from "@/hooks/useAuth";
 import SquarePost from "@/components/common/SquarePost";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -16,7 +15,6 @@ import AuthAxios from "@/api/authAxios";
 import { ClosetPostList } from "@/type/post";
 
 const ClosetPage = () => {
-  useRequireAuth();
   const router = useRouter();
   const [postList, setPostList] = useState<ClosetPostList[]>();
   const [search, setSearch] = useState<string>("");

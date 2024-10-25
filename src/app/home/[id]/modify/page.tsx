@@ -5,8 +5,6 @@ import Button from "@/components/common/Button";
 import Category from "@/components/common/Category";
 import Input from "@/components/common/Input";
 import Topbar from "@/components/common/Topbar";
-import { getToken } from "@/hooks/getToken";
-import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import {
   clearCategory,
@@ -16,6 +14,7 @@ import {
 } from "@/redux/slices/categorySlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+import { getAccessToken } from "@/util/storage";
 import axios from "axios";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
@@ -30,7 +29,6 @@ interface Price {
 }
 
 const Modify = () => {
-  useRequireAuth();
   const { id } = useParams();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -172,7 +170,7 @@ const Modify = () => {
       .put(`/api/v1/rentals/${id}`, formData, {
         baseURL: process.env.NEXT_PUBLIC_BASE_URL,
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       })
       .then((response) => {

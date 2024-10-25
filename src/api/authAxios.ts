@@ -1,3 +1,4 @@
+import { clearTokens, getAccessToken, getIsAutoLogin, getRefreshToken, setTokens } from "@/util/storage";
 import axios from "axios";
 
 const AuthAxios = axios.create({
@@ -5,7 +6,7 @@ const AuthAxios = axios.create({
 });
 
 AuthAxios.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
+  const token = getAccessToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -23,7 +24,8 @@ AuthAxios.interceptors.response.use(
     
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshToken = localStorage.getItem("refreshToken")?? "";
+      const refreshToken = getRefreshToken() ?? "";
+      const isAutoLogin = getIsAutoLogin() ?? "";
       console.log("재발급할 때 보내지는 refreshToken", refreshToken);
       if (refreshToken.length>0) {
         try {
@@ -33,8 +35,11 @@ AuthAxios.interceptors.response.use(
           );
 
           if (response.data.isSuccess && response.data.result) {
-            localStorage.setItem("accessToken", response.data.result.accessToken);
-            localStorage.setItem("refreshToken", response.data.result.refreshToken);
+            setTokens(
+              response.data.result.accessToken,
+              response.data.result.refreshToken,
+              isAutoLogin
+            );
 
             originalRequest.headers.Authorization = `Bearer ${response.data.result.accessToken}`;
             
@@ -47,9 +52,13 @@ AuthAxios.interceptors.response.use(
                 "400 에러: 유효하지 않은 리프레시 토큰입니다.",
                 tokenRefreshError.response.data
               );
+              clearTokens();
+              window.location.replace('/');
             }
-          if (tokenRefreshError.response?.status === 401) {
-            console.error("토큰이 만료되었습니다. 재로그인을 해주세요.");
+            if (tokenRefreshError.response?.status === 401) {
+              console.error("토큰이 만료되었습니다. 재로그인을 해주세요.");
+              clearTokens();
+              window.location.replace('/');
           }
         }
       }

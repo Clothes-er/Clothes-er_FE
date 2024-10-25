@@ -35,10 +35,9 @@ const ChatListContent: React.FC<ChatListContentProps> = ({ type }) => {
       {chatList.length > 0 ? (
         <ChatContainer>
           {chatList.map((data, index) => (
-            <>
+            <ChatPreviewWrapper key={data.id}>
               <ChatPreview
                 type={type}
-                key={data.id}
                 id={data.id}
                 userSid={data.userSid}
                 nickname={data.nickname}
@@ -54,7 +53,7 @@ const ChatListContent: React.FC<ChatListContentProps> = ({ type }) => {
                 isWithdrawn={data.isWithdrawn}
               />
               {index < chatList.length - 1 && <Divider />}
-            </>
+            </ChatPreviewWrapper>
           ))}
         </ChatContainer>
       ) : (
@@ -90,6 +89,11 @@ const ChatListContianer = styled.div`
 
 const ChatContainer = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ChatPreviewWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;

@@ -38,16 +38,6 @@ const UserPage = () => {
       });
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("isFirstLogin");
-    router.push("/");
-  };
-
-  const handleWithdrawal = () => {
-    // 탈퇴하기 API
-  };
-
   return (
     <>
       <Layout>

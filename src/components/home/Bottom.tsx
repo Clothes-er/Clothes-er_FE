@@ -13,6 +13,7 @@ import {
   postClothesLike,
   postRentalLike,
 } from "@/api/like";
+import { getIsSuspended } from "@/util/storage";
 
 type bottomType = "share" | "closet";
 
@@ -55,7 +56,7 @@ const Bottom: React.FC<BottomProps> = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const suspended = localStorage.getItem("isSuspended");
+      const suspended = getIsSuspended();
       setIsSuspended(suspended);
     }
   }, []);

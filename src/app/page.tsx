@@ -7,16 +7,18 @@ import Tabbar from "@/components/common/Tabbar";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { setUser } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import {
+  setIsAutoLogin,
+  setIsFirstLogin,
+  setIsSuspended,
+  setTokens,
+} from "@/util/storage";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-
-interface SaveProps {
-  save: boolean;
-}
 
 export default function Home() {
   const router = useRouter();
@@ -26,10 +28,6 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [save, setSave] = useState(false);
   const [error, setError] = useState<string>("");
-
-  useEffect(() => {
-    dispatch(clearSignIn());
-  }, []);
 
   const handleSave = () => {
     setSave(!save);
@@ -54,16 +52,14 @@ export default function Home() {
           isSuspended: response.data.result.isSuspended,
         };
         dispatch(setUser(userData));
-        localStorage.setItem(
-          "accessToken",
-          response.data.result.token.accessToken
+        setTokens(
+          response.data.result.token.accessToken,
+          response.data.result.token.refreshToken,
+          String(save)
         );
-        localStorage.setItem(
-          "refreshToken",
-          response.data.result.token.refreshToken
-        );
-        localStorage.setItem("isFirstLogin", userData.isFirstLogin);
-        localStorage.setItem("isSuspended", userData.isSuspended);
+        setIsAutoLogin(String(save));
+        setIsFirstLogin(userData.isFirstLogin);
+        setIsSuspended(userData.isSuspended);
 
         if (userData.isFirstLogin) {
           router.push("/first/step1");

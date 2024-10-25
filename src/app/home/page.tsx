@@ -12,7 +12,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
 import { getCoordsAddress } from "@/hooks/getCoordsAddress";
-import { useRequireAuth } from "@/hooks/useAuth";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { categoryMsg } from "@/data/category";
@@ -21,12 +20,11 @@ import {
   SkeletonPost,
   SkeletonText,
   SkeletonCircle,
-  SkeletonBox,
   SkeletonDiv,
 } from "@/components/common/Skeleton";
-import { getIsSuspended, getToken } from "@/hooks/getToken";
 import { showToast } from "@/hooks/showToast";
 import Loading from "@/components/common/Loading";
+import { getIsSuspended } from "@/util/storage";
 
 interface PostList {
   id: number;
@@ -39,7 +37,6 @@ interface PostList {
 }
 
 const Home = () => {
-  useRequireAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -47,7 +44,8 @@ const Home = () => {
   const [postList, setPostList] = useState<PostList[]>([]);
   const [location, setLocation] = useState<number | undefined>(undefined);
   const [search, setSearch] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
+  const [locationLoading, setLocationLoading] = useState<boolean>(true);
+  const [postLoading, setPostLoading] = useState<boolean>(true);
 
   const sort = useSelector((state: RootState) => state.filter.selectedSort);
   const gender = useSelector((state: RootState) => state.filter.selectedGender);
@@ -71,7 +69,7 @@ const Home = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const suspended = localStorage.getItem("isSuspended");
+      const suspended = getIsSuspended();
       setIsSuspended(suspended);
     }
   }, []);
@@ -105,20 +103,19 @@ const Home = () => {
   /* 위치 정보 받아오기 */
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); // 로딩 시작
-      console.log("accessToken", getToken());
+      setLocationLoading(true); // 로딩 시작
       try {
         const response = await AuthAxios.get(`/api/v1/users/address`);
         const latitude = response.data.result.latitude;
         const longitude = response.data.result.longitude;
-        console.log("데이터", response.data);
+        console.log("위치 정보", response.data);
         console.log(response.data.message);
         const newLocation = await getCoordsAddress(longitude, latitude);
         setLocation(newLocation);
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false); // 로딩 종료
+        setLocationLoading(false); // 로딩 종료
       }
     };
 
@@ -130,7 +127,7 @@ const Home = () => {
   /* 대여글 목록 조회(검색, 필터링, 카테고리) */
   useEffect(() => {
     const fetchPostList = async () => {
-      setLoading(true); // 로딩 시작
+      setPostLoading(true); // 로딩 시작
       try {
         const queryString = buildQueryString(); // Query String 생성
         console.log("queryString", queryString);
@@ -142,7 +139,7 @@ const Home = () => {
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false); // 로딩 종료
+        setPostLoading(false); // 로딩 종료
       }
     };
 
@@ -220,7 +217,7 @@ const Home = () => {
                 alt="pin"
               />
             )}
-            {loading
+            {locationLoading
               ? "주소를 찾고 있어요..."
               : location || "위치를 설정해 주세요"}
           </Location>
@@ -245,7 +242,7 @@ const Home = () => {
                 />
               ))}
             </CategorySlider>
-            {loading ? (
+            {postLoading ? (
               // 로딩 중일 때 스켈레톤 UI 표시
               <>
                 {Array.from({ length: 7 }, (_, index) => (

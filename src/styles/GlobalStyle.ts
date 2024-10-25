@@ -43,8 +43,7 @@ button {
 
 @font-face {
     font-family: "Pretendard";
-    src: url("/assets/fonts/PretendardVariable.woff2") format('font-woff2'),
-        url("/assets/fonts/PretendardVariable.ttf") format('truetype');
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
   }
 `;
 

@@ -9,6 +9,7 @@ import { setStep3 } from "@/redux/slices/firstLoginSlice";
 import { useAppDispatch } from "@/redux/store";
 import { postFirstLoginData } from "@/redux/thunks/postFirstLogin";
 import { theme } from "@/styles/theme";
+import { setIsFirstLogin } from "@/util/storage";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -40,7 +41,7 @@ const Step3 = () => {
       .unwrap()
       .then((data) => {
         console.log("최초 로그인 성공:", data);
-        localStorage.removeItem("isFirstLogin");
+        setIsFirstLogin("false");
         router.push("/home");
       })
       .catch((error) => {

@@ -6,8 +6,6 @@ import Category from "@/components/common/Category";
 import Input from "@/components/common/Input";
 import Toggle from "@/components/common/Toggle";
 import Topbar from "@/components/common/Topbar";
-import { getToken } from "@/hooks/getToken";
-import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import { formatPrice, removeCommas } from "@/lib/formatPrice";
 import {
@@ -18,6 +16,7 @@ import {
 } from "@/redux/slices/categorySlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+import { getAccessToken } from "@/util/storage";
 import axios from "axios";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
@@ -27,7 +26,6 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import styled from "styled-components";
 
 const Modify = () => {
-  useRequireAuth();
   const { clothesId } = useParams();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -157,7 +155,7 @@ const Modify = () => {
       .put(`/api/v1/clothes/${clothesId}`, formData, {
         baseURL: process.env.NEXT_PUBLIC_BASE_URL,
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       })
       .then((response) => {

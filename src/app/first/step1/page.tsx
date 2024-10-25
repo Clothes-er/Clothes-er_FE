@@ -10,10 +10,8 @@ import Postcode from "@/components/common/Postcode";
 import { getAddressCoords } from "@/hooks/getAddressCoords";
 import { useDispatch } from "react-redux";
 import { setStep1 } from "@/redux/slices/firstLoginSlice";
-// import { useRequireFirstAuth } from "@/hooks/usefirstAuth copy";
 
 const Step1 = () => {
-  // useRequireFirstAuth();
   const router = useRouter();
   const dispatch = useDispatch();
   const [location, setLocation] = useState("");

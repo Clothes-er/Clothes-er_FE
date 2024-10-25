@@ -11,14 +11,13 @@ import styled from "styled-components";
 import Modal from "@/components/common/Modal";
 import RentalDate from "@/components/common/RentalDate";
 import { Client } from "@stomp/stompjs";
-import { getToken } from "@/hooks/getToken";
 import Input from "@/components/common/Input";
-import { useRequireAuth } from "@/hooks/useAuth";
 import BottomModal from "@/components/common/BottomModal";
 import { setChatPost } from "@/redux/slices/chatPostSlice";
 import { useDispatch } from "react-redux";
 import MoreBox from "@/components/common/MoreBox";
 import { format, parse } from "date-fns";
+import { getAccessToken, getIsSuspended } from "@/util/storage";
 
 interface Message {
   nickname: string;
@@ -54,7 +53,6 @@ interface CheckList {
 }
 
 const ChatDetail = () => {
-  useRequireAuth();
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
@@ -102,7 +100,7 @@ const ChatDetail = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const suspended = localStorage.getItem("isSuspended");
+      const suspended = getIsSuspended();
       setIsSuspended(suspended);
     }
   }, []);
@@ -184,7 +182,7 @@ const ChatDetail = () => {
     const client = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
-        Authorization: `Bearer ${getToken()}`,
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       debug: (str) => {
         console.log(str);
