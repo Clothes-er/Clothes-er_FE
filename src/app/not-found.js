@@ -4,32 +4,10 @@ import Button from "@/components/common/Button";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import styled from "styled-components";
-import Postcode from "@/components/common/Postcode";
-import { getAddressCoords } from "@/hooks/getAddressCoords";
-import { useDispatch } from "react-redux";
-import { setStep1 } from "@/redux/slices/firstLoginSlice";
-import AuthAxios from "@/api/authAxios";
 
-const Step1 = () => {
+const NotFoundPage = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const [location, setLocation] = useState("");
-
-  const handleNext = async () => {
-    console.log("location-page", location);
-    const coords = await getAddressCoords(location);
-    router.push("/first/step2");
-
-    const step1Info = {
-      address: location,
-      latitude: Number(coords.y),
-      longitude: Number(coords.x),
-    };
-
-    dispatch(setStep1(step1Info));
-  };
 
   return (
     <Layout>
@@ -79,7 +57,7 @@ const Step1 = () => {
   );
 };
 
-export default Step1;
+export default NotFoundPage;
 
 const Layout = styled.div`
   max-width: 560px;
