@@ -24,9 +24,9 @@ import {
   SkeletonBox,
   SkeletonDiv,
 } from "@/components/common/Skeleton";
-import { getIsSuspended, getToken } from "@/hooks/getToken";
 import { showToast } from "@/hooks/showToast";
 import Loading from "@/components/common/Loading";
+import { getAccessToken, getIsSuspended } from "@/util/storage";
 
 interface PostList {
   id: number;
@@ -71,7 +71,7 @@ const Home = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const suspended = localStorage.getItem("isSuspended");
+      const suspended = getIsSuspended();
       setIsSuspended(suspended);
     }
   }, []);
@@ -106,7 +106,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true); // 로딩 시작
-      console.log("accessToken", getToken());
+      console.log("accessToken", getAccessToken());
       try {
         const response = await AuthAxios.get(`/api/v1/users/address`);
         const latitude = response.data.result.latitude;

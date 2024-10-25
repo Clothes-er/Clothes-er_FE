@@ -7,6 +7,13 @@ import Tabbar from "@/components/common/Tabbar";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { setUser } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import {
+  getAccessToken,
+  setIsAutoLogin,
+  setIsFirstLogin,
+  setIsSuspended,
+  setTokens,
+} from "@/util/storage";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -27,8 +34,16 @@ export default function Home() {
   const [save, setSave] = useState(false);
   const [error, setError] = useState<string>("");
 
+  const accessToken = getAccessToken();
+
   useEffect(() => {
-    dispatch(clearSignIn());
+    if (accessToken) {
+      /* 유효한 토큰인지 테스트 */
+      // const response =
+      router.push("/home");
+    } else {
+      dispatch(clearSignIn());
+    }
   }, []);
 
   const handleSave = () => {
@@ -54,16 +69,24 @@ export default function Home() {
           isSuspended: response.data.result.isSuspended,
         };
         dispatch(setUser(userData));
-        localStorage.setItem(
-          "accessToken",
-          response.data.result.token.accessToken
+        setTokens(
+          response.data.result.token.accessToken,
+          response.data.result.token.refreshToken,
+          save
         );
-        localStorage.setItem(
-          "refreshToken",
-          response.data.result.token.refreshToken
-        );
-        localStorage.setItem("isFirstLogin", userData.isFirstLogin);
-        localStorage.setItem("isSuspended", userData.isSuspended);
+        setIsAutoLogin(String(save));
+        setIsFirstLogin(userData.isFirstLogin, save);
+        setIsSuspended(userData.isSuspended, save);
+        // localStorage.setItem(
+        //   "accessToken",
+        //   response.data.result.token.accessToken
+        // );
+        // localStorage.setItem(
+        //   "refreshToken",
+        //   response.data.result.token.refreshToken
+        // );
+        // localStorage.setItem("isFirstLogin", userData.isFirstLogin);
+        // localStorage.setItem("isSuspended", userData.isSuspended);
 
         if (userData.isFirstLogin) {
           router.push("/first/step1");

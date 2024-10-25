@@ -10,7 +10,6 @@ import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import axios from "axios";
-import { getToken } from "@/hooks/getToken";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
@@ -25,6 +24,7 @@ import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import Topbar from "@/components/common/Topbar";
 import { showToast } from "@/hooks/showToast";
 import Loading from "@/components/common/Loading";
+import { getAccessToken } from "@/util/storage";
 
 interface Price {
   days: number | null;
@@ -169,7 +169,7 @@ const WritePost = () => {
       .post(`/api/v1/rentals`, formData, {
         baseURL: process.env.NEXT_PUBLIC_BASE_URL,
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       })
       .then((response) => {

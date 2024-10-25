@@ -27,6 +27,7 @@ import {
   SkeletonDiv,
   SkeletonProfile,
 } from "@/components/common/Skeleton";
+import { getIsSuspended } from "@/util/storage";
 
 interface PostInfo {
   id: number;
@@ -64,7 +65,7 @@ const Page = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const suspended = localStorage.getItem("isSuspended");
+      const suspended = getIsSuspended();
       setIsSuspended(suspended);
     }
   }, []);

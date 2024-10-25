@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { getToken } from "./getToken";
 import { useRouter } from "next/navigation";
 
 export const useNoRequireAuth = () => {

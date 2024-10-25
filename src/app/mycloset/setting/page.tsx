@@ -6,6 +6,7 @@ import Topbar from "@/components/common/Topbar";
 import { showToast } from "@/hooks/showToast";
 import { clearUser } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import { clearTokens, getRefreshToken } from "@/util/storage";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -21,7 +22,7 @@ const Setting = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("refreshToken");
+      const token = getRefreshToken();
       setRefreshToken(token);
     }
   }, []);
@@ -38,10 +39,7 @@ const Setting = () => {
             icon: "💜",
             type: "success",
           });
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          localStorage.removeItem("isFirstLogin");
-          localStorage.removeItem("isSuspended");
+          clearTokens();
           dispatch(clearUser());
           router.push("/");
         })
@@ -60,9 +58,7 @@ const Setting = () => {
           icon: "👋🏻",
           type: "success",
         });
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("isFirstLogin");
+        clearTokens();
         dispatch(clearUser());
         router.push("/");
       })

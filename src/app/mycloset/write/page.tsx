@@ -10,7 +10,6 @@ import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import axios from "axios";
-import { getToken } from "@/hooks/getToken";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
@@ -25,6 +24,7 @@ import AuthAxios from "@/api/authAxios";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import Topbar from "@/components/common/Topbar";
 import Loading from "@/components/common/Loading";
+import { getAccessToken } from "@/util/storage";
 
 const MyClosetWrite = () => {
   useRequireAuth();
@@ -162,7 +162,7 @@ const MyClosetWrite = () => {
       .post(`/api/v1/clothes`, formData, {
         baseURL: process.env.NEXT_PUBLIC_BASE_URL,
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       })
       .then((response) => {

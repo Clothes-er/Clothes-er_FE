@@ -14,6 +14,7 @@ import { useRequireAuth } from "@/hooks/useAuth";
 import { getGenderLabel } from "@/interface/Gender";
 import { theme } from "@/styles/theme";
 import { getLevelMessage } from "@/util/custom";
+import { getIsSuspended } from "@/util/storage";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -58,7 +59,7 @@ const MyCloset = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const suspended = localStorage.getItem("isSuspended");
+      const suspended = getIsSuspended();
       setIsSuspended(suspended);
     }
   }, []);
