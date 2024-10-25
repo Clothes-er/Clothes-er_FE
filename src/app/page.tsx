@@ -58,8 +58,8 @@ export default function Home() {
           String(save)
         );
         setIsAutoLogin(String(save));
-        setIsFirstLogin(userData.isFirstLogin, save);
-        setIsSuspended(userData.isSuspended, save);
+        setIsFirstLogin(userData.isFirstLogin);
+        setIsSuspended(userData.isSuspended);
 
         if (userData.isFirstLogin) {
           router.push("/first/step1");

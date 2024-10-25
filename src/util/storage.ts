@@ -9,7 +9,7 @@ export const setTokens = (
   // 자동 로그인 시 7일, 아니면 1시간 유효
   const options = isAutoLogin ? { expires: 7 } : { expires: 1 / 24 };
   Cookies.set("accessToken", accessToken, options);
-  Cookies.set("refreshToken", refreshToken, options);
+  Cookies.set("refreshToken", refreshToken, { expires: 7 });
 };
 
 export const getAccessToken = () => {
@@ -30,8 +30,8 @@ export const getIsAutoLogin = () => {
 };
 
 /* 최초 로그인 여부 */
-export const setIsFirstLogin = (isFirstLogin: string, autoLogin: boolean) => {
-  const options = autoLogin ? { expires: 7 } : { expires: 1 / 24 };
+export const setIsFirstLogin = (isFirstLogin: string) => {
+    const options = { expires: 7 };
   Cookies.set("isFirstLogin", isFirstLogin, options);
 };
 
@@ -40,8 +40,8 @@ export const getIsFirstLogin = () => {
 };
 
 /* 유예 상태 여부 (기능 제한) */
-export const setIsSuspended = (isSuspended: string, autoLogin: boolean) => {
-  const options = autoLogin ? { expires: 7 } : { expires: 1 / 24 };
+export const setIsSuspended = (isSuspended: string) => {
+  const options = { expires: 7 };
   Cookies.set("isSuspended", isSuspended, options);
 };
 
