@@ -15,7 +15,6 @@ import "../../../styles/slick.css";
 import "../../../styles/slick-theme.css";
 import NextArrow from "@/components/common/NextArrow";
 import PrevArrow from "@/components/common/PrevArrow";
-import { useRequireAuth } from "@/hooks/useAuth";
 import MoreBox from "@/components/common/MoreBox";
 import Modal from "@/components/common/Modal";
 import { formatPrice } from "@/lib/formatPrice";
@@ -53,7 +52,6 @@ interface PostInfo {
 }
 
 const Page = () => {
-  useRequireAuth();
   const router = useRouter();
   const { clothesId } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(true);

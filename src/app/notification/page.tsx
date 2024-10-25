@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import { Suspense, useEffect, useState } from "react";
-import { useRequireAuth } from "@/hooks/useAuth";
 import Loading from "@/components/common/Loading";
 import dynamic from "next/dynamic";
 import NotiBox from "@/components/notification/NotiBox";
@@ -22,8 +21,6 @@ interface NotiList {
 }
 
 const Notification = () => {
-  useRequireAuth();
-
   const [notiList, setNotiList] = useState<NotiList[]>([
     { id: 0, type: "팔로우", image: "", url: "", content: "신고 어쩌고" },
     {

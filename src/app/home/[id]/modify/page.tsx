@@ -5,7 +5,6 @@ import Button from "@/components/common/Button";
 import Category from "@/components/common/Category";
 import Input from "@/components/common/Input";
 import Topbar from "@/components/common/Topbar";
-import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import {
   clearCategory,
@@ -30,7 +29,6 @@ interface Price {
 }
 
 const Modify = () => {
-  useRequireAuth();
   const { id } = useParams();
   const router = useRouter();
   const dispatch = useDispatch();

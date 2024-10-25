@@ -18,7 +18,6 @@ import {
   setSelectedGender,
   setSelectedStyle,
 } from "@/redux/slices/categorySlice";
-import { useRequireAuth } from "@/hooks/useAuth";
 import AuthAxios from "@/api/authAxios";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import Topbar from "@/components/common/Topbar";
@@ -31,7 +30,6 @@ interface Price {
   price: number | null;
 }
 const WritePost = () => {
-  useRequireAuth();
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();

@@ -12,7 +12,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import AuthAxios from "@/api/authAxios";
 import { getCoordsAddress } from "@/hooks/getCoordsAddress";
-import { useRequireAuth } from "@/hooks/useAuth";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { categoryMsg } from "@/data/category";
@@ -38,7 +37,6 @@ interface PostList {
 }
 
 const Home = () => {
-  useRequireAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 

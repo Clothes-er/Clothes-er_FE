@@ -12,7 +12,6 @@ import Modal from "@/components/common/Modal";
 import RentalDate from "@/components/common/RentalDate";
 import { Client } from "@stomp/stompjs";
 import Input from "@/components/common/Input";
-import { useRequireAuth } from "@/hooks/useAuth";
 import BottomModal from "@/components/common/BottomModal";
 import { setChatPost } from "@/redux/slices/chatPostSlice";
 import { useDispatch } from "react-redux";
@@ -54,7 +53,6 @@ interface CheckList {
 }
 
 const ChatDetail = () => {
-  useRequireAuth();
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();

@@ -8,7 +8,6 @@ import { clearSignIn } from "@/redux/slices/signInSlice";
 import { setUser } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import {
-  getAccessToken,
   setIsAutoLogin,
   setIsFirstLogin,
   setIsSuspended,
@@ -17,13 +16,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-
-interface SaveProps {
-  save: boolean;
-}
 
 export default function Home() {
   const router = useRouter();
@@ -33,18 +28,6 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [save, setSave] = useState(false);
   const [error, setError] = useState<string>("");
-
-  const accessToken = getAccessToken();
-
-  useEffect(() => {
-    if (accessToken) {
-      /* 유효한 토큰인지 테스트 */
-      // const response =
-      router.push("/home");
-    } else {
-      dispatch(clearSignIn());
-    }
-  }, []);
 
   const handleSave = () => {
     setSave(!save);
@@ -72,21 +55,11 @@ export default function Home() {
         setTokens(
           response.data.result.token.accessToken,
           response.data.result.token.refreshToken,
-          save
+          String(save)
         );
         setIsAutoLogin(String(save));
         setIsFirstLogin(userData.isFirstLogin, save);
         setIsSuspended(userData.isSuspended, save);
-        // localStorage.setItem(
-        //   "accessToken",
-        //   response.data.result.token.accessToken
-        // );
-        // localStorage.setItem(
-        //   "refreshToken",
-        //   response.data.result.token.refreshToken
-        // );
-        // localStorage.setItem("isFirstLogin", userData.isFirstLogin);
-        // localStorage.setItem("isSuspended", userData.isSuspended);
 
         if (userData.isFirstLogin) {
           router.push("/first/step1");

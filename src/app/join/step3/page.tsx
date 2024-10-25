@@ -5,7 +5,6 @@ import BottomModal from "@/components/common/BottomModal";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Progressbar from "@/components/common/Progressbar";
-import { useNoRequireAuth } from "@/hooks/useNoAuth";
 import { setStep3 } from "@/redux/slices/signInSlice";
 import { RootState, useAppDispatch } from "@/redux/store";
 import { postSignUpData } from "@/redux/thunks/postSignIn";
@@ -17,7 +16,6 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const Step3 = () => {
-  useNoRequireAuth();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const step3 = useSelector((state: RootState) => state.signIn.step3);

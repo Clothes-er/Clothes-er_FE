@@ -6,7 +6,6 @@ import Category from "@/components/common/Category";
 import Input from "@/components/common/Input";
 import Toggle from "@/components/common/Toggle";
 import Topbar from "@/components/common/Topbar";
-import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import { formatPrice, removeCommas } from "@/lib/formatPrice";
 import {
@@ -27,7 +26,6 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import styled from "styled-components";
 
 const Modify = () => {
-  useRequireAuth();
   const { clothesId } = useParams();
   const router = useRouter();
   const dispatch = useDispatch();

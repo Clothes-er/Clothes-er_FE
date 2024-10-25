@@ -18,7 +18,6 @@ import {
   setSelectedGender,
   setSelectedStyle,
 } from "@/redux/slices/categorySlice";
-import { useRequireAuth } from "@/hooks/useAuth";
 import Toggle from "@/components/common/Toggle";
 import AuthAxios from "@/api/authAxios";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
@@ -27,7 +26,6 @@ import Loading from "@/components/common/Loading";
 import { getAccessToken } from "@/util/storage";
 
 const MyClosetWrite = () => {
-  useRequireAuth();
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();

@@ -2,7 +2,6 @@
 import AuthAxios from "@/api/authAxios";
 import Axios from "@/api/axios";
 import Input from "@/components/common/Input";
-import { useRequireAuth } from "@/hooks/useAuth";
 import { convertURLtoFile } from "@/lib/convertURLtoFile";
 import { theme } from "@/styles/theme";
 import { getAccessToken } from "@/util/storage";
@@ -24,7 +23,6 @@ interface UserInfo {
 }
 
 const UserInfo = () => {
-  useRequireAuth();
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<UserInfo>();
 
