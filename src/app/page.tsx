@@ -7,6 +7,7 @@ import Tabbar from "@/components/common/Tabbar";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { setUser } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import { handleAllowNotification } from "@/util/notification";
 import {
   setIsAutoLogin,
   setIsFirstLogin,
@@ -38,7 +39,7 @@ export default function Home() {
       email: email,
       password: password,
     })
-      .then((response) => {
+      .then(async (response) => {
         console.log("로그인 성공", response.data);
         const userData = {
           name: "",
@@ -60,6 +61,9 @@ export default function Home() {
         setIsAutoLogin(String(save));
         setIsFirstLogin(userData.isFirstLogin);
         setIsSuspended(userData.isSuspended);
+
+        /* 로그인 성공 후 알림 설정 및 디바이스 토큰 발급 */
+        await handleAllowNotification();
 
         if (userData.isFirstLogin) {
           router.push("/first/step1");
