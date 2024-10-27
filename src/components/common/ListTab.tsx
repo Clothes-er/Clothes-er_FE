@@ -99,6 +99,7 @@ const ListTab: React.FC<ListTabProps> = ({ listType, userSid }) => {
         currentTab={currentTab}
         currentSubTab={currentSubTab}
         userSid={userSid}
+        listType={listType}
       />
     </Container>
   );
@@ -108,13 +109,15 @@ function ContentArea({
   currentTab,
   currentSubTab,
   userSid,
+  listType,
 }: {
   currentTab: string;
   currentSubTab: string;
   userSid?: string;
+  listType?: string;
 }) {
   if (currentTab === "my" && currentSubTab === "closet") {
-    return <MyClosetContent userSid={userSid || ""} />;
+    return <MyClosetContent userSid={userSid || ""} isMe={listType === "me"} />;
   } else if (currentTab === "my" && currentSubTab === "share") {
     return <MyShareContent userSid={userSid || ""} />;
   } else if (currentTab === "transaction" && currentSubTab === "sharing") {
