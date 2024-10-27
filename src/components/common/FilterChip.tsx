@@ -39,15 +39,15 @@ const StyledChip = styled.div<StyledChipProps>`
   justify-content: center;
   align-items: center;
   width: auto;
-  height: 23px;
-  padding: 3px 8px;
+  height: 26px;
+  padding: 6px 8px;
   text-align: center;
   border-radius: 15px;
   border: 1px solid
     ${({ selected }) =>
       selected ? theme.colors.purple500 : theme.colors.gray400};
   color: ${({ selected }) => (selected ? theme.colors.purple500 : "#2E2E44")};
-  ${(props) => props.theme.fonts.c1_medium};
+  ${(props) => props.theme.fonts.b3_medium};
   cursor: pointer;
   white-space: nowrap;
 `;

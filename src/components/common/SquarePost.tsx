@@ -131,6 +131,7 @@ const Title = styled.div`
 const Sub = styled.div`
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.c2_regular};
+  font-size: 13px;
 `;
 
 const Span = styled.span<{ $disabled?: boolean }>`
