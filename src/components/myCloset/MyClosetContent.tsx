@@ -10,9 +10,10 @@ import { useRouter } from "next/navigation";
 
 interface MyClosetContentProps {
   userSid?: string;
+  isMe?: boolean;
 }
 
-const MyClosetContent: React.FC<MyClosetContentProps> = ({ userSid }) => {
+const MyClosetContent: React.FC<MyClosetContentProps> = ({ userSid, isMe }) => {
   const router = useRouter();
   const [postList, setPostList] = useState<ClosetPostList[]>();
   const [isSuspended, setIsSuspended] = useState<boolean>(false);
@@ -59,15 +60,17 @@ const MyClosetContent: React.FC<MyClosetContentProps> = ({ userSid }) => {
 
   return (
     <>
-      <WriteButton $isSuspended={isSuspended + ""} onClick={handleAddCloth}>
-        <Image
-          src={`/assets/icons/ic_plus_${isSuspended ? "gray" : "purple"}.svg`}
-          width={16}
-          height={16}
-          alt="plus"
-        />
-        옷장 채우기
-      </WriteButton>
+      {isMe && (
+        <WriteButton $isSuspended={isSuspended + ""} onClick={handleAddCloth}>
+          <Image
+            src={`/assets/icons/ic_plus_${isSuspended ? "gray" : "purple"}.svg`}
+            width={16}
+            height={16}
+            alt="plus"
+          />
+          옷장 채우기
+        </WriteButton>
+      )}
       {postList && postList.length > 0 ? (
         <GridContainer>
           {postList?.map((data) => (

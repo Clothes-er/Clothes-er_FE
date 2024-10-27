@@ -116,8 +116,15 @@ const CheckboxContainer = styled.label<{
     align-items: center;
     margin-right: 10px;
     ${({ theme }) => theme.fonts.c1_medium};
+    ${({ theme, $labelFontSize }) =>
+      $labelFontSize &&
+      theme.fonts[$labelFontSize] &&
+      `
+        ${theme.fonts[$labelFontSize]};
+      `}
     color: ${(props) =>
       props.$essential ? theme.colors.primary500 : theme.colors.b100};
+    white-space: nowrap;
 
     /* color */
     &.purple {

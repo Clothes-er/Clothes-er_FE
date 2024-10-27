@@ -99,15 +99,15 @@ const Score = styled.div`
 `;
 
 const Location = styled.div<{ $recentScore: number; $locationWidth: number }>`
-  height: 20px;
+  height: 22px;
   padding: 4px 8px;
-  border-radius: 10px;
+  border-radius: 15px;
   background: ${theme.colors.purple100};
   display: inline-flex;
   justify-content: center;
   align-items: center;
   color: ${theme.colors.purple500};
-  ${(props) => props.theme.fonts.c3_medium};
+  ${(props) => props.theme.fonts.c2_semiBold};
   position: absolute;
   top: -25px;
   ${({ $recentScore, $locationWidth }) => css`

@@ -16,8 +16,8 @@ const NotiBox = (props: NotiList) => {
   return (
     <Container>
       <Left>
-        <Image
-          src="/assets/images/profile.svg"
+        <NotiImage
+          src="/icon-192x192.png"
           width={70}
           height={70}
           alt="이미지"
@@ -46,20 +46,24 @@ const Left = styled.div`
   width: 70px;
 `;
 
+const NotiImage = styled(Image)`
+  border-radius: 50%;
+`;
+
 const Right = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  gap: 6px;
 `;
 
 const Type = styled.div`
   color: ${theme.colors.b100};
-  ${theme.fonts.b3_semiBold};
+  ${theme.fonts.b2_semiBold};
 `;
 
 const Content = styled.div`
   color: ${theme.colors.b100};
-  ${theme.fonts.c1_regular};
+  ${theme.fonts.b3_regular};
 `;

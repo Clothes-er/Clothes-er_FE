@@ -341,7 +341,7 @@ const Nickname = styled.div`
 
 const Gender = styled.span`
   color: ${theme.colors.purple500};
-  ${(props) => props.theme.fonts.c3_medium};
+  ${(props) => props.theme.fonts.c2_medium};
   margin-top: 5px;
 `;
 
@@ -403,12 +403,13 @@ const InfoTop = styled.div`
 `;
 
 const Title = styled.div`
-  ${(props) => props.theme.fonts.b3_bold};
+  ${(props) => props.theme.fonts.b2_bold};
 `;
 
 const Comment = styled.div`
   color: ${theme.colors.purple300};
   ${(props) => props.theme.fonts.c3_medium};
+  font-size: 13px;
 `;
 
 const Score = styled.div`

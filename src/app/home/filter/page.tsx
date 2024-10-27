@@ -162,7 +162,7 @@ const FilterPage = () => {
                       )
                     }
                     labelFontSize={
-                      localSort === "createdAt" ? "c1_semiBold" : "c1_medium"
+                      localSort === "createdAt" ? "b3_semiBold" : "b3_medium"
                     }
                     color={localSort === "createdAt" ? "purple" : "black"}
                   />
@@ -175,7 +175,7 @@ const FilterPage = () => {
                       )
                     }
                     labelFontSize={
-                      localSort === "closetScore" ? "c1_semiBold" : "c1_medium"
+                      localSort === "closetScore" ? "b3_semiBold" : "b3_medium"
                     }
                     color={localSort === "closetScore" ? "purple" : "black"}
                   />
@@ -190,8 +190,8 @@ const FilterPage = () => {
                     onChange={() => handleGenderSelect("FEMALE")}
                     labelFontSize={
                       localGender.includes("FEMALE")
-                        ? "c1_semiBold"
-                        : "c1_medium"
+                        ? "b3_semiBold"
+                        : "b3_medium"
                     }
                     color={localGender.includes("FEMALE") ? "purple" : "black"}
                   />
@@ -200,7 +200,7 @@ const FilterPage = () => {
                     checked={localGender.includes("MALE")}
                     onChange={() => handleGenderSelect("MALE")}
                     labelFontSize={
-                      localGender.includes("MALE") ? "c1_semiBold" : "c1_medium"
+                      localGender.includes("MALE") ? "b3_semiBold" : "b3_medium"
                     }
                     color={localGender.includes("MALE") ? "purple" : "black"}
                   />
@@ -322,13 +322,14 @@ const Label = styled.div`
 `;
 
 const GenderCheckbox = styled.div`
-  display: flex;
-  gap: 50px;
+  max-width: 300px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 `;
 
 const HeightText = styled.div`
   color: ${theme.colors.b500};
-  ${(props) => props.theme.fonts.b3_medium};
+  ${(props) => props.theme.fonts.b2_medium};
 `;
 
 const CategoryGrid = styled.div`
@@ -342,8 +343,6 @@ const CategoryGrid = styled.div`
   align-items: flex-start;
 
   @media screen and (max-width: 400px) {
-    /* grid-template-columns: repeat(3, 1fr);
-    column-gap: 30px; */
     display: flex;
     flex-direction: column;
   }

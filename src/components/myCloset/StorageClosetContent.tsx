@@ -5,11 +5,13 @@ import styled from "styled-components";
 import SquarePost from "../common/SquarePost";
 import { ClosetLikeList } from "@/type/like";
 
-interface MyClosetContentProps {
+interface StorageClosetContentProps {
   userSid?: string;
 }
 
-const StorageClosetContent: React.FC<MyClosetContentProps> = ({ userSid }) => {
+const StorageClosetContent: React.FC<StorageClosetContentProps> = ({
+  userSid,
+}) => {
   const [postList, setPostList] = useState<ClosetLikeList[]>();
 
   useEffect(() => {
