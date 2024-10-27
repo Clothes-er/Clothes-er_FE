@@ -7,7 +7,10 @@ import Tabbar from "@/components/common/Tabbar";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { setUser } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import { handleAllowNotification } from "@/util/notification";
+import {
+  handleAllowNotification,
+  registerServiceWorker,
+} from "@/util/notification";
 import {
   setIsAutoLogin,
   setIsFirstLogin,
@@ -29,7 +32,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [save, setSave] = useState(false);
   const [error, setError] = useState<string>("");
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [notificationPermission, setNotificationPermission] = useState<
+    "granted" | "denied" | "default" | null
+  >(null);
 
   const handleSave = () => {
     setSave(!save);
@@ -37,10 +42,15 @@ export default function LoginPage() {
 
   /* 로그인 성공 후 알림 설정 및 디바이스 토큰 발급 */
   useEffect(() => {
-    if (isLoggedIn) {
-      handleAllowNotification();
-    }
-  }, [isLoggedIn]);
+    const initNotification = async () => {
+      await handleAllowNotification(); // 알림 권한 요청
+      if (notificationPermission === "granted") {
+        registerServiceWorker(); // 권한이 허용되면 Service Worker 등록
+      }
+    };
+
+    initNotification();
+  }, [notificationPermission]);
 
   const handleLogin = () => {
     Axios.post("/api/v1/users/login", {
@@ -70,8 +80,7 @@ export default function LoginPage() {
         setIsFirstLogin(userData.isFirstLogin);
         setIsSuspended(userData.isSuspended);
 
-        /* 로그인 성공 상태 변경 */
-        setIsLoggedIn(true);
+        setNotificationPermission("default");
 
         if (userData.isFirstLogin) {
           router.push("/first/step1");

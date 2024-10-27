@@ -17,7 +17,6 @@ export async function handleAllowNotification() {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
       console.log("알림 권한이 허용되었습니다.");
-      registerServiceWorker();
       const token = await getDeviceToken();
       if (token) {
         await patchDeviceToken(token);
