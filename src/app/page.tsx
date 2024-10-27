@@ -17,11 +17,11 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
-export default function Home() {
+export default function LoginPage() {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -29,17 +29,25 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [save, setSave] = useState(false);
   const [error, setError] = useState<string>("");
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const handleSave = () => {
     setSave(!save);
   };
+
+  /* 로그인 성공 후 알림 설정 및 디바이스 토큰 발급 */
+  useEffect(() => {
+    if (isLoggedIn) {
+      handleAllowNotification();
+    }
+  }, [isLoggedIn]);
 
   const handleLogin = () => {
     Axios.post("/api/v1/users/login", {
       email: email,
       password: password,
     })
-      .then(async (response) => {
+      .then((response) => {
         console.log("로그인 성공", response.data);
         const userData = {
           name: "",
@@ -62,8 +70,8 @@ export default function Home() {
         setIsFirstLogin(userData.isFirstLogin);
         setIsSuspended(userData.isSuspended);
 
-        /* 로그인 성공 후 알림 설정 및 디바이스 토큰 발급 */
-        await handleAllowNotification();
+        /* 로그인 성공 상태 변경 */
+        setIsLoggedIn(true);
 
         if (userData.isFirstLogin) {
           router.push("/first/step1");
