@@ -15,7 +15,6 @@ interface LoginPageProps {
   save: boolean;
   error: string;
   handleLogin: () => void;
-  notificationPermission: "granted" | "denied" | "default" | null;
 }
 
 export default function LoginPage({

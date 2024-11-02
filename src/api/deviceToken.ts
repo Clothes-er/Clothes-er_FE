@@ -3,6 +3,8 @@ import { getToken } from "firebase/messaging";
 import { messaging } from "../core/notification/settingFCM";
 
 export async function getDeviceToken() {
+  if (typeof window === "undefined") return null;
+
    const token = await getToken(messaging, {
     vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
   })
@@ -12,6 +14,8 @@ export async function getDeviceToken() {
 }
 
 export async function patchDeviceToken(token: string) {
+  if (typeof window === "undefined") return null;
+
   try {
     const response = await AuthAxios.patch(`/api/v1/notifications/token`, {
       deviceToken: token,
