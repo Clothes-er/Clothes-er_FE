@@ -49,7 +49,9 @@ export default function LoginPage() {
       }
     };
 
-    initNotification();
+    if (typeof window !== "undefined") {
+      initNotification();
+    }
   }, [notificationPermission]);
 
   const handleLogin = () => {
