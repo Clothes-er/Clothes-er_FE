@@ -9,6 +9,7 @@ export default function middleware(request: NextRequest) {
   if (
     request.nextUrl.pathname.startsWith("/images") ||
     request.nextUrl.pathname.endsWith(".svg") ||
+    request.nextUrl.pathname.endsWith(".png") ||
     request.nextUrl.pathname === "/manifest.json"
   ) {
     return NextResponse.next();
