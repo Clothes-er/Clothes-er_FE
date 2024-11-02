@@ -11,7 +11,7 @@ import { getNotificationList } from "@/api/notifications";
 
 interface NotiList {
   id: number;
-  image: string;
+  image: string | null;
   title: string;
   content: string;
   type: string;
@@ -20,12 +20,13 @@ interface NotiList {
 }
 
 const Notification = () => {
-  const [notiList, setNotiList] = useState<NotiList[]>();
+  const [notiList, setNotiList] = useState<NotiList[] | null>();
   const [notiCount, setNotiCount] = useState<number>(0);
 
   useEffect(() => {
     const fetchNotificationList = async () => {
       const response = await getNotificationList();
+      console.log(response);
       setNotiList(response.result.notificationList);
       setNotiCount(response.result.countOfNotReadNotifications);
     };

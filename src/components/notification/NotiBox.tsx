@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 interface NotiList {
   id: number;
-  image: string;
+  image: string | null;
   title: string;
   content: string;
   type: string;
@@ -34,7 +34,12 @@ const NotiBox = (props: NotiList) => {
   return (
     <Container $isRead={read} onClick={handleReadNotification}>
       <Left>
-        <NotiImage src={image} width={70} height={70} alt="이미지" />
+        <NotiImage
+          src={image || "/icon-192x192.png"}
+          width={70}
+          height={70}
+          alt="이미지"
+        />
       </Left>
       <Right>
         <Title>{title}</Title>
@@ -58,7 +63,7 @@ const Container = styled.div<{ $isRead: boolean }>`
     $isRead &&
     `
       background: ${theme.colors.purple50};
-      opacity: 0.8;
+      opacity: 0.7;
     `}
 `;
 const Left = styled.div`
