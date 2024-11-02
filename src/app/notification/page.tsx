@@ -6,44 +6,40 @@ import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import { Suspense, useEffect, useState } from "react";
 import Loading from "@/components/common/Loading";
-import dynamic from "next/dynamic";
 import NotiBox from "@/components/notification/NotiBox";
+import { getNotificationList } from "@/api/notifications";
 
 interface NotiList {
   id: number;
-  type: string;
-  url: string;
+  image: string | null;
+  title: string;
   content: string;
-  image: string;
+  type: string;
+  sourceId: string;
+  isRead: boolean;
 }
 
 const Notification = () => {
-  const [notiList, setNotiList] = useState<NotiList[]>([
-    { id: 0, type: "팔로우", image: "", url: "", content: "신고 어쩌고" },
-    {
-      id: 1,
-      type: "신고",
-      image: "",
-      url: "",
-      content: "빈티지걸 님이 접수하신 신고 내용이 처리 중이에요!",
-    },
-    {
-      id: 2,
-      type: "팔로우",
-      image: "",
-      url: "",
-      content: "빈티지걸 님이 러블리걸 님을 팔로우 하였습니다.",
-    },
-  ]);
+  const [notiList, setNotiList] = useState<NotiList[] | null>();
+  const [notiCount, setNotiCount] = useState<number>(0);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const fetchNotificationList = async () => {
+      const response = await getNotificationList();
+      console.log(response);
+      setNotiList(response.result.notificationList);
+      setNotiCount(response.result.countOfNotReadNotifications);
+    };
+
+    fetchNotificationList();
+  }, []);
 
   return (
     <>
       <Contain>
         <Layout>
           <Header />
-          <Topbar text="알림" align="left" icon={true} />
+          <Topbar text={`알림 (${notiCount})`} align="left" icon={true} />
           <Content>
             {notiList && notiList.length > 0 ? (
               <Notis>
@@ -52,10 +48,12 @@ const Notification = () => {
                     <NotiBox
                       key={data.id}
                       id={data.id}
-                      type={data.type}
                       image={data.image}
-                      url={data.url}
+                      title={data.title}
                       content={data.content}
+                      type={data.type}
+                      sourceId={data.sourceId}
+                      isRead={data.isRead}
                     />
                     {index < notiList.length - 1 && <Divider />}
                   </NotiContainer>

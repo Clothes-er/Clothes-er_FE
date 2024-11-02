@@ -1,10 +1,23 @@
+import { getIsNotification } from "@/api/notifications";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Header = () => {
   const router = useRouter();
+  const [isNotification, setIsNotification] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchIsNotification = async () => {
+      try {
+        const response = await getIsNotification();
+        setIsNotification(!response.result.isRead);
+      } catch {}
+    };
+
+    fetchIsNotification();
+  }, []);
   return (
     <Container>
       <Image
@@ -24,7 +37,9 @@ const Header = () => {
           style={{ cursor: "pointer" }}
         /> */}
         <Image
-          src="/assets/icons/ic_bell.svg"
+          src={`/assets/icons/${
+            isNotification ? "ic_bell_purple" : "ic_bell"
+          }.svg`}
           width={24}
           height={24}
           alt="알림"
