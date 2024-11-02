@@ -8,14 +8,13 @@ self.addEventListener("activate", function (e) {
 
 self.addEventListener("push", function (e) {
   const data = e.data.json();
-
   if (!data) return;
 
   const { token, data: noticeTypeData, notification: resultData } = data;
   const notificationTitle = resultData.title;
   const notificationOptions = {
     body: resultData.body,
-    icon: resultData.image,
+    icon: resultData.image || null,
   };
 
   let targetUrl;
@@ -25,6 +24,8 @@ self.addEventListener("push", function (e) {
     targetUrl = `/chat/${noticeTypeData.sourceId}?type=rental`;
   } else if (noticeTypeData.type === "USER_CHAT") {
     targetUrl = `/chat/${noticeTypeData.sourceId}?type=user`;
+  } else if (noticeTypeData.type === "REPORT") {
+    targetUrl = ``;
   }
 
   e.waitUntil(
