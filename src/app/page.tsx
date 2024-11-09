@@ -28,12 +28,15 @@ export default function Login() {
   const [save, setSave] = useState(false);
   const [error, setError] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isTokenRequested, setIsTokenRequested] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
 
   const handleSave = () => {
     setSave(!save);
   };
 
   useEffect(() => {}, [isLoggedIn]);
+
   const handleLogin = async () => {
     try {
       const response = await Axios.post("/api/v1/users/login", {
@@ -54,6 +57,8 @@ export default function Login() {
         isFirstLogin: response.data.result.isFirstLogin,
         isSuspended: response.data.result.isSuspended,
       };
+      setUserData(userData);
+
       dispatch(setUser(userData));
       setTokens(
         response.data.result.token.accessToken,
@@ -63,12 +68,6 @@ export default function Login() {
       setIsAutoLogin(String(save));
       setIsFirstLogin(userData.isFirstLogin);
       setIsSuspended(userData.isSuspended);
-
-      if (userData.isFirstLogin) {
-        router.push("/first/step1");
-      } else {
-        router.push("/home");
-      }
     } catch (error: any) {
       console.log("로그인 실패", error);
       if (error.response) {
@@ -87,6 +86,17 @@ export default function Login() {
     }
   };
 
+  useEffect(() => {
+    // 로그인 후, 디바이스 토큰 요청 완료 시 경로 이동
+    if (isLoggedIn && isTokenRequested) {
+      if (userData.isFirstLogin) {
+        router.push("/first/step1");
+      } else {
+        router.push("/home");
+      }
+    }
+  }, [isLoggedIn, isTokenRequested]);
+
   return (
     <>
       <LoginPage
@@ -99,7 +109,11 @@ export default function Login() {
         error={error}
         handleLogin={handleLogin}
       />
-      {isLoggedIn && <DeviceTokenComponent />}
+      {isLoggedIn && (
+        <DeviceTokenComponent
+          onTokenRequestComplete={() => setIsTokenRequested(true)}
+        />
+      )}
     </>
   );
 }
