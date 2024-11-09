@@ -4,7 +4,11 @@ import { useEffect } from "react";
 import { registerServiceWorker } from "@/util/notification";
 import { getDeviceToken, patchDeviceToken } from "@/api/deviceToken";
 
-const DeviceTokenComponent = () => {
+const DeviceTokenComponent = ({
+  onTokenRequestComplete,
+}: {
+  onTokenRequestComplete: () => void;
+}) => {
   useEffect(() => {
     const requestDeviceToken = async () => {
       const permission = await Notification.requestPermission();
@@ -24,6 +28,8 @@ const DeviceTokenComponent = () => {
       } else {
         console.log("사용자가 알림 권한을 결정하지 않았습니다.");
       }
+
+      onTokenRequestComplete();
     };
 
     requestDeviceToken();
