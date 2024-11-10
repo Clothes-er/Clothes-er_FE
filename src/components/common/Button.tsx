@@ -4,6 +4,7 @@ import React, { ReactNode } from "react";
 import styled, { css, keyframes } from "styled-components";
 
 export type buttonType = "primaryDeep" | "primary" | "primaryLight" | "gray";
+export type fontType = keyof typeof theme.fonts;
 
 type ButtonTypes = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -15,9 +16,13 @@ export interface ButtonProps extends ButtonTypes {
   buttonType?: buttonType;
   size?: "large" | "medium" | "small";
   width?: string;
+  height?: string;
+  borderRadius?: string;
+  background?: string;
+  color?: string;
+  fontType?: fontType;
   children?: React.ReactNode;
   onClick?: (e: React.MouseEvent) => void;
-  style?: React.CSSProperties & { fontSize?: string };
   disabled?: boolean;
   blink?: boolean;
 }
@@ -28,6 +33,11 @@ const Button = (props: ButtonProps) => {
     buttonType = "primary",
     size,
     width,
+    height,
+    borderRadius,
+    background,
+    color,
+    fontType = "b2_regular",
     onClick,
     style,
     disabled,
@@ -51,12 +61,16 @@ const Button = (props: ButtonProps) => {
 
   return (
     <StyledButton
-      className={buttonClassName}
-      style={style}
+      className={buttonType}
+      $width={width}
+      $height={height}
+      $borderRadius={borderRadius}
+      $background={background}
+      $color={color}
+      $fontType={fontType}
       onClick={onClick}
       disabled={disabled}
       $isBlink={blink}
-      $width={width}
     >
       {text}
     </StyledButton>
@@ -67,75 +81,92 @@ export default Button;
 
 const StyledButton = styled.button<{
   $isBlink: boolean;
-  $width: string | undefined;
+  $width?: string;
+  $height?: string;
+  $borderRadius?: string;
+  $background?: string;
+  $color?: string;
+  $fontType: fontType;
 }>`
   display: flex;
-  width: ${({ $width }) => ($width ? $width : "100%")};
+  width: ${({ $width }) => $width || "100%"};
+  height: ${({ $height }) => $height || "auto"};
   padding: 16px 28px;
   position: relative;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
-  ${(props) => props.theme.fonts.b2_regular};
+  border-radius: ${({ $borderRadius }) => $borderRadius || "8px"};
+  background: ${({ $background, theme }) =>
+    $background || theme.colors.purple500};
+  color: ${({ $color, theme }) => $color || theme.colors.white};
+  ${({ $fontType, theme }) => theme.fonts[$fontType]};
   white-space: nowrap;
   gap: 10px;
   transition: color 200ms, background-color 200ms;
 
   /* buttonType */
-  &.primaryDeep {
-    color: ${theme.colors.white};
-    background: ${theme.colors.purple800};
-    &:hover {
-      background: ${theme.colors.purple700};
-    }
-    &:active {
-      background: ${theme.colors.purple700};
-    }
-    &:disabled {
-      background: ${theme.colors.gray500};
-    }
-  }
-  &.primary {
-    color: ${theme.colors.white};
-    background: ${theme.colors.purple500};
-    &:hover {
-      background: ${theme.colors.purple900};
-    }
-    &:active {
-      background: ${theme.colors.purple900};
-    }
-    &:disabled {
-      background: ${theme.colors.gray700};
-    }
-  }
-  &.primaryLight {
-    border-radius: 5px;
-    border: 1.5px solid ${theme.colors.purple800};
-    color: ${theme.colors.purple800};
-    background: ${theme.colors.purple50};
+  ${({ $background, $color, $borderRadius, theme }) => {
+    if (!$background && !$color && !$borderRadius) {
+      return css`
+        &.primaryDeep {
+          background: ${theme.colors.purple800};
+          color: ${theme.colors.white};
+          &:hover {
+            background: ${theme.colors.purple700};
+          }
+          &:active {
+            background: ${theme.colors.purple700};
+          }
+          &:disabled {
+            background: ${theme.colors.gray500};
+          }
+        }
 
-    &:hover {
-      background: ${theme.colors.purple150};
+        &.primary {
+          background: ${theme.colors.purple500};
+          color: ${theme.colors.white};
+          &:hover {
+            background: ${theme.colors.purple900};
+          }
+          &:active {
+            background: ${theme.colors.purple900};
+          }
+          &:disabled {
+            background: ${theme.colors.gray700};
+          }
+        }
+
+        &.primaryLight {
+          border-radius: 5px;
+          border: 1.5px solid ${theme.colors.purple800};
+          color: ${theme.colors.purple800};
+          background: ${theme.colors.purple50};
+          &:hover {
+            background: ${theme.colors.purple150};
+          }
+          &:active {
+            background: ${theme.colors.purple150};
+          }
+          &:disabled {
+            border: 1.5px solid ${theme.colors.gray800};
+            color: ${theme.colors.b100};
+            background: ${theme.colors.gray100};
+          }
+        }
+
+        &.gray {
+          background: ${theme.colors.gray700};
+          color: ${theme.colors.white};
+          &:hover {
+            background: ${theme.colors.gray800};
+          }
+          &:active {
+            background: ${theme.colors.gray800};
+          }
+        }
+      `;
     }
-    &:active {
-      background: ${theme.colors.purple150};
-    }
-    &:disabled {
-      border: 1.5px solid ${theme.colors.gray800};
-      color: ${theme.colors.b100};
-      background: ${theme.colors.gray100};
-    }
-  }
-  &.gray {
-    color: ${theme.colors.white};
-    background: ${theme.colors.gray700};
-    &:hover {
-      background: ${theme.colors.gray800};
-    }
-    &:active {
-      background: ${theme.colors.gray800};
-    }
-  }
+  }}
 
   /* size */
   &.large {
