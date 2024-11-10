@@ -1,5 +1,7 @@
 "use client";
 import AuthAxios from "@/api/authAxios";
+import FollowButton from "@/components/common/FollowButton";
+import Header from "@/components/common/Header";
 import ListTab from "@/components/common/ListTab";
 import Topbar from "@/components/common/Topbar";
 import ScoreBar from "@/components/myCloset/ScoreBar";
@@ -12,7 +14,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-interface ProfileInfo {
+interface Profile {
   nickname: string;
   profileUrl: string;
   gender: string;
@@ -27,22 +29,37 @@ interface ProfileInfo {
   styles: string[];
   followers: number;
   followees: number;
+  isSuspended: boolean;
+  isRestricted: boolean;
+}
+
+interface ProfileInfo {
+  isFollowing: boolean;
+  profile: Profile;
 }
 
 const MyCloset = () => {
   const router = useRouter();
   const { userSid } = useParams();
+  const userSidString = Array.isArray(userSid) ? userSid[0] : userSid;
 
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>();
+  const [isFollowState, setIsFollowState] = useState<boolean>(false);
 
   const [currentslide, setCurrentslide] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
 
+  const handleFollowButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsFollowState(!isFollowState);
+  };
+
   useEffect(() => {
-    AuthAxios.get(`/api/v1/users/profile/${userSid}`)
+    AuthAxios.get(`/api/v1/users/profile/${userSidString}`)
       .then((response) => {
         const data = response.data.result;
         setProfileInfo(data);
+        setIsFollowState(data.isFollowing);
         console.log(data);
         console.log(response.data.message);
       })
@@ -77,19 +94,12 @@ const MyCloset = () => {
     <>
       <Layout>
         <Background />
-        <Image
-          src="/assets/images/logo_black.svg"
-          width={101}
-          height={18}
-          alt="logo"
-          onClick={() => router.push("/home")}
-          style={{ cursor: "pointer" }}
-        />
+        <Header />
         <TopRow>
           <Topbar
             text={`${
               profileInfo
-                ? `${profileInfo.nickname} 님의 옷장`
+                ? `${profileInfo.profile.nickname} 님의 옷장`
                 : "존재하지 않는 옷장"
             }`}
             icon={true}
@@ -97,41 +107,53 @@ const MyCloset = () => {
           />
         </TopRow>
         <Profile>
-          <ProfileImage>
-            <Image
-              src={
-                profileInfo
-                  ? profileInfo.profileUrl || "/assets/images/basic_profile.svg"
-                  : "/assets/images/withdraw_profile.svg"
-              }
-              fill
-              objectFit="cover"
-              alt="profile"
-            />
-          </ProfileImage>
-          <Text>
-            <Top>
-              <Nickname>
-                {profileInfo ? profileInfo.nickname : "탈퇴한 유저"}
-                {profileInfo && (
-                  <Gender>{getGenderLabel(profileInfo.gender)}</Gender>
-                )}
-              </Nickname>
-            </Top>
-            {profileInfo && (
-              <>
+          <ProfileLeft>
+            <ProfileImage>
+              <Image
+                src={
+                  profileInfo
+                    ? profileInfo.profile.profileUrl ||
+                      "/assets/images/basic_profile.svg"
+                    : "/assets/images/withdraw_profile.svg"
+                }
+                fill
+                objectFit="cover"
+                alt="profile"
+              />
+            </ProfileImage>
+            <Text>
+              <Top>
+                <Nickname>
+                  {profileInfo ? profileInfo.profile.nickname : "탈퇴한 유저"}
+                  {profileInfo && (
+                    <Gender>
+                      {getGenderLabel(profileInfo.profile.gender)}
+                    </Gender>
+                  )}
+                </Nickname>
+              </Top>
+              {profileInfo && (
                 <Level>
-                  {profileInfo?.level !== null &&
-                    `${getLevelText(profileInfo.level) + ""} (Lv. ${
-                      profileInfo?.level
+                  {profileInfo?.profile.level !== null &&
+                    `${getLevelText(profileInfo.profile.level) + ""} (Lv. ${
+                      profileInfo?.profile.level
                     })`}
                   <LevelText>
-                    {profileInfo?.rentalCount}개의 옷을 아꼈어요!
+                    {profileInfo?.profile.rentalCount}개의 옷을 아꼈어요!
                   </LevelText>
                 </Level>
-              </>
-            )}
-          </Text>
+              )}
+              <Follow>
+                팔로워 {profileInfo?.profile.followers}
+                &nbsp;&nbsp;&nbsp; 팔로잉 {profileInfo?.profile.followees}
+              </Follow>
+            </Text>
+          </ProfileLeft>
+          <FollowButton
+            userSid={userSidString}
+            isFollow={isFollowState}
+            onClick={handleFollowButtonClick}
+          />
         </Profile>
         <SliderContainer>
           <Slider ref={sliderRef}>
@@ -142,20 +164,22 @@ const MyCloset = () => {
                     <InfoTop>
                       <Title>옷장점수</Title>
                       <Comment>
-                        {getLevelMessage(profileInfo?.closetScore || 0)}
+                        {getLevelMessage(profileInfo?.profile.closetScore || 0)}
                       </Comment>
-                      <Score>{profileInfo?.closetScore}점</Score>
+                      <Score>{profileInfo?.profile.closetScore}점</Score>
                     </InfoTop>
                     {currentslide === 0 && (
                       <ScoreBarWrapper>
                         <ScoreBar
-                          recentScore={profileInfo?.closetScore || 0}
-                          nickname={profileInfo?.nickname}
+                          recentScore={profileInfo?.profile.closetScore || 0}
+                          nickname={profileInfo?.profile.nickname}
                         />
                       </ScoreBarWrapper>
                     )}
                     <MoreReview
-                      onClick={() => router.push(`/user/${userSid}/review`)}
+                      onClick={() =>
+                        router.push(`/user/${userSidString}/review`)
+                      }
                     >
                       거래 후기 확인하기
                     </MoreReview>
@@ -175,32 +199,34 @@ const MyCloset = () => {
                         <SpecText>
                           <div>키</div>
                           <div>
-                            {profileInfo?.height
-                              ? `${profileInfo.height}cm`
+                            {profileInfo?.profile.height
+                              ? `${profileInfo.profile.height}cm`
                               : "미공개"}
                           </div>
                           <div>몸무게</div>
                           <div>
-                            {profileInfo?.weight
-                              ? `${profileInfo.weight}kg`
+                            {profileInfo?.profile.weight
+                              ? `${profileInfo.profile.weight}kg`
                               : "미공개"}
                           </div>
                           <div>발 크기</div>
                           <div>
-                            {profileInfo?.shoeSize
-                              ? `${profileInfo.shoeSize}mm`
+                            {profileInfo?.profile.shoeSize
+                              ? `${profileInfo.profile.shoeSize}mm`
                               : "미공개"}
                           </div>
                         </SpecText>
                       </div>
                       <Keywords>
-                        {profileInfo?.bodyShapes[0] ? (
+                        {profileInfo?.profile.bodyShapes[0] ? (
                           <>
-                            {profileInfo?.bodyShapes.map((data, index) => (
-                              <Keyword key={index} type={1}>
-                                {data}
-                              </Keyword>
-                            ))}
+                            {profileInfo?.profile.bodyShapes.map(
+                              (data, index) => (
+                                <Keyword key={index} type={1}>
+                                  {data}
+                                </Keyword>
+                              )
+                            )}
                           </>
                         ) : (
                           <Keyword type={0}>체형정보 미기입</Keyword>
@@ -211,18 +237,20 @@ const MyCloset = () => {
                       <div>
                         <Title>취향</Title>
                         <StyleText>
-                          {profileInfo?.categories.map((data, index) => (
-                            <span key={index}>
-                              {data}
-                              {`  `}
-                            </span>
-                          ))}
+                          {profileInfo?.profile.categories.map(
+                            (data, index) => (
+                              <span key={index}>
+                                {data}
+                                {`  `}
+                              </span>
+                            )
+                          )}
                         </StyleText>
                       </div>
                       <Keywords>
-                        {profileInfo?.styles[0] ? (
+                        {profileInfo?.profile.styles[0] ? (
                           <>
-                            {profileInfo?.styles.map((data, index) => (
+                            {profileInfo?.profile.styles.map((data, index) => (
                               <Keyword key={index} type={2}>
                                 {data}
                               </Keyword>
@@ -304,9 +332,15 @@ const Profile = styled.div`
   height: 120px;
   padding: 10px 20px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 30px;
+`;
+
+const ProfileLeft = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 `;
 
 const ProfileImage = styled.div`
@@ -319,10 +353,10 @@ const ProfileImage = styled.div`
 `;
 
 const Text = styled.div`
-  width: calc(100% - 105px);
+  width: auto;
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 5px;
   margin-left: 30px;
 `;
 
@@ -346,16 +380,21 @@ const Gender = styled.span`
 `;
 
 const Level = styled.div`
-  height: 21px;
   display: flex;
   flex-direction: column;
   color: ${theme.colors.b500};
-  ${(props) => props.theme.fonts.b3_medium};
+  ${(props) => props.theme.fonts.b2_medium};
 `;
 
 const LevelText = styled.div`
   color: ${theme.colors.b200};
-  ${(props) => props.theme.fonts.c3_medium};
+  ${(props) => props.theme.fonts.c1_medium};
+`;
+
+const Follow = styled.button`
+  color: ${theme.colors.gray900};
+  ${theme.fonts.c1_regular};
+  text-align: left;
 `;
 
 /* 옷장점수 & 스펙, 취향 */

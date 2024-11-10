@@ -81,6 +81,10 @@ const MyCloset = () => {
       });
   }, []);
 
+  const handleFollow = () => {
+    router.push(`/mycloset/follow?nickname=${profileInfo?.nickname}`);
+  };
+
   const goToSlide = (slideIndex: number) => {
     if (sliderRef.current) {
       const slideWidth = sliderRef.current.clientWidth;
@@ -183,7 +187,7 @@ const MyCloset = () => {
                     프로필 수정
                   </ProfileButton>
                 </Top>
-                <Level>
+                {/* <Level>
                   {profileInfo?.level !== null &&
                     `${getLevelText(profileInfo?.level || 0) + ""} (Lv. ${
                       profileInfo?.level
@@ -191,7 +195,22 @@ const MyCloset = () => {
                   <LevelText>
                     {profileInfo?.rentalCount}개의 옷을 아꼈어요!
                   </LevelText>
-                </Level>
+                </Level> */}
+                {profileInfo && (
+                  <Level>
+                    {profileInfo?.level !== null &&
+                      `${getLevelText(profileInfo.level) + ""} (Lv. ${
+                        profileInfo?.level
+                      })`}
+                    <LevelText>
+                      {profileInfo?.rentalCount}개의 옷을 아꼈어요!
+                    </LevelText>
+                  </Level>
+                )}
+                <Follow onClick={handleFollow}>
+                  팔로워 {profileInfo?.followers}
+                  &nbsp;&nbsp;&nbsp; 팔로잉 {profileInfo?.followees}
+                </Follow>
               </Text>
             </Profile>
           </>
@@ -460,7 +479,7 @@ const Profile = styled.div`
   height: 120px;
   padding: 10px 20px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 30px;
 `;
@@ -472,10 +491,11 @@ const ProfileImage = styled.div`
   background: white;
   border-radius: 50%;
   overflow: hidden;
+  flex-shrink: 0;
 `;
 
 const Text = styled.div`
-  width: calc(100% - 105px);
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -512,7 +532,6 @@ const ProfileButton = styled.button`
 `;
 
 const Level = styled.div`
-  height: 21px;
   display: flex;
   flex-direction: column;
   color: ${theme.colors.b500};
@@ -522,6 +541,12 @@ const Level = styled.div`
 const LevelText = styled.div`
   color: ${theme.colors.b200};
   ${(props) => props.theme.fonts.c1_medium};
+`;
+
+const Follow = styled.button`
+  color: ${theme.colors.gray900};
+  ${theme.fonts.c1_regular};
+  text-align: left;
 `;
 
 /* 옷장점수 & 스펙, 취향 */

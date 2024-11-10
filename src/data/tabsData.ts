@@ -42,3 +42,25 @@ export const chatTabs = [
     key: "user",
   }
 ]
+
+export const followTabs = [
+  {
+    tab: "팔로워",
+    key: "follower",
+  },
+  {
+    tab: "팔로잉",
+    key: "followee",
+  }
+]
+
+export const closetTabs = [
+  {
+    tab: "둘러보기",
+    key: "all",
+  },
+  {
+    tab: "팔로잉 하는 옷장",
+    key: "follow",
+  },
+];

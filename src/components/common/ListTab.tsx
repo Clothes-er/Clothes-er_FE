@@ -1,4 +1,9 @@
-import { chatTabs, myClosetTabs } from "@/data/tabsData";
+import {
+  chatTabs,
+  closetTabs,
+  followTabs,
+  myClosetTabs,
+} from "@/data/tabsData";
 import { theme } from "@/styles/theme";
 import { useState } from "react";
 import styled from "styled-components";
@@ -10,8 +15,10 @@ import TransRentContent from "../myCloset/TransRentContent";
 import ChatListContent from "../chat/ChatListContent";
 import StorageClosetContent from "../myCloset/StorageClosetContent";
 import StorageRentalContent from "../myCloset/StorageRentalContent";
+import FollowListContent from "../myCloset/FollowListContent";
+import ClosetListContent from "../closet/ClosetListContent";
 
-type listType = "me" | "other" | "chat";
+type listType = "me" | "other" | "chat" | "follow" | "closet";
 
 interface ListTabProps {
   listType: listType;
@@ -38,7 +45,11 @@ const ListTab: React.FC<ListTabProps> = ({ listType, userSid }) => {
 
   // 탭 정보
   const tabsToDisplay: TabItem[] =
-    listType === "chat"
+    listType === "closet"
+      ? closetTabs
+      : listType === "follow"
+      ? followTabs
+      : listType === "chat"
       ? chatTabs
       : listType === "other"
       ? [myClosetTabs[0]]
@@ -47,8 +58,16 @@ const ListTab: React.FC<ListTabProps> = ({ listType, userSid }) => {
   const handleTabClick = (tabIndex: number) => {
     setSelectedTab(tabIndex);
     setSelectedSubTab(0);
-    if (listType === "chat") {
+    if (listType === "closet") {
+      const newTab = closetTabs[tabIndex].key;
+      setCurrentTab(newTab);
+      setCurrentSubTab("");
+    } else if (listType === "chat") {
       const newTab = chatTabs[tabIndex].key;
+      setCurrentTab(newTab);
+      setCurrentSubTab("");
+    } else if (listType === "follow") {
+      const newTab = followTabs[tabIndex].key;
       setCurrentTab(newTab);
       setCurrentSubTab("");
     } else {
@@ -74,6 +93,7 @@ const ListTab: React.FC<ListTabProps> = ({ listType, userSid }) => {
             key={index}
             selected={selectedTab === index}
             onClick={() => handleTabClick(index)}
+            $listType={listType}
           >
             {item.tab}
             {selectedTab === index && item.sub && (
@@ -132,6 +152,14 @@ function ContentArea({
     return <ChatListContent type="rental" />;
   } else if (currentTab === "user") {
     return <ChatListContent type="user" />;
+  } else if (currentTab === "follower") {
+    return <FollowListContent type="follower" />;
+  } else if (currentTab === "followee") {
+    return <FollowListContent type="followee" />;
+  } else if (currentTab === "all") {
+    return <ClosetListContent type="all" />;
+  } else if (currentTab === "follow") {
+    return <ClosetListContent type="follow" />;
   }
   return null;
 }
@@ -152,12 +180,13 @@ const ListContainer = styled.div<{ $listType: listType }>`
   align-items: center;
   padding: 0px 40px;
   border-bottom: 1px solid ${theme.colors.gray200};
-  margin-bottom: ${({ $listType }) => ($listType === "chat" ? "0px" : "30px")};
+  margin-bottom: ${({ $listType }) =>
+    $listType === "chat" || $listType === "follow" ? "0px" : "30px"};
   gap: 20px;
 `;
 
-const Tab = styled.div<{ selected: boolean }>`
-  width: 77px;
+const Tab = styled.div<{ selected: boolean; $listType: listType }>`
+  width: ${({ $listType }) => ($listType === "closet" ? "150px" : "77px")};
   padding: 5px 22px;
   display: flex;
   align-items: center;

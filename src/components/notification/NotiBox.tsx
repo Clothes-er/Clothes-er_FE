@@ -36,8 +36,8 @@ const NotiBox = (props: NotiList) => {
       <Left>
         <NotiImage
           src={image || "/icon-192x192.png"}
-          width={70}
-          height={70}
+          width={60}
+          height={60}
           alt="이미지"
         />
       </Left>
@@ -56,7 +56,7 @@ const Container = styled.div<{ $isRead: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
   padding: 16px 22px;
 
   ${({ $isRead, theme }) =>
@@ -68,6 +68,10 @@ const Container = styled.div<{ $isRead: boolean }>`
 `;
 const Left = styled.div`
   width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const NotiImage = styled(Image)`
