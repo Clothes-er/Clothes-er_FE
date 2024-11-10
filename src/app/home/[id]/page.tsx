@@ -44,6 +44,7 @@ interface PostInfo {
   isWithdrawn: boolean;
   followers: number;
   followees: number;
+  isFollowing: boolean;
   imgUrls: string[];
   title: string;
   description: string;
@@ -222,6 +223,7 @@ const Page = () => {
                   </>
                 )}
                 <Profile
+                  userSid={postInfo?.userSid || ""}
                   nickname={
                     postInfo?.nickname
                       ? `${postInfo.nickname}${
@@ -234,7 +236,11 @@ const Page = () => {
                       : ""
                   }
                   profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
+                  followerCount={postInfo?.followers || 0} // 추후 수정
+                  followingCount={postInfo?.followees || 0}
+                  isFollow={!!postInfo?.isFollowing}
                   isWithdrawn={postInfo?.isWithdrawn}
+                  isWriter={!!postInfo?.isWriter}
                   onClick={() => {
                     if (!postInfo?.isRestricted) {
                       router.push(`/user/${postInfo?.userSid}`);
