@@ -2,13 +2,14 @@
 
 import Header from "@/components/common/Header";
 import ListTab from "@/components/common/ListTab";
+import Loading from "@/components/common/Loading";
 import Topbar from "@/components/common/Topbar";
 import { theme } from "@/styles/theme";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import styled from "styled-components";
 
-const MyClosetFollowPage = () => {
+const MyClosetFollow = () => {
   const searchParams = useSearchParams();
   const nickname = searchParams.get("nickname");
 
@@ -23,7 +24,13 @@ const MyClosetFollowPage = () => {
   );
 };
 
-export default MyClosetFollowPage;
+export default function MyClosetFollowPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <MyClosetFollow />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;
