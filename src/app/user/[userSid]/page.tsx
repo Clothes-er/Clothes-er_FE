@@ -76,12 +76,6 @@ const MyCloset = () => {
       });
   }, []);
 
-  const handleFollow = () => {
-    // const currentPath = window.location.pathname;
-    // const newPath = `${currentPath}/follow`;
-    // router.push(newPath);
-  };
-
   const goToSlide = (slideIndex: number) => {
     if (sliderRef.current) {
       const slideWidth = sliderRef.current.clientWidth;
@@ -149,7 +143,7 @@ const MyCloset = () => {
                   </LevelText>
                 </Level>
               )}
-              <Follow onClick={handleFollow}>
+              <Follow>
                 팔로워 {profileInfo?.profile.followers}
                 &nbsp;&nbsp;&nbsp; 팔로잉 {profileInfo?.profile.followees}
               </Follow>
