@@ -36,6 +36,8 @@ interface PostInfo {
   nickname: string;
   isWriter: boolean;
   isWithdrawn: boolean;
+  follower: number;
+  followee: number;
   imgUrls: string[];
   name: string;
   description: string;
@@ -206,9 +208,14 @@ const Page = () => {
                   </>
                 )}
                 <Profile
+                  userSid={postInfo?.userSid || ""}
                   nickname={postInfo?.nickname ? postInfo.nickname : ""}
                   profileUrl={postInfo?.profileUrl ? postInfo.profileUrl : ""}
+                  followerCount={postInfo?.follower || 0}
+                  followingCount={postInfo?.followee || 0}
+                  isFollow={false}
                   isWithdrawn={postInfo?.isWithdrawn}
+                  isWriter={true}
                   onClick={() => router.push(`/user/${postInfo?.userSid}`)}
                 />
                 <Body>
