@@ -80,9 +80,7 @@ const Bottom: React.FC<BottomProps> = ({
     }
   };
 
-  useEffect(() => {
-    console.log("z");
-  }, [heart, heartCount]);
+  useEffect(() => {}, [heart, heartCount]);
 
   const handleShowPrice = () => {
     setPricePop(true);
