@@ -19,15 +19,29 @@ self.addEventListener("push", function (e) {
 
   let targetUrl;
 
-  /* 대여글 채팅과 유저 채팅에 따라 경로 설정 */
-  if (noticeTypeData.type === "RENTAL_CHAT") {
-    targetUrl = `/chat/${noticeTypeData.sourceId}?type=rental`;
-  } else if (noticeTypeData.type === "USER_CHAT") {
-    targetUrl = `/chat/${noticeTypeData.sourceId}?type=user`;
-  } else if (noticeTypeData.type === "REPORT") {
-    targetUrl = ``;
+  /* 알림 유형에 따라 targetUrl 설정 */
+  switch (noticeTypeData.type) {
+    case "RENTAL_CHAT":
+      targetUrl = `/chat/${noticeTypeData.sourceId}?type=rental`;
+      break;
+    case "USER_CHAT":
+      targetUrl = `/chat/${noticeTypeData.sourceId}?type=user`;
+      break;
+    case "FOLLOW":
+      targetUrl = `/user/${noticeTypeData.sourceId}`;
+      break;
+    case "REPORT":
+      targetUrl = `/notification`;
+      break;
+    case "REPORT_NO_URL":
+      targetUrl = "";
+      break;
+    default:
+      targetUrl = "/";
+      break;
   }
 
+  notificationOptions.data = { targetUrl };
   e.waitUntil(
     self.registration.showNotification(notificationTitle, notificationOptions)
   );
@@ -35,6 +49,9 @@ self.addEventListener("push", function (e) {
   /* 알림 클릭 시 이벤트 처리 */
   self.addEventListener("notificationclick", function (event) {
     event.notification.close(); // 알림 닫기
+
+    const targetUrl = event.notification.data?.targetUrl;
+    if (!targetUrl) return;
 
     /* targetUrl로 이동 */
     event.waitUntil(
@@ -44,8 +61,10 @@ self.addEventListener("push", function (e) {
           const client = clientList.find((c) => c.url.includes(targetUrl));
           if (client) {
             client.focus();
-          } else {
-            clients.openWindow(targetUrl);
+          } else if (targetUrl) {
+            clients.openWindow(targetUrl).catch((error) => {
+              console.error("Unable to open window:", error);
+            });
           }
         })
     );

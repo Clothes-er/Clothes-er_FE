@@ -148,11 +148,11 @@ const ChatDetail = () => {
   };
 
   /* 새 메시지가 들어올 때 스크롤 하단 */
-  // useEffect(() => {
-  //   if (bottomRef.current) {
-  //     bottomRef.current.scrollIntoView({ behavior: "smooth" });
-  //   }
-  // }, [chatMsgList]);
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMsg?.messages]);
 
   /* chatPost 정보 리덕스 업데이트 */
   useEffect(() => {

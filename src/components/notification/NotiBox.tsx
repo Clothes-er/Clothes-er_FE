@@ -26,7 +26,9 @@ const NotiBox = (props: NotiList) => {
       try {
         await patchReadNotification(id);
         setRead(true);
-        // router.push(); // 클릭 시 이동 경로 설정
+        if (type === "FOLLOW") {
+          router.push(`/user/${sourceId}`);
+        }
       } catch {}
     }
   };
