@@ -1,6 +1,6 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FollowButton from "../common/FollowButton";
 
@@ -17,11 +17,16 @@ const FollowList = (props: FollowListProps) => {
 
   const [isFollowState, setIsFollowState] = useState<boolean>(isFollowing);
 
+  useEffect(() => {
+    setIsFollowState(isFollowing);
+  }, [isFollowing]);
+
   const handleFollowButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsFollowState(!isFollowState);
   };
 
+  console.log("isFollowState", nickname, isFollowState);
   return (
     <FollowListContainer>
       <LeftBox>
