@@ -123,4 +123,4 @@
 
 | [![](https://github.com//yyypearl.png?width=200px)](https://github.com/yyypearl) | [![](https://github.com///ilu25.png?width=200px)](https://github.com//ilu25)|
 |:---:|:---:|
-| 지호 | 나희 |
+| 진주(FE) | 조세영(BE) |
