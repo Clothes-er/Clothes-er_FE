@@ -73,6 +73,7 @@
 
 <img src="https://github.com/user-attachments/assets/b9ce9665-acc8-4a3d-b132-24bb850f2092" width="30%" />
 <img src="https://github.com/user-attachments/assets/0331b4d8-4384-488b-9007-da2b9e8352f1" width="29%" />
+<img src="https://github.com/user-attachments/assets/8aa25a67-47b6-42f3-9014-d07678af7c44" width="29%" />
 
 <br/><br/>
 
@@ -117,6 +118,10 @@
 
 - **FCM 연동**하여 **채팅, 팔로우, 신고 등** 관련 알림 시스템 구축
 
+<img src="https://github.com/user-attachments/assets/310480a3-6700-4817-be8a-25d244923dae" width="30.7%" />
+<img src="https://github.com/user-attachments/assets/2dc38bad-1b69-4f98-9e5d-59925fe1cda1" width="31%" />
+<img src="https://github.com/user-attachments/assets/cd47ee05-400a-4ef5-9171-58f385760164" width="31%" />
+
 <br/><br/>
 
 ### 📍 관리자 페이지
@@ -125,8 +130,8 @@
 - **전체 회원의 정보를 열람하고, 사용자 검토 후 조치 가능**
 - 사용자 거래 내역 및 채팅 확인 가능
 
-<img src="https://github.com/user-attachments/assets/3eeeebe4-fb04-4edc-858e-e582d9b4acc4" width="60%" /><br/>
-<img src="https://github.com/user-attachments/assets/e7545cfe-a249-48e6-94ea-ec5e4075a168" width="60%" />
+<img src="https://github.com/user-attachments/assets/3eeeebe4-fb04-4edc-858e-e582d9b4acc4" width="90%" /><br/>
+<img src="https://github.com/user-attachments/assets/e7545cfe-a249-48e6-94ea-ec5e4075a168" width="90%" />
 
 <br/><br/>
 
